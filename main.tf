@@ -348,7 +348,7 @@ resource "aws_security_group" "default" {
 resource "aws_elastic_beanstalk_environment" "default" {
   name                = "${null_resource.default.triggers.id}"
   application         = "${var.app}"
-  solution_stack_name = "${var.solution_stack}"
+
   tier                = "WebServer"
 
   tags {

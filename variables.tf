@@ -32,10 +32,6 @@ variable "security_groups" {
 
 variable "app" {}
 
-variable "solution_stack" {
-  default = "64bit Amazon Linux 2016.09 v2.3.3 running PHP 7.0"
-}
-
 variable "vpc_id" {}
 
 variable "public_subnets" {
