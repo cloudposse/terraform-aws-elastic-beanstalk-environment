@@ -433,12 +433,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   ###=========================== Autoscale trigger ========================== ###
-
+/*
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = "${aws_security_group.default.id}"
-  }
+  }*/
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
