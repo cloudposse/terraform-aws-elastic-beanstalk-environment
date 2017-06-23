@@ -308,13 +308,6 @@ resource "aws_security_group" "default" {
 
   vpc_id = "${var.vpc_id}"
 
-  #  ingress {
-  #    from_port   = 80
-  #    to_port     = 80
-  #    protocol    = "tcp"
-  #    cidr_blocks = ["0.0.0.0/0"]
-  #  }
-
   ingress {
     from_port   = 0
     to_port     = 0
@@ -602,6 +595,8 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "InstanceRefreshEnabled"
     value     = "true"
   }
+
+  depends_on = ["aws_security_group.default"]
 }
 
 data "aws_elb_service_account" "main" {}
