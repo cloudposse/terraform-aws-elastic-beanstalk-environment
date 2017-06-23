@@ -726,7 +726,7 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 
 module "tld" {
-  source    = "../hostname"
+  source    = "git::https://github.com/cloudposse/tf-hostname.git?ref=init"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -735,7 +735,7 @@ module "tld" {
 }
 
 module "www" {
-  source    = "../hostname"
+  source    = "git::https://github.com/cloudposse/tf-hostname.git?ref=init"
   namespace = "${var.namespace}"
   name      = "www.${var.name}"
   stage     = "${var.stage}"
