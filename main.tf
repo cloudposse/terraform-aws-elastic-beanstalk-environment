@@ -302,54 +302,6 @@ resource "aws_iam_instance_profile" "ec2" {
   role = "${aws_iam_role.ec2.name}"
 }
 
-resource "aws_ssm_document" "varnish-purge-all" {
-  name          = "${null_resource.default.triggers.id}-purge-all"
-  document_type = "Command"
-
-  content = <<DOC
-  {
-     "schemaVersion":"2.0",
-     "description":"${null_resource.default.triggers.id}-purge-all",
-     "parameters":{
-     },
-     "mainSteps":[
-        {
-           "action":"aws:runShellScript",
-           "name":"runShellScript",
-           "inputs":{
-              "runCommand": ["curl -X DOMAINBAN -H Host:${var.canonical_host} http://127.0.0.1"]
-           }
-        }     ]
-  }
-DOC
-}
-
-resource "aws_ssm_document" "varnish-purge-page" {
-  name          = "${null_resource.default.triggers.id}-purge-page"
-  document_type = "Command"
-
-  content = <<DOC
-  {
-     "schemaVersion":"2.0",
-     "description":"${null_resource.default.triggers.id}-purge-page",
-     "parameters":{
-        "path" : {
-          "type": "String",
-          "default": "{{ssm:path}}"
-        }
-     },
-     "mainSteps":[
-        {
-           "action":"aws:runShellScript",
-           "name":"runShellScript",
-           "inputs":{
-              "runCommand": ["curl -X BAN -H Host:${var.canonical_host} http://127.0.0.1/{{path}}"]
-           }
-        }     ]
-  }
-DOC
-}
-
 resource "aws_security_group" "default" {
   name        = "${null_resource.default.triggers.id}"
   description = "Allow all inbound traffic"
@@ -404,6 +356,8 @@ resource "aws_elastic_beanstalk_environment" "default" {
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
+
+  template_name = "${var.settings}"
 
   setting {
     namespace = "aws:ec2:vpc"
@@ -460,21 +414,25 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "MeasureName"
     value     = "CPUUtilization"
   }
+
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Statistic"
     value     = "Average"
   }
+
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Unit"
     value     = "Percent"
   }
+
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "LowerThreshold"
     value     = "${var.autoscale_lower_bound}"
   }
+
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "UpperThreshold"
@@ -488,206 +446,157 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "SecurityGroups"
     value     = "${aws_security_group.default.id}"
   }
+
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
     value     = "${var.instance_type}"
   }
+
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = "${aws_iam_instance_profile.ec2.name}"
   }
+
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "EC2KeyName"
     value     = "${var.keypair}"
   }
+
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "Availability Zones"
     value     = "Any 2"
   }
+
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = "${var.autoscale_min}"
   }
+
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "${var.autoscale_max}"
   }
+
   setting {
     namespace = "aws:elb:loadbalancer"
     name      = "CrossZone"
     value     = "true"
   }
+
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "HTTP"
   }
+
   setting {
     namespace = "aws:elb:listener"
     name      = "InstancePort"
     value     = "80"
   }
+
   setting {
     namespace = "aws:elb:listener"
     name      = "InstancePort"
     value     = "80"
   }
+
   setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionDrainingEnabled"
     value     = "true"
   }
+
   setting {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Bucket"
     value     = "${aws_s3_bucket.elb_logs.id}"
   }
+
   setting {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Enabled"
     value     = "true"
   }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SecurityGroups"
+    value     = "${var.settings}"
+  }
+
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "LoadBalancerType"
     value     = "${var.loadbalancer_type}"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = "${aws_iam_role.service.name}"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:application"
     name      = "Application Healthcheck URL"
     value     = "HTTP:80${var.healthcheck_url}"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
     value     = "enhanced"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSizeType"
     value     = "Fixed"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSize"
     value     = "1"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
     value     = "Rolling"
   }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_NAME"
-    value     = "${var.db_name}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_USER"
-    value     = "${var.db_user}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_PASS"
-    value     = "${var.db_password}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_HOST"
-    value     = "${var.db_host}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_HOST_REPLICAS"
-    value     = "${var.db_host_replicas}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "EFS_HOST"
-    value     = "${var.efs_host}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "EFS_SUBDIR"
-    value     = ""
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "CACHE_HOST"
-    value     = "${var.cache_host}"
-  }
+
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BASE_HOST"
     value     = "${var.name}"
   }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "CANONICAL_HOST"
-    value     = "${var.canonical_host}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "CDN_HOST"
-    value     = "${var.cdn_host}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "HEALTH_CHECK_URL"
-    value     = "${var.healthcheck_url}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ROBOTS_DENIED"
-    value     = "${var.robots_denied}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "SWAP_SIZE"
-    value     = "${var.swap_size}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "GITHUB_API_TOKEN"
-    value     = "${var.github_api_token}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "GITHUB_ORGANIZATION"
-    value     = "${var.github_organization}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "GITHUB_TEAM"
-    value     = "${var.github_team}"
-  }
+
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
     value     = "true"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "PreferredStartTime"
     value     = "Sun:10:00"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "UpdateLevel"
     value     = "minor"
   }
+
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "InstanceRefreshEnabled"
@@ -729,15 +638,6 @@ module "tld" {
   source    = "git::https://github.com/cloudposse/tf-hostname.git?ref=init"
   namespace = "${var.namespace}"
   name      = "${var.name}"
-  stage     = "${var.stage}"
-  zone_id   = "${var.zone_id}"
-  records   = ["${aws_elastic_beanstalk_environment.default.cname}"]
-}
-
-module "www" {
-  source    = "git::https://github.com/cloudposse/tf-hostname.git?ref=init"
-  namespace = "${var.namespace}"
-  name      = "www.${var.name}"
   stage     = "${var.stage}"
   zone_id   = "${var.zone_id}"
   records   = ["${aws_elastic_beanstalk_environment.default.cname}"]

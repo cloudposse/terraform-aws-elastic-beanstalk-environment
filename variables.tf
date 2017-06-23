@@ -14,24 +14,15 @@ variable "healthcheck_url" {
   default = "/healthcheck"
 }
 
-variable "robots_denied" {
-  default = "false"
-}
-
-// Swap size in MB
-variable "swap_size" {
-  default = "0"
-}
-
 variable "loadbalancer_type" {
   default = "classic"
 }
 
-variable "canonical_host" {
+variable "zone_id" {
   default = ""
 }
 
-variable "zone_id" {
+variable "settings" {
   default = ""
 }
 
@@ -84,21 +75,6 @@ variable "autoscale_min" {
 variable "autoscale_max" {
   default = "3"
 }
-
-variable "github_api_token" {}
-variable "github_organization" {}
-variable "github_team" {}
-
-variable "db_name" {}
-variable "db_user" {}
-variable "db_password" {}
-variable "db_host" {}
-variable "db_host_replicas" {}
-
-variable "efs_host" {}
-variable "cache_host" {}
-
-variable "cdn_host" {}
 
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
 # Via: https://github.com/hashicorp/terraform/issues/7071
