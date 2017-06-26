@@ -433,12 +433,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   ###=========================== Autoscale trigger ========================== ###
-/*
-  setting {
+
+  etting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = "${aws_security_group.default.id}"
-  }*/
+  }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -516,12 +516,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Enabled"
     value     = "true"
-  }
-
-  setting {
-    namespace = "aws:autoscaling:launchconfiguration"
-    name      = "SecurityGroups"
-    value     = "${var.settings}"
   }
 
   setting {
