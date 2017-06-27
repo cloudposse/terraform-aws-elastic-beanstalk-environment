@@ -1,12 +1,9 @@
 # Define composite variables for resources
-resource "null_resource" "default" {
-  triggers = {
-    id = "${lower(format("%v-%v-%v", var.namespace, var.stage, var.name))}"
-  }
-
-  lifecycle {
-    create_before_destroy = true
-  }
+module "label" {
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  namespace = "${var.namespace}"
+  name      = "${var.name}"
+  stage     = "${var.stage}"
 }
 
 data "aws_region" "default" {
@@ -34,7 +31,7 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
-  name               = "${null_resource.default.triggers.id}-service"
+  name               = "${module.label.value}-service"
   assume_role_policy = "${data.aws_iam_policy_document.service.json}"
 }
 
@@ -84,12 +81,12 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role" "ec2" {
-  name               = "${null_resource.default.triggers.id}-ec2"
+  name               = "${module.label.value}-ec2"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 
 resource "aws_iam_role_policy" "default" {
-  name   = "${null_resource.default.triggers.id}-default"
+  name   = "${module.label.value}-default"
   role   = "${aws_iam_role.ec2.id}"
   policy = "${data.aws_iam_policy_document.default.json}"
 }
@@ -123,7 +120,7 @@ resource "aws_iam_role_policy_attachment" "ssm-automation" {
 }
 
 resource "aws_ssm_activation" "ec2" {
-  name               = "${null_resource.default.triggers.id}"
+  name               = "${module.label.value}"
   iam_role           = "${aws_iam_role.ec2.id}"
   registration_limit = "${var.autoscale_max}"
 }
@@ -298,12 +295,12 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "${null_resource.default.triggers.id}"
+  name = "${module.label.value}"
   role = "${aws_iam_role.ec2.name}"
 }
 
 resource "aws_security_group" "default" {
-  name        = "${null_resource.default.triggers.id}"
+  name        = "${module.label.value}"
   description = "Allow all inbound traffic"
 
   vpc_id = "${var.vpc_id}"
@@ -327,7 +324,7 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags {
-    Name      = "${null_resource.default.triggers.id}"
+    Name      = "${module.label.value}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -339,13 +336,13 @@ resource "aws_security_group" "default" {
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
-  name                = "${null_resource.default.triggers.id}"
+  name                = "${module.label.value}"
   application         = "${var.app}"
 
   tier                = "WebServer"
 
   tags {
-    Name      = "${null_resource.default.triggers.id}"
+    Name      = "${module.label.value}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -604,7 +601,7 @@ data "aws_iam_policy_document" "elb_logs" {
     ]
 
     resources = [
-      "arn:aws:s3:::${null_resource.default.triggers.id}-logs/*",
+      "arn:aws:s3:::${module.label.value}-logs/*",
     ]
 
     principals {
@@ -617,7 +614,7 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
-  bucket = "${null_resource.default.triggers.id}-logs"
+  bucket = "${module.label.value}-logs"
   acl    = "private"
 
   policy = "${data.aws_iam_policy_document.elb_logs.json}"
