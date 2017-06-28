@@ -31,7 +31,7 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
-  name               = "${module.label.value}-service"
+  name               = "${module.label.id}-service"
   assume_role_policy = "${data.aws_iam_policy_document.service.json}"
 }
 
@@ -81,12 +81,12 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role" "ec2" {
-  name               = "${module.label.value}-ec2"
+  name               = "${module.label.id}-ec2"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 
 resource "aws_iam_role_policy" "default" {
-  name   = "${module.label.value}-default"
+  name   = "${module.label.id}-default"
   role   = "${aws_iam_role.ec2.id}"
   policy = "${data.aws_iam_policy_document.default.json}"
 }
@@ -120,7 +120,7 @@ resource "aws_iam_role_policy_attachment" "ssm-automation" {
 }
 
 resource "aws_ssm_activation" "ec2" {
-  name               = "${module.label.value}"
+  name               = "${module.label.id}"
   iam_role           = "${aws_iam_role.ec2.id}"
   registration_limit = "${var.autoscale_max}"
 }
@@ -295,12 +295,12 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "${module.label.value}"
+  name = "${module.label.id}"
   role = "${aws_iam_role.ec2.name}"
 }
 
 resource "aws_security_group" "default" {
-  name        = "${module.label.value}"
+  name        = "${module.label.id}"
   description = "Allow all inbound traffic"
 
   vpc_id = "${var.vpc_id}"
@@ -324,7 +324,7 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags {
-    Name      = "${module.label.value}"
+    Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -336,13 +336,13 @@ resource "aws_security_group" "default" {
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
-  name                = "${module.label.value}"
+  name                = "${module.label.id}"
   application         = "${var.app}"
 
   tier                = "WebServer"
 
   tags {
-    Name      = "${module.label.value}"
+    Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
@@ -601,7 +601,7 @@ data "aws_iam_policy_document" "elb_logs" {
     ]
 
     resources = [
-      "arn:aws:s3:::${module.label.value}-logs/*",
+      "arn:aws:s3:::${module.label.id}-logs/*",
     ]
 
     principals {
@@ -614,7 +614,7 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
-  bucket = "${module.label.value}-logs"
+  bucket = "${module.label.id}-logs"
   acl    = "private"
 
   policy = "${data.aws_iam_policy_document.elb_logs.json}"
