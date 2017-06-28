@@ -10,12 +10,6 @@ data "aws_region" "default" {
   current = true
 }
 
-data "aws_acm_certificate" "default" {
-  count = "${var.loadbalancer_certificate == "" ? 0 : 1 }"
-  domain   = "${var.loadbalancer_certificate}"
-  statuses = ["ISSUED"]
-}
-
 #
 # Service
 #
@@ -500,7 +494,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate == "" ? "true" : "false"}"
+    value     = "${var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
 
   setting {
@@ -518,13 +512,13 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener_port"
     name      = "SSLCertificateId"
-    value     = "${element(data.aws_acm_certificate.*.arn, 0)}"
+    value     = "${var.loadbalancer_certificate_arn}"
   }
 
   setting {
     namespace = "aws:elb:listener_port"
     name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate == "" ? "false" : "true"}"
+    value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
   }
 
   setting {
@@ -548,13 +542,13 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate == "" ? "true" : "false"}"
+    value     = "${var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
 
   setting {
     namespace = "aws:elbv2:listener:listener_port"
     name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate == "" ? "false" : "true"}"
+    value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
   }
 
   setting {
@@ -566,7 +560,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:listener_port"
     name      = "SSLCertificateArns"
-    value     = "${element(data.aws_acm_certificate.*.arn, 0)}"
+    value     = "${var.loadbalancer_certificate_arn}"
   }
 
   setting {

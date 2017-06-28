@@ -18,7 +18,7 @@ variable "loadbalancer_type" {
   default = "classic"
 }
 
-variable "loadbalancer_certificate" {
+variable "loadbalancer_certificate_arn" {
   default = ""
 }
 
