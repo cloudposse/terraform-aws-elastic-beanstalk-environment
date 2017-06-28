@@ -11,6 +11,7 @@ data "aws_region" "default" {
 }
 
 data "aws_acm_certificate" "default" {
+  count = ${var.loadbalancer_certificate == "" ? 0 : 1 }
   domain   = "${var.loadbalancer_certificate}"
   statuses = ["ISSUED"]
 }
@@ -517,7 +518,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener_port"
     name      = "SSLCertificateId"
-    value     = "${data.aws_acm_certificate.default.arn}"
+    value     = "${var.loadbalancer_certificate == "" ? "" : data.aws_acm_certificate.default.arn }"
   }
 
   setting {
@@ -565,7 +566,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:listener_port"
     name      = "SSLCertificateArns"
-    value     = "${data.aws_acm_certificate.default.arn}"
+    value     = "${var.loadbalancer_certificate == "" ? "" : data.aws_acm_certificate.default.arn }"
   }
 
   setting {
