@@ -518,7 +518,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener_port"
     name      = "SSLCertificateId"
-    value     = "${data.aws_acm_certificate.*.arn}"
+    value     = "${element(data.aws_acm_certificate.*.arn, 0)}"
   }
 
   setting {
@@ -566,7 +566,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:listener_port"
     name      = "SSLCertificateArns"
-    value     = "${data.aws_acm_certificate.*.arn}"
+    value     = "${element(data.aws_acm_certificate.*.arn, 0)}"
   }
 
   setting {
