@@ -18,6 +18,11 @@ variable "loadbalancer_type" {
   default = "classic"
 }
 
+variable "loadbalancer_certificate" {
+  default = ""
+}
+
+
 variable "zone_id" {
   default = ""
 }

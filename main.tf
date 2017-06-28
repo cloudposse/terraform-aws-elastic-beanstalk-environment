@@ -10,6 +10,11 @@ data "aws_region" "default" {
   current = true
 }
 
+data "aws_acm_certificate" "default" {
+  domain   = "${var.loadbalancer_certificate}"
+  statuses = ["ISSUED"]
+}
+
 #
 # Service
 #
@@ -493,8 +498,32 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   setting {
     namespace = "aws:elb:listener"
+    name      = "ListenerEnabled"
+    value     = "${var.loadbalancer_certificate == "" ? "true" : "false"}"
+  }
+
+  setting {
+    namespace = "aws:elb:listener_port"
+    name      = "ListenerProtocol"
+    value     = "HTTPS"
+  }
+
+  setting {
+    namespace = "aws:elb:listener_port"
     name      = "InstancePort"
     value     = "80"
+  }
+
+  setting {
+    namespace = "aws:elb:listener_port"
+    name      = "SSLCertificateId"
+    value     = "${data.aws_acm_certificate.default.arn}"
+  }
+
+  setting {
+    namespace = "aws:elb:listener_port"
+    name      = "ListenerEnabled"
+    value     = "${var.loadbalancer_certificate == "" ? "false" : "true"}"
   }
 
   setting {
@@ -513,6 +542,30 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Enabled"
     value     = "true"
+  }
+
+  setting {
+    namespace = "aws:elbv2:listener:default"
+    name      = "ListenerEnabled"
+    value     = "${var.loadbalancer_certificate == "" ? "true" : "false"}"
+  }
+
+  setting {
+    namespace = "aws:elbv2:listener:listener_port"
+    name      = "ListenerEnabled"
+    value     = "${var.loadbalancer_certificate == "" ? "false" : "true"}"
+  }
+
+  setting {
+    namespace = "aws:elbv2:listener:listener_port"
+    name      = "Protocol"
+    value     = "HTTPS"
+  }
+
+  setting {
+    namespace = "aws:elbv2:listener:listener_port"
+    name      = "SSLCertificateArns"
+    value     = "${data.aws_acm_certificate.default.arn}"
   }
 
   setting {
