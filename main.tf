@@ -11,7 +11,7 @@ data "aws_region" "default" {
 }
 
 data "aws_acm_certificate" "default" {
-  count = ${var.loadbalancer_certificate == "" ? 0 : 1 }
+  count = "${var.loadbalancer_certificate == "" ? 0 : 1 }"
   domain   = "${var.loadbalancer_certificate}"
   statuses = ["ISSUED"]
 }
