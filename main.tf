@@ -1,12 +1,14 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_label.git?ref=provider"
+  provider  = "${var.provider}"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
 }
 
 data "aws_region" "default" {
+  provider  = "${var.provider}"
   current = true
 }
 
@@ -14,6 +16,7 @@ data "aws_region" "default" {
 # Service
 #
 data "aws_iam_policy_document" "service" {
+  provider  = "${var.provider}"
   statement {
     sid = ""
 
@@ -31,16 +34,19 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
+  provider  = "${var.provider}"
   name               = "${module.label.id}-service"
   assume_role_policy = "${data.aws_iam_policy_document.service.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced-health" {
+  provider  = "${var.provider}"
   role       = "${aws_iam_role.service.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
+  provider  = "${var.provider}"
   role       = "${aws_iam_role.service.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
 }
@@ -49,6 +55,7 @@ resource "aws_iam_role_policy_attachment" "service" {
 # EC2
 #
 data "aws_iam_policy_document" "ec2" {
+  provider  = "${var.provider}"
   statement {
     sid = ""
 
@@ -81,27 +88,32 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role" "ec2" {
+  provider  = "${var.provider}"
   name               = "${module.label.id}-ec2"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
 }
 
 resource "aws_iam_role_policy" "default" {
+  provider  = "${var.provider}"
   name   = "${module.label.id}-default"
   role   = "${aws_iam_role.ec2.id}"
   policy = "${data.aws_iam_policy_document.default.json}"
 }
 
 resource "aws_iam_role_policy_attachment" "web-tier" {
+  provider  = "${var.provider}"
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker-tier" {
+  provider  = "${var.provider}"
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-ec2" {
+  provider  = "${var.provider}"
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 
@@ -111,6 +123,7 @@ resource "aws_iam_role_policy_attachment" "ssm-ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm-automation" {
+  provider  = "${var.provider}"
   role       = "${aws_iam_role.ec2.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
@@ -120,6 +133,7 @@ resource "aws_iam_role_policy_attachment" "ssm-automation" {
 }
 
 resource "aws_ssm_activation" "ec2" {
+  provider  = "${var.provider}"
   name               = "${module.label.id}"
   iam_role           = "${aws_iam_role.ec2.id}"
   registration_limit = "${var.autoscale_max}"
@@ -130,6 +144,7 @@ resource "aws_ssm_activation" "ec2" {
 #
 
 data "aws_iam_policy_document" "default" {
+  provider  = "${var.provider}"
   statement {
     sid = ""
 
@@ -295,11 +310,13 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
+  provider  = "${var.provider}"
   name = "${module.label.id}"
   role = "${aws_iam_role.ec2.name}"
 }
 
 resource "aws_security_group" "default" {
+  provider  = "${var.provider}"
   name        = "${module.label.id}"
   description = "Allow all inbound traffic"
 
@@ -336,6 +353,7 @@ resource "aws_security_group" "default" {
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
+  provider  = "${var.provider}"
   name                = "${module.label.id}"
   application         = "${var.app}"
 
@@ -638,9 +656,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   depends_on = ["aws_security_group.default"]
 }
 
-data "aws_elb_service_account" "main" {}
+data "aws_elb_service_account" "main" {
+  provider  = "${var.provider}"
+}
 
 data "aws_iam_policy_document" "elb_logs" {
+  provider  = "${var.provider}"
   statement {
     sid = ""
 
@@ -662,6 +683,7 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
+  provider  = "${var.provider}"
   bucket = "${module.label.id}-logs"
   acl    = "private"
 
@@ -669,7 +691,8 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 
 module "tld" {
-  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=provider"
+  provider  = "${var.provider}"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
