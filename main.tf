@@ -1,6 +1,6 @@
 # Define composite variables for resources
 module "label" {
-  source    = "git::https://github.com/cloudposse/tf_label.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_label.git"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
@@ -669,7 +669,7 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 
 module "tld" {
-  source    = "git::https://github.com/cloudposse/tf_hostname.git?ref=init"
+  source    = "git::https://github.com/cloudposse/tf_hostname.git"
   namespace = "${var.namespace}"
   name      = "${var.name}"
   stage     = "${var.stage}"
