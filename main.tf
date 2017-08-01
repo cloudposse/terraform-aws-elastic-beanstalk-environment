@@ -612,6 +612,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "CONFIG_SOURCE"
+    value     = "${var.config_source}"
+  }
+
+  setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
     value     = "true"
