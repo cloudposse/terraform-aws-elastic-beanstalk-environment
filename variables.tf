@@ -80,6 +80,10 @@ variable "autoscale_max" {
   default = "3"
 }
 
+variable "solution_stack_name" {
+  default = ""
+}
+
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
 # Via: https://github.com/hashicorp/terraform/issues/7071
 variable "alb_zone_id" {
