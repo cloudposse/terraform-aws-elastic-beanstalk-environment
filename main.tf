@@ -15,7 +15,7 @@ data "aws_region" "default" {
 #
 data "aws_iam_policy_document" "service" {
   statement {
-    sid = ""
+    sid     = ""
 
     actions = [
       "sts:AssumeRole",
@@ -26,7 +26,7 @@ data "aws_iam_policy_document" "service" {
       identifiers = ["elasticbeanstalk.amazonaws.com"]
     }
 
-    effect = "Allow"
+    effect  = "Allow"
   }
 }
 
@@ -50,7 +50,7 @@ resource "aws_iam_role_policy_attachment" "service" {
 #
 data "aws_iam_policy_document" "ec2" {
   statement {
-    sid = ""
+    sid     = ""
 
     actions = [
       "sts:AssumeRole",
@@ -61,11 +61,11 @@ data "aws_iam_policy_document" "ec2" {
       identifiers = ["ec2.amazonaws.com"]
     }
 
-    effect = "Allow"
+    effect  = "Allow"
   }
 
   statement {
-    sid = ""
+    sid     = ""
 
     actions = [
       "sts:AssumeRole",
@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "ec2" {
       identifiers = ["ssm.amazonaws.com"]
     }
 
-    effect = "Allow"
+    effect  = "Allow"
   }
 }
 
@@ -131,9 +131,9 @@ resource "aws_ssm_activation" "ec2" {
 
 data "aws_iam_policy_document" "default" {
   statement {
-    sid = ""
+    sid       = ""
 
-    actions = [
+    actions   = [
       "elasticloadbalancing:DescribeInstanceHealth",
       "elasticloadbalancing:DescribeLoadBalancers",
       "elasticloadbalancing:DescribeTargetHealth",
@@ -153,13 +153,13 @@ data "aws_iam_policy_document" "default" {
 
     resources = ["*"]
 
-    effect = "Allow"
+    effect    = "Allow"
   }
 
   statement {
-    sid = "AllowOperations"
+    sid       = "AllowOperations"
 
-    actions = [
+    actions   = [
       "autoscaling:AttachInstances",
       "autoscaling:CreateAutoScalingGroup",
       "autoscaling:CreateLaunchConfiguration",
@@ -247,13 +247,13 @@ data "aws_iam_policy_document" "default" {
 
     resources = ["*"]
 
-    effect = "Allow"
+    effect    = "Allow"
   }
 
   statement {
-    sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+    sid       = "AllowS3OperationsOnElasticBeanstalkBuckets"
 
-    actions = [
+    actions   = [
       "s3:*",
     ]
 
@@ -261,13 +261,13 @@ data "aws_iam_policy_document" "default" {
       "arn:aws:s3:::*",
     ]
 
-    effect = "Allow"
+    effect    = "Allow"
   }
 
   statement {
-    sid = "AllowDeleteCloudwatchLogGroups"
+    sid       = "AllowDeleteCloudwatchLogGroups"
 
-    actions = [
+    actions   = [
       "logs:DeleteLogGroup",
     ]
 
@@ -275,13 +275,13 @@ data "aws_iam_policy_document" "default" {
       "arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*",
     ]
 
-    effect = "Allow"
+    effect    = "Allow"
   }
 
   statement {
-    sid = "AllowCloudformationOperationsOnElasticBeanstalkStacks"
+    sid       = "AllowCloudformationOperationsOnElasticBeanstalkStacks"
 
-    actions = [
+    actions   = [
       "cloudformation:*",
     ]
 
@@ -290,7 +290,7 @@ data "aws_iam_policy_document" "default" {
       "arn:aws:cloudformation:*:*:stack/eb-*",
     ]
 
-    effect = "Allow"
+    effect    = "Allow"
   }
 }
 
@@ -303,7 +303,7 @@ resource "aws_security_group" "default" {
   name        = "${module.label.id}"
   description = "Allow all inbound traffic"
 
-  vpc_id = "${var.vpc_id}"
+  vpc_id      = "${var.vpc_id}"
 
   ingress {
     from_port   = 0
@@ -332,7 +332,7 @@ resource "aws_security_group" "default" {
 
 #
 # Full list of options:
-#      http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
+# http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
@@ -340,14 +340,14 @@ resource "aws_elastic_beanstalk_environment" "default" {
   application         = "${var.app}"
 
   tier                = "WebServer"
+  solution_stack_name = "${var.solution_stack_name}"
+  template_name       = "${var.settings}"
 
   tags {
     Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
     Stage     = "${var.stage}"
   }
-
-  template_name = "${var.settings}"
 
   setting {
     namespace = "aws:ec2:vpc"
@@ -641,16 +641,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "true"
   }
 
-  depends_on = ["aws_security_group.default"]
+  depends_on          = ["aws_security_group.default"]
 }
 
 data "aws_elb_service_account" "main" {}
 
 data "aws_iam_policy_document" "elb_logs" {
   statement {
-    sid = ""
+    sid       = ""
 
-    actions = [
+    actions   = [
       "s3:PutObject",
     ]
 
@@ -663,7 +663,7 @@ data "aws_iam_policy_document" "elb_logs" {
       identifiers = ["${data.aws_elb_service_account.main.arn}"]
     }
 
-    effect = "Allow"
+    effect    = "Allow"
   }
 }
 
