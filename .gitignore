@@ -4,3 +4,6 @@
 
 # Module directory
 .terraform/
+
+.idea
+*.iml
