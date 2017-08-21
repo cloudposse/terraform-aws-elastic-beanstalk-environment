@@ -341,7 +341,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   tier                = "WebServer"
   solution_stack_name = "${var.solution_stack_name}"
-  template_name       = "${var.settings}"
+//  template_name       = "${var.settings}"
 
   tags {
     Name      = "${module.label.id}"
