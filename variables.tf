@@ -26,10 +26,6 @@ variable "zone_id" {
   default = ""
 }
 
-variable "settings" {
-  default = ""
-}
-
 variable "config_source" {
   default = ""
 }
