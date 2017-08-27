@@ -100,3 +100,18 @@ variable "alb_zone_id" {
     us-west-2      = "Z38NKT9BP95V3O"
   }
 }
+
+variable "delimiter" {
+  type    = "string"
+  default = "-"
+}
+
+variable "attributes" {
+  type    = "list"
+  default = []
+}
+
+variable "tags" {
+  type    = "map"
+  default = {}
+}
