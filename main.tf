@@ -18,7 +18,7 @@ data "aws_region" "default" {
 #
 data "aws_iam_policy_document" "service" {
   statement {
-    sid     = ""
+    sid = ""
 
     actions = [
       "sts:AssumeRole",
@@ -29,7 +29,7 @@ data "aws_iam_policy_document" "service" {
       identifiers = ["elasticbeanstalk.amazonaws.com"]
     }
 
-    effect  = "Allow"
+    effect = "Allow"
   }
 }
 
@@ -53,7 +53,7 @@ resource "aws_iam_role_policy_attachment" "service" {
 #
 data "aws_iam_policy_document" "ec2" {
   statement {
-    sid     = ""
+    sid = ""
 
     actions = [
       "sts:AssumeRole",
@@ -64,11 +64,11 @@ data "aws_iam_policy_document" "ec2" {
       identifiers = ["ec2.amazonaws.com"]
     }
 
-    effect  = "Allow"
+    effect = "Allow"
   }
 
   statement {
-    sid     = ""
+    sid = ""
 
     actions = [
       "sts:AssumeRole",
@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "ec2" {
       identifiers = ["ssm.amazonaws.com"]
     }
 
-    effect  = "Allow"
+    effect = "Allow"
   }
 }
 
@@ -134,9 +134,9 @@ resource "aws_ssm_activation" "ec2" {
 
 data "aws_iam_policy_document" "default" {
   statement {
-    sid       = ""
+    sid = ""
 
-    actions   = [
+    actions = [
       "elasticloadbalancing:DescribeInstanceHealth",
       "elasticloadbalancing:DescribeLoadBalancers",
       "elasticloadbalancing:DescribeTargetHealth",
@@ -156,13 +156,13 @@ data "aws_iam_policy_document" "default" {
 
     resources = ["*"]
 
-    effect    = "Allow"
+    effect = "Allow"
   }
 
   statement {
-    sid       = "AllowOperations"
+    sid = "AllowOperations"
 
-    actions   = [
+    actions = [
       "autoscaling:AttachInstances",
       "autoscaling:CreateAutoScalingGroup",
       "autoscaling:CreateLaunchConfiguration",
@@ -250,13 +250,13 @@ data "aws_iam_policy_document" "default" {
 
     resources = ["*"]
 
-    effect    = "Allow"
+    effect = "Allow"
   }
 
   statement {
-    sid       = "AllowS3OperationsOnElasticBeanstalkBuckets"
+    sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
 
-    actions   = [
+    actions = [
       "s3:*",
     ]
 
@@ -264,13 +264,13 @@ data "aws_iam_policy_document" "default" {
       "arn:aws:s3:::*",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
   }
 
   statement {
-    sid       = "AllowDeleteCloudwatchLogGroups"
+    sid = "AllowDeleteCloudwatchLogGroups"
 
-    actions   = [
+    actions = [
       "logs:DeleteLogGroup",
     ]
 
@@ -278,13 +278,13 @@ data "aws_iam_policy_document" "default" {
       "arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
   }
 
   statement {
-    sid       = "AllowCloudformationOperationsOnElasticBeanstalkStacks"
+    sid = "AllowCloudformationOperationsOnElasticBeanstalkStacks"
 
-    actions   = [
+    actions = [
       "cloudformation:*",
     ]
 
@@ -293,7 +293,7 @@ data "aws_iam_policy_document" "default" {
       "arn:aws:cloudformation:*:*:stack/eb-*",
     ]
 
-    effect    = "Allow"
+    effect = "Allow"
   }
 }
 
@@ -306,7 +306,7 @@ resource "aws_security_group" "default" {
   name        = "${module.label.id}"
   description = "Allow all inbound traffic"
 
-  vpc_id      = "${var.vpc_id}"
+  vpc_id = "${var.vpc_id}"
 
   ingress {
     from_port   = 0
@@ -314,18 +314,21 @@ resource "aws_security_group" "default" {
     protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   ingress {
     from_port       = 0
     to_port         = 0
     protocol        = -1
     security_groups = ["${var.security_groups}"]
   }
+
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+
   tags {
     Name      = "${module.label.id}"
     Namespace = "${var.namespace}"
@@ -339,8 +342,8 @@ resource "aws_security_group" "default" {
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
-  name                = "${module.label.id}"
-  application         = "${var.app}"
+  name        = "${module.label.id}"
+  application = "${var.app}"
 
   tier                = "WebServer"
   solution_stack_name = "${var.solution_stack_name}"
@@ -406,25 +409,21 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "MeasureName"
     value     = "CPUUtilization"
   }
-
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Statistic"
     value     = "Average"
   }
-
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Unit"
     value     = "Percent"
   }
-
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "LowerThreshold"
     value     = "${var.autoscale_lower_bound}"
   }
-
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "UpperThreshold"
@@ -438,221 +437,191 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "SecurityGroups"
     value     = "${aws_security_group.default.id}"
   }
-
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
     value     = "${var.instance_type}"
   }
-
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = "${aws_iam_instance_profile.ec2.name}"
   }
-
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "EC2KeyName"
     value     = "${var.keypair}"
   }
-
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "Availability Zones"
     value     = "Any 2"
   }
-
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = "${var.autoscale_min}"
   }
-
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = "${var.autoscale_max}"
   }
-
   setting {
     namespace = "aws:elb:loadbalancer"
     name      = "CrossZone"
     value     = "true"
   }
-
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "HTTP"
   }
-
   setting {
     namespace = "aws:elb:listener"
     name      = "InstancePort"
     value     = "80"
   }
-
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerEnabled"
     value     = "${var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
-
   setting {
     namespace = "aws:elb:listener:443"
     name      = "ListenerProtocol"
     value     = "HTTPS"
   }
-
   setting {
     namespace = "aws:elb:listener:443"
     name      = "InstancePort"
     value     = "80"
   }
-
   setting {
     namespace = "aws:elb:listener:443"
     name      = "SSLCertificateId"
     value     = "${var.loadbalancer_certificate_arn}"
   }
-
   setting {
     namespace = "aws:elb:listener:443"
     name      = "ListenerEnabled"
     value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
   }
-
   setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionDrainingEnabled"
     value     = "true"
   }
-
   setting {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Bucket"
     value     = "${aws_s3_bucket.elb_logs.id}"
   }
-
   setting {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Enabled"
     value     = "true"
   }
-
   setting {
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
     value     = "${var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
-
   setting {
     namespace = "aws:elbv2:listener:443"
     name      = "ListenerEnabled"
     value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
   }
-
   setting {
     namespace = "aws:elbv2:listener:443"
     name      = "Protocol"
     value     = "HTTPS"
   }
-
   setting {
     namespace = "aws:elbv2:listener:443"
     name      = "SSLCertificateArns"
     value     = "${var.loadbalancer_certificate_arn}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "LoadBalancerType"
     value     = "${var.loadbalancer_type}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = "${aws_iam_role.service.name}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:application"
     name      = "Application Healthcheck URL"
     value     = "HTTP:80${var.healthcheck_url}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
     value     = "enhanced"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSizeType"
     value     = "Fixed"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSize"
     value     = "1"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
     value     = "Rolling"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BASE_HOST"
     value     = "${var.name}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "CONFIG_SOURCE"
     value     = "${var.config_source}"
   }
-
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "EFS_HOST"
+    value     = "${var.efs_host}"
+  }
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
     value     = "true"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "PreferredStartTime"
     value     = "Sun:10:00"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "UpdateLevel"
     value     = "minor"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "InstanceRefreshEnabled"
     value     = "true"
   }
-
-  depends_on          = ["aws_security_group.default"]
+  depends_on = ["aws_security_group.default"]
 }
 
 data "aws_elb_service_account" "main" {}
 
 data "aws_iam_policy_document" "elb_logs" {
   statement {
-    sid       = ""
+    sid = ""
 
-    actions   = [
+    actions = [
       "s3:PutObject",
     ]
 
@@ -665,7 +634,7 @@ data "aws_iam_policy_document" "elb_logs" {
       identifiers = ["${data.aws_elb_service_account.main.arn}"]
     }
 
-    effect    = "Allow"
+    effect = "Allow"
   }
 }
 

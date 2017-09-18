@@ -115,3 +115,8 @@ variable "tags" {
   type    = "map"
   default = {}
 }
+
+variable "efs_host" {
+  type    = "string"
+  default = ""
+}
