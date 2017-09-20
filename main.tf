@@ -9,10 +9,10 @@ module "label" {
   tags       = "${var.tags}"
 }
 
-module "vector_map" {
-  source = "git::https://github.com/cloudposse/tf_vector_map.git?ref=init"
-  env    = "${var.env}"
-}
+//module "vector_map" {
+//  source = "git::https://github.com/cloudposse/tf_vector_map.git?ref=init"
+//  env    = "${var.env}"
+//}
 
 data "aws_region" "default" {
   current = true
@@ -614,31 +614,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   ###=========================== ENV vars ========================== ###
-
   setting {
+    count     = "${length(keys(var.env))}"
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${module.vector_map.vector.0.key}"
-    value     = "${module.vector_map.vector.0.value}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${module.vector_map.vector.1.key}"
-    value     = "${module.vector_map.vector.1.value}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${module.vector_map.vector.2.key}"
-    value     = "${module.vector_map.vector.2.value}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${module.vector_map.vector.3.key}"
-    value     = "${module.vector_map.vector.3.value}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${module.vector_map.vector.4.key}"
-    value     = "${module.vector_map.vector.4.value}"
+    name      = "${element(keys(var.env), count.index)}"
+    value     = "${element(values(var.env), count.index)}"
   }
   depends_on = ["aws_security_group.default"]
 }
