@@ -116,7 +116,15 @@ variable "tags" {
   default = {}
 }
 
-variable "env" {
+variable "env_default_key" {
+  default = "DEFAULT_ENV_%d"
+}
+
+variable "env_default_value" {
+  default = "UNSET"
+}
+
+variable "env_map" {
   default = {}
   type    = "map"
 }

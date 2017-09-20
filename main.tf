@@ -336,6 +336,16 @@ resource "aws_security_group" "default" {
   }
 }
 
+resource "null_resource" "env_vars" {
+  # Max number of supported ENV variables
+  count = 20
+
+  triggers {
+    key   = "${count.index >= length(keys(var.env_map)) ? format(var.env_default_key, count.index+1) : element(keys(var.env_map), count.index)}"
+    value = "${count.index >= length(values(var.env_map)) ? var.env_default_value : element(values(var.env_map), count.index)}"
+  }
+}
+
 #
 # Full list of options:
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
@@ -608,58 +618,107 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "true"
   }
 
-  ###================================== ENV vars =================================###
+  ###===================== Application ENV vars ======================###
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 0 ? element(keys(var.env), 0) : "ENV_0"}"
-    value     = "${length(keys(var.env)) > 0 ? element(values(var.env), 0) : "UNSET"}"
+    name      = "${null_resource.env_vars.0.triggers.key}"
+    value     = "${null_resource.env_vars.0.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 1 ? element(keys(var.env), 1) : "ENV_1"}"
-    value     = "${length(keys(var.env)) > 1 ? element(values(var.env), 1) : "UNSET"}"
+    name      = "${null_resource.env_vars.1.triggers.key}"
+    value     = "${null_resource.env_vars.1.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 2 ? element(keys(var.env), 2) : "ENV_2"}"
-    value     = "${length(keys(var.env)) > 2 ? element(values(var.env), 2) : "UNSET"}"
+    name      = "${null_resource.env_vars.2.triggers.key}"
+    value     = "${null_resource.env_vars.2.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 3 ? element(keys(var.env), 3) : "ENV_3"}"
-    value     = "${length(keys(var.env)) > 3 ? element(values(var.env), 3) : "UNSET"}"
+    name      = "${null_resource.env_vars.3.triggers.key}"
+    value     = "${null_resource.env_vars.3.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 4 ? element(keys(var.env), 4) : "ENV_4"}"
-    value     = "${length(keys(var.env)) > 4 ? element(values(var.env), 4) : "UNSET"}"
+    name      = "${null_resource.env_vars.4.triggers.key}"
+    value     = "${null_resource.env_vars.4.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 5 ? element(keys(var.env), 5) : "ENV_5"}"
-    value     = "${length(keys(var.env)) > 5 ? element(values(var.env), 5) : "UNSET"}"
+    name      = "${null_resource.env_vars.5.triggers.key}"
+    value     = "${null_resource.env_vars.5.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 6 ? element(keys(var.env), 6) : "ENV_6"}"
-    value     = "${length(keys(var.env)) > 6 ? element(values(var.env), 6) : "UNSET"}"
+    name      = "${null_resource.env_vars.6.triggers.key}"
+    value     = "${null_resource.env_vars.6.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 7 ? element(keys(var.env), 7) : "ENV_7"}"
-    value     = "${length(keys(var.env)) > 7 ? element(values(var.env), 7) : "UNSET"}"
+    name      = "${null_resource.env_vars.7.triggers.key}"
+    value     = "${null_resource.env_vars.7.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 8 ? element(keys(var.env), 8) : "ENV_8"}"
-    value     = "${length(keys(var.env)) > 8 ? element(values(var.env), 8) : "UNSET"}"
+    name      = "${null_resource.env_vars.8.triggers.key}"
+    value     = "${null_resource.env_vars.8.triggers.value}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${length(keys(var.env)) > 9 ? element(keys(var.env), 9) : "ENV_9"}"
-    value     = "${length(keys(var.env)) > 9 ? element(values(var.env), 9) : "UNSET"}"
+    name      = "${null_resource.env_vars.9.triggers.key}"
+    value     = "${null_resource.env_vars.9.triggers.value}"
   }
-
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.10.triggers.key}"
+    value     = "${null_resource.env_vars.10.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.11.triggers.key}"
+    value     = "${null_resource.env_vars.11.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.12.triggers.key}"
+    value     = "${null_resource.env_vars.12.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.13.triggers.key}"
+    value     = "${null_resource.env_vars.13.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.14.triggers.key}"
+    value     = "${null_resource.env_vars.14.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.15.triggers.key}"
+    value     = "${null_resource.env_vars.15.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.16.triggers.key}"
+    value     = "${null_resource.env_vars.16.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.17.triggers.key}"
+    value     = "${null_resource.env_vars.17.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.18.triggers.key}"
+    value     = "${null_resource.env_vars.18.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.19.triggers.key}"
+    value     = "${null_resource.env_vars.19.triggers.value}"
+  }
   depends_on = ["aws_security_group.default"]
 }
 
