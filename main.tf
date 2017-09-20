@@ -9,11 +9,6 @@ module "label" {
   tags       = "${var.tags}"
 }
 
-//module "vector_map" {
-//  source = "git::https://github.com/cloudposse/tf_vector_map.git?ref=init"
-//  env    = "${var.env}"
-//}
-
 data "aws_region" "default" {
   current = true
 }
@@ -613,12 +608,58 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "true"
   }
 
-  ###=========================== ENV vars ========================== ###
-//  setting {
-//    namespace = "aws:elasticbeanstalk:application:environment"
-//    name      = "${element(keys(var.env), 0)}"
-//    value     = "${element(values(var.env), 0)}"
-//  }
+  ###================================== ENV vars =================================###
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 0 ? element(keys(var.env), 0) : "ENV_0"}"
+    value     = "${length(keys(var.env)) > 0 ? element(values(var.env), 0) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 1 ? element(keys(var.env), 1) : "ENV_1"}"
+    value     = "${length(keys(var.env)) > 1 ? element(values(var.env), 1) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 2 ? element(keys(var.env), 2) : "ENV_2"}"
+    value     = "${length(keys(var.env)) > 2 ? element(values(var.env), 2) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 3 ? element(keys(var.env), 3) : "ENV_3"}"
+    value     = "${length(keys(var.env)) > 3 ? element(values(var.env), 3) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 4 ? element(keys(var.env), 4) : "ENV_4"}"
+    value     = "${length(keys(var.env)) > 4 ? element(values(var.env), 4) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 5 ? element(keys(var.env), 5) : "ENV_5"}"
+    value     = "${length(keys(var.env)) > 5 ? element(values(var.env), 5) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 6 ? element(keys(var.env), 6) : "ENV_6"}"
+    value     = "${length(keys(var.env)) > 6 ? element(values(var.env), 6) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 7 ? element(keys(var.env), 7) : "ENV_7"}"
+    value     = "${length(keys(var.env)) > 7 ? element(values(var.env), 7) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 8 ? element(keys(var.env), 8) : "ENV_8"}"
+    value     = "${length(keys(var.env)) > 8 ? element(values(var.env), 8) : "UNSET"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${length(keys(var.env)) > 9 ? element(keys(var.env), 9) : "ENV_9"}"
+    value     = "${length(keys(var.env)) > 9 ? element(values(var.env), 9) : "UNSET"}"
+  }
+
   depends_on = ["aws_security_group.default"]
 }
 
