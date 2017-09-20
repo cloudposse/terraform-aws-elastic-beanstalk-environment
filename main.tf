@@ -336,9 +336,10 @@ resource "aws_security_group" "default" {
   }
 }
 
+# This pattern of generating ENV vars will be changed in the future once Terraform implements iterrators: https://github.com/hashicorp/terraform/issues/7034
 resource "null_resource" "env_vars" {
   # Max number of supported ENV variables
-  count = 20
+  count = 50
 
   triggers {
     key   = "${count.index >= length(keys(var.env_map)) ? format(var.env_default_key, count.index+1) : element(keys(var.env_map), count.index)}"
@@ -617,7 +618,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "InstanceRefreshEnabled"
     value     = "true"
   }
-
   ###===================== Application ENV vars ======================###
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
@@ -718,6 +718,156 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "${null_resource.env_vars.19.triggers.key}"
     value     = "${null_resource.env_vars.19.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.20.triggers.key}"
+    value     = "${null_resource.env_vars.20.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.21.triggers.key}"
+    value     = "${null_resource.env_vars.21.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.22.triggers.key}"
+    value     = "${null_resource.env_vars.22.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.23.triggers.key}"
+    value     = "${null_resource.env_vars.23.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.24.triggers.key}"
+    value     = "${null_resource.env_vars.24.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.25.triggers.key}"
+    value     = "${null_resource.env_vars.25.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.26.triggers.key}"
+    value     = "${null_resource.env_vars.26.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.27.triggers.key}"
+    value     = "${null_resource.env_vars.27.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.28.triggers.key}"
+    value     = "${null_resource.env_vars.28.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.29.triggers.key}"
+    value     = "${null_resource.env_vars.29.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.30.triggers.key}"
+    value     = "${null_resource.env_vars.30.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.31.triggers.key}"
+    value     = "${null_resource.env_vars.31.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.32.triggers.key}"
+    value     = "${null_resource.env_vars.32.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.33.triggers.key}"
+    value     = "${null_resource.env_vars.33.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.34.triggers.key}"
+    value     = "${null_resource.env_vars.34.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.35.triggers.key}"
+    value     = "${null_resource.env_vars.35.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.36.triggers.key}"
+    value     = "${null_resource.env_vars.36.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.37.triggers.key}"
+    value     = "${null_resource.env_vars.37.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.38.triggers.key}"
+    value     = "${null_resource.env_vars.38.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.39.triggers.key}"
+    value     = "${null_resource.env_vars.39.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.40.triggers.key}"
+    value     = "${null_resource.env_vars.40.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.41.triggers.key}"
+    value     = "${null_resource.env_vars.41.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.42.triggers.key}"
+    value     = "${null_resource.env_vars.42.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.43.triggers.key}"
+    value     = "${null_resource.env_vars.43.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.44.triggers.key}"
+    value     = "${null_resource.env_vars.44.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.45.triggers.key}"
+    value     = "${null_resource.env_vars.45.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.46.triggers.key}"
+    value     = "${null_resource.env_vars.46.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.47.triggers.key}"
+    value     = "${null_resource.env_vars.47.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.48.triggers.key}"
+    value     = "${null_resource.env_vars.48.triggers.value}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:application:environment"
+    name      = "${null_resource.env_vars.49.triggers.key}"
+    value     = "${null_resource.env_vars.49.triggers.value}"
   }
   depends_on = ["aws_security_group.default"]
 }
