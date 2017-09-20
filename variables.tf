@@ -115,3 +115,8 @@ variable "tags" {
   type    = "map"
   default = {}
 }
+
+variable "env" {
+  default = {}
+  type    = "map"
+}
