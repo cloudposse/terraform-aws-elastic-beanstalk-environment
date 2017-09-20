@@ -614,11 +614,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   ###=========================== ENV vars ========================== ###
-  setting {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${element(keys(var.env), 0)}"
-    value     = "${element(values(var.env), 0)}"
-  }
+//  setting {
+//    namespace = "aws:elasticbeanstalk:application:environment"
+//    name      = "${element(keys(var.env), 0)}"
+//    value     = "${element(values(var.env), 0)}"
+//  }
   depends_on = ["aws_security_group.default"]
 }
 
