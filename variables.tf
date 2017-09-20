@@ -124,7 +124,7 @@ variable "env_default_value" {
   default = "UNSET"
 }
 
-variable "env_map" {
+variable "env_vars" {
   default = {}
   type    = "map"
 }
