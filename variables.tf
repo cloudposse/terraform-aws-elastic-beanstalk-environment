@@ -22,6 +22,11 @@ variable "loadbalancer_certificate_arn" {
   default = ""
 }
 
+variable "http_listen_always" {
+  default = true
+}
+
+
 variable "zone_id" {
   default = ""
 }
