@@ -23,7 +23,7 @@ variable "loadbalancer_certificate_arn" {
 }
 
 variable "http_listen_always" {
-  default = true
+  default = false
 }
 
 
