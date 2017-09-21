@@ -566,6 +566,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
+    namespace = "aws:elasticbeanstalk:application"
+    name      = "Application Healthcheck URL"
+    value     = "HTTP:80${var.healthcheck_url}"
+  }
+
+  setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "LoadBalancerType"
     value     = "${var.loadbalancer_type}"
@@ -575,12 +581,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = "${aws_iam_role.service.name}"
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:application"
-    name      = "Application Healthcheck URL"
-    value     = "HTTP:80${var.healthcheck_url}"
   }
 
   setting {
