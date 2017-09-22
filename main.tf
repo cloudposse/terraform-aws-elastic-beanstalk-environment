@@ -508,7 +508,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elb:listener:443"
@@ -548,7 +548,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elbv2:listener:443"
@@ -566,6 +566,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_certificate_arn}"
   }
   setting {
+    namespace = "aws:elasticbeanstalk:application"
+    name      = "Application Healthcheck URL"
+    value     = "HTTP:80${var.healthcheck_url}"
+  }
+
+  setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "LoadBalancerType"
     value     = "${var.loadbalancer_type}"
@@ -574,11 +580,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = "${aws_iam_role.service.name}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:application"
-    name      = "Application Healthcheck URL"
-    value     = "HTTP:80${var.healthcheck_url}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
