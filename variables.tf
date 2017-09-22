@@ -120,3 +120,16 @@ variable "tags" {
   type    = "map"
   default = {}
 }
+
+variable "env_default_key" {
+  default = "DEFAULT_ENV_%d"
+}
+
+variable "env_default_value" {
+  default = "UNSET"
+}
+
+variable "env_vars" {
+  default = {}
+  type    = "map"
+}
