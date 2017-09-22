@@ -129,7 +129,9 @@ resource "aws_ssm_activation" "ec2" {
 }
 
 #
+
 # Other stuff
+
 #
 
 data "aws_iam_policy_document" "default" {
@@ -348,8 +350,11 @@ resource "null_resource" "env_vars" {
 }
 
 #
+
 # Full list of options:
+
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
+
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
