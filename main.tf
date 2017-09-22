@@ -496,7 +496,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerEnabled"
-    value     = "${var.http_listen_always || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
 
   setting {
@@ -544,7 +544,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
-    value     = "${var.http_listen_always || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
 
   setting {
