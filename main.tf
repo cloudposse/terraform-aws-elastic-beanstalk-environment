@@ -343,7 +343,7 @@ resource "null_resource" "env_vars" {
 
   triggers {
     key   = "${count.index >= length(keys(var.env_vars)) ? format(var.env_default_key, count.index+1) : element(keys(var.env_vars), count.index)}"
-    value = "${count.index >= length(values(var.env_vars)) ? var.env_default_value : element(values(var.env_vars), count.index)}"
+    value = "${count.index >= length(keys(var.env_vars)) ? var.env_default_value : lookup(var.env_vars, element(keys(var.env_vars), count.index))}"
   }
 }
 
