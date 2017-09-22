@@ -342,8 +342,8 @@ resource "null_resource" "env_vars" {
   count = 50
 
   triggers {
-    key   = "${count.index >= length(keys(var.env_vars)) ? format(var.env_default_key, count.index+1) : element(keys(var.env_vars), count.index)}"
-    value = "${count.index >= length(keys(var.env_vars)) ? var.env_default_value : lookup(var.env_vars, element(keys(var.env_vars), count.index))}"
+    key   = "${count.index < length(keys(var.env_vars)) ?                      element(keys(var.env_vars), count.index)  : format(var.env_default_key, count.index+1)}"
+    value = "${count.index < length(keys(var.env_vars)) ? lookup(var.env_vars, element(keys(var.env_vars), count.index)) : var.env_default_value} "
   }
 }
 
