@@ -345,13 +345,14 @@ resource "null_resource" "env_vars" {
 
   triggers {
     key = "${count.index < length(var.env_vars) ?
-                    element(concat(keys(var.env_vars),list("")), count.index) :
-                    format(var.env_default_key, count.index+1)
-                 }"
+                        element(concat(keys(var.env_vars),list("")), count.index) :
+                        format(var.env_default_key, count.index+1)
+               }"
 
     value = "${count.index < length(var.env_vars) ?
-                    lookup(var.env_vars, element(concat(keys(var.env_vars),list("")), count.index), var.env_default_value) :
-                    var.env_default_value}"
+                        lookup(var.env_vars, element(concat(keys(var.env_vars),list("")), count.index), var.env_default_value) :
+                        var.env_default_value
+                 }"
   }
 }
 
