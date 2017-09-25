@@ -129,7 +129,9 @@ resource "aws_ssm_activation" "ec2" {
 }
 
 #
+
 # Other stuff
+
 #
 
 data "aws_iam_policy_document" "default" {
@@ -342,14 +344,24 @@ resource "null_resource" "env_vars" {
   count = 50
 
   triggers {
-    key   = "${count.index >= length(keys(var.env_vars)) ? format(var.env_default_key, count.index+1) : element(keys(var.env_vars), count.index)}"
-    value = "${count.index >= length(values(var.env_vars)) ? var.env_default_value : element(values(var.env_vars), count.index)}"
+    key = "${count.index < length(var.env_vars) ?
+                        element(concat(keys(var.env_vars),list("")), count.index) :
+                        format(var.env_default_key, count.index+1)
+               }"
+
+    value = "${count.index < length(var.env_vars) ?
+                        lookup(var.env_vars, element(concat(keys(var.env_vars),list("")), count.index), var.env_default_value) :
+                        var.env_default_value
+                 }"
   }
 }
 
 #
+
 # Full list of options:
+
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
+
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
