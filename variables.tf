@@ -26,7 +26,6 @@ variable "http_listener_enabled" {
   default = false
 }
 
-
 variable "zone_id" {
   default = ""
 }
