@@ -900,6 +900,15 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "Protocol"
     value     = "HTTP"
   }
+  ###===================== Notification =====================================================###
+
+  setting {
+    namespace = "aws:elasticbeanstalk:sns:topics"
+    name      = "Notification Endpoint"
+    value     = "${var.notify_email}"
+  }
+
+
   depends_on = ["aws_security_group.default"]
 }
 

@@ -14,6 +14,10 @@ variable "healthcheck_url" {
   default = "/healthcheck"
 }
 
+variable "notify_email" {
+  default = ""
+}
+
 variable "loadbalancer_type" {
   default = "classic"
 }
