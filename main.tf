@@ -338,30 +338,9 @@ resource "aws_security_group" "default" {
   }
 }
 
-# This pattern of generating ENV vars will be changed in the future once Terraform implements iterrators: https://github.com/hashicorp/terraform/issues/7034
-resource "null_resource" "env_vars" {
-  # Max number of supported ENV variables
-  count = 50
-
-  triggers {
-    key = "${count.index < length(var.env_vars) ?
-                        element(concat(keys(var.env_vars),list("")), count.index) :
-                        format(var.env_default_key, count.index+1)
-               }"
-
-    value = "${count.index < length(var.env_vars) ?
-                        lookup(var.env_vars, element(concat(keys(var.env_vars),list("")), count.index), var.env_default_value) :
-                        var.env_default_value
-                 }"
-  }
-}
-
 #
-
 # Full list of options:
-
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
-
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
@@ -633,253 +612,253 @@ resource "aws_elastic_beanstalk_environment" "default" {
   ###===================== Application ENV vars ======================###
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.0.triggers.key}"
-    value     = "${null_resource.env_vars.0.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 0))), 0)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 0))), 0), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.1.triggers.key}"
-    value     = "${null_resource.env_vars.1.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 1))), 1)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 1))), 1), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.2.triggers.key}"
-    value     = "${null_resource.env_vars.2.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 2))), 2)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 2))), 2), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.3.triggers.key}"
-    value     = "${null_resource.env_vars.3.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 3))), 3)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 3))), 3), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.4.triggers.key}"
-    value     = "${null_resource.env_vars.4.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 4))), 4)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 4))), 4), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.5.triggers.key}"
-    value     = "${null_resource.env_vars.5.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 5))), 5)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 5))), 5), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.6.triggers.key}"
-    value     = "${null_resource.env_vars.6.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 6))), 6)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 6))), 6), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.7.triggers.key}"
-    value     = "${null_resource.env_vars.7.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 7))), 7)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 7))), 7), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.8.triggers.key}"
-    value     = "${null_resource.env_vars.8.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 8))), 8)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 8))), 8), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.9.triggers.key}"
-    value     = "${null_resource.env_vars.9.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 9))), 9)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 9))), 9), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.10.triggers.key}"
-    value     = "${null_resource.env_vars.10.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 10))), 10)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 10))), 10), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.11.triggers.key}"
-    value     = "${null_resource.env_vars.11.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 11))), 11)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 11))), 11), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.12.triggers.key}"
-    value     = "${null_resource.env_vars.12.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 12))), 12)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 12))), 12), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.13.triggers.key}"
-    value     = "${null_resource.env_vars.13.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 13))), 13)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 13))), 13), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.14.triggers.key}"
-    value     = "${null_resource.env_vars.14.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 14))), 14)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 14))), 14), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.15.triggers.key}"
-    value     = "${null_resource.env_vars.15.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 15))), 15)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 15))), 15), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.16.triggers.key}"
-    value     = "${null_resource.env_vars.16.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 16))), 16)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 16))), 16), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.17.triggers.key}"
-    value     = "${null_resource.env_vars.17.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 17))), 17)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 17))), 17), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.18.triggers.key}"
-    value     = "${null_resource.env_vars.18.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 18))), 18)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 18))), 18), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.19.triggers.key}"
-    value     = "${null_resource.env_vars.19.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 19))), 19)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 19))), 19), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.20.triggers.key}"
-    value     = "${null_resource.env_vars.20.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 20))), 20)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 20))), 20), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.21.triggers.key}"
-    value     = "${null_resource.env_vars.21.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 21))), 21)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 21))), 21), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.22.triggers.key}"
-    value     = "${null_resource.env_vars.22.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 22))), 22)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 22))), 22), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.23.triggers.key}"
-    value     = "${null_resource.env_vars.23.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 23))), 23)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 23))), 23), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.24.triggers.key}"
-    value     = "${null_resource.env_vars.24.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 24))), 24)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 24))), 24), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.25.triggers.key}"
-    value     = "${null_resource.env_vars.25.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 25))), 25)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 25))), 25), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.26.triggers.key}"
-    value     = "${null_resource.env_vars.26.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 26))), 26)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 26))), 26), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.27.triggers.key}"
-    value     = "${null_resource.env_vars.27.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 27))), 27)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 27))), 27), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.28.triggers.key}"
-    value     = "${null_resource.env_vars.28.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 28))), 28)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 28))), 28), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.29.triggers.key}"
-    value     = "${null_resource.env_vars.29.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 29))), 29)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 29))), 29), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.30.triggers.key}"
-    value     = "${null_resource.env_vars.30.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 30))), 30)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 30))), 30), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.31.triggers.key}"
-    value     = "${null_resource.env_vars.31.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 31))), 31)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 31))), 31), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.32.triggers.key}"
-    value     = "${null_resource.env_vars.32.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 32))), 32)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 32))), 32), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.33.triggers.key}"
-    value     = "${null_resource.env_vars.33.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 33))), 33)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 33))), 33), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.34.triggers.key}"
-    value     = "${null_resource.env_vars.34.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 34))), 34)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 34))), 34), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.35.triggers.key}"
-    value     = "${null_resource.env_vars.35.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 35))), 35)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 35))), 35), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.36.triggers.key}"
-    value     = "${null_resource.env_vars.36.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 36))), 36)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 36))), 36), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.37.triggers.key}"
-    value     = "${null_resource.env_vars.37.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 37))), 37)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 37))), 37), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.38.triggers.key}"
-    value     = "${null_resource.env_vars.38.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 38))), 38)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 38))), 38), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.39.triggers.key}"
-    value     = "${null_resource.env_vars.39.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 39))), 39)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 39))), 39), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.40.triggers.key}"
-    value     = "${null_resource.env_vars.40.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 40))), 40)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 40))), 40), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.41.triggers.key}"
-    value     = "${null_resource.env_vars.41.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 41))), 41)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 41))), 41), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.42.triggers.key}"
-    value     = "${null_resource.env_vars.42.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 42))), 42)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 42))), 42), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.43.triggers.key}"
-    value     = "${null_resource.env_vars.43.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 43))), 43)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 43))), 43), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.44.triggers.key}"
-    value     = "${null_resource.env_vars.44.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 44))), 44)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 44))), 44), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.45.triggers.key}"
-    value     = "${null_resource.env_vars.45.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 45))), 45)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 45))), 45), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.46.triggers.key}"
-    value     = "${null_resource.env_vars.46.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 46))), 46)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 46))), 46), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.47.triggers.key}"
-    value     = "${null_resource.env_vars.47.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 47))), 47)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 47))), 47), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.48.triggers.key}"
-    value     = "${null_resource.env_vars.48.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 48))), 48)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 48))), 48), var.env_default_value)}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "${null_resource.env_vars.49.triggers.key}"
-    value     = "${null_resource.env_vars.49.triggers.value}"
+    name      = "${element(concat(keys(var.env_vars), list(format(var.env_default_key, 49))), 49)}"
+    value     = "${lookup(var.env_vars, element(concat(keys(var.env_vars), list(format(var.env_default_key, 49))), 49), var.env_default_value)}"
   }
   ###===================== Application Load Balancer Health check settings =====================================================###
   # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
