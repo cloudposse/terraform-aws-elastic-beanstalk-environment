@@ -122,6 +122,13 @@ resource "aws_iam_role_policy_attachment" "ssm-automation" {
   }
 }
 
+# http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html
+# http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
+resource "aws_iam_role_policy_attachment" "ecr-readonly" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+}
+
 resource "aws_ssm_activation" "ec2" {
   name               = "${module.label.id}"
   iam_role           = "${aws_iam_role.ec2.id}"
