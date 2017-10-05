@@ -905,8 +905,28 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:sns:topics"
     name      = "Notification Endpoint"
-    value     = "${var.notify_email}"
+    value     = "${var.notification_endpoint}"
   }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:sns:topics"
+    name      = "Notification Protocol"
+    value     = "${var.notification_protocol}"
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:sns:topics"
+    name      = "Notification Topic ARN"
+    value     = "${var.notification_topic_arn}"
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:sns:topics"
+    name      = "Notification Topic Name"
+    value     = "${var.notification_topic_name}"
+  }
+
+
 
 
   depends_on = ["aws_security_group.default"]

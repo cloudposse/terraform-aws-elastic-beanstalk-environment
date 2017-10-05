@@ -14,7 +14,19 @@ variable "healthcheck_url" {
   default = "/healthcheck"
 }
 
-variable "notify_email" {
+variable "notification_protocol" {
+  default = "email"
+}
+
+variable "notification_endpoint" {
+  default = ""
+}
+
+variable "notification_topic_arn" {
+  default = ""
+}
+
+variable "notification_topic_name" {
   default = ""
 }
 
