@@ -494,7 +494,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerEnabled"
-    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled  == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elb:listener:443"
@@ -530,7 +530,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener:22"
     name      = "ListenerEnabled"
-    value     = "${var.ssh_listener_enabled ? "true" : "false"}"
+    value     = "${var.ssh_listener_enabled}"
   }
 
   setting {
@@ -551,7 +551,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
-    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elbv2:listener:443"

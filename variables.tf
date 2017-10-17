@@ -39,11 +39,11 @@ variable "loadbalancer_certificate_arn" {
 }
 
 variable "http_listener_enabled" {
-  default = false
+  default = "false"
 }
 
 variable "ssh_listener_enabled" {
-  default = false
+  default = "false"
 }
 
 variable "zone_id" {
