@@ -530,7 +530,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener:22"
     name      = "ListenerEnabled"
-    value     = "${var.ssh_listener_enabled}"
+    value     = "true"
   }
 
   setting {
