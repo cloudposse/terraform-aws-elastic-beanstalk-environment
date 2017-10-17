@@ -518,17 +518,17 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
-    namespace = "aws:elb:listener:22"
+    namespace = "aws:elb:listener:${var.ssh_listener_port}"
     name      = "ListenerProtocol"
     value     = "TCP"
   }
   setting {
-    namespace = "aws:elb:listener:22"
+    namespace = "aws:elb:listener:${var.ssh_listener_port}"
     name      = "InstancePort"
     value     = "22"
   }
   setting {
-    namespace = "aws:elb:listener:22"
+    namespace = "aws:elb:listener:${var.ssh_listener_port}"
     name      = "ListenerEnabled"
     value     = "${var.ssh_listener_enabled}"
   }

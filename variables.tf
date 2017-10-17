@@ -46,6 +46,10 @@ variable "ssh_listener_enabled" {
   default = "false"
 }
 
+variable "ssh_listener_port" {
+  default = "22"
+}
+
 variable "zone_id" {
   default = ""
 }
