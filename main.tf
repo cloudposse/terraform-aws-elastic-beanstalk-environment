@@ -536,7 +536,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionSettingIdleTimeout"
-    value     = "${var.ssh_listener_enabled == "true" ? "4000" : "60"}"
+    value     = "${var.ssh_listener_enabled == "true" ? "3600" : "60"}"
   }
 
   setting {
