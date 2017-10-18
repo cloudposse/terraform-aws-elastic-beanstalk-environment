@@ -17,3 +17,7 @@ output "elb_dns_name" {
 output "elb_zone_id" {
   value = "${var.alb_zone_id[data.aws_region.default.name]}"
 }
+
+output "ec2_instance_profile_role_name" {
+  value = "${aws_iam_role.ec2.name}"
+}

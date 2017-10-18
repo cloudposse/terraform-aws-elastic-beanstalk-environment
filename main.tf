@@ -135,12 +135,6 @@ resource "aws_ssm_activation" "ec2" {
   registration_limit = "${var.autoscale_max}"
 }
 
-#
-
-# Other stuff
-
-#
-
 data "aws_iam_policy_document" "default" {
   statement {
     sid = ""
@@ -307,7 +301,7 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  name = "${module.label.id}"
+  name = "${module.label.id}-ec2"
   role = "${aws_iam_role.ec2.name}"
 }
 
@@ -886,6 +880,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "Protocol"
     value     = "HTTP"
   }
+
   ###===================== Notification =====================================================###
 
   setting {
@@ -893,28 +888,21 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "Notification Endpoint"
     value     = "${var.notification_endpoint}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:sns:topics"
     name      = "Notification Protocol"
     value     = "${var.notification_protocol}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:sns:topics"
     name      = "Notification Topic ARN"
     value     = "${var.notification_topic_arn}"
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:sns:topics"
     name      = "Notification Topic Name"
     value     = "${var.notification_topic_name}"
   }
-
-
-
-
   depends_on = ["aws_security_group.default"]
 }
 
