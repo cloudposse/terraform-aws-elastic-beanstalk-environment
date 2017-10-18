@@ -149,12 +149,22 @@ data "aws_iam_policy_document" "default" {
       "ec2:AssociateAddress",
       "ec2:DescribeAddresses",
       "ec2:DescribeSecurityGroups",
+      "ec2:DescribeSpotInstanceRequests",
+      "ec2:CancelSpotInstanceRequests",
+      "ec2:RequestSpotInstances",
+      "ec2:RunInstances",
+      "ec2:StartInstances",
+      "ec2:StopInstances",
+      "ec2:CreateTags",
+      "ec2:DeleteTags",
+      "ec2:DescribeRegions",
+      "ec2:DescribeAvailabilityZones",
       "sqs:GetQueueAttributes",
       "sqs:GetQueueUrl",
       "autoscaling:DescribeAutoScalingGroups",
       "autoscaling:DescribeAutoScalingInstances",
       "autoscaling:DescribeScalingActivities",
-      "autoscaling:DescribeNotificationConfigurations",
+      "autoscaling:DescribeNotificationConfigurations"
     ]
 
     resources = ["*"]
