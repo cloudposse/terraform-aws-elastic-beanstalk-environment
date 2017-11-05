@@ -510,6 +510,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "ListenerEnabled"
     value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
   }
+
   setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionDrainingEnabled"
