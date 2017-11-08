@@ -36,8 +36,6 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | public_subnets |__REQUIRED__ |  |
 | security_groups |__REQUIRED__ |  |
 | solution_stack_name |"" |  |
-| ssh_listener_enabled |"false" |  |
-| ssh_listener_port |"22" |  |
 | stage |"default" |  |
 | tags |{} |  |
 | updating_max_batch |"1" |  |
@@ -49,6 +47,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 <!--------------------------------REQUIRE POSTPROCESSING-------------------------------->
 |  Name | Description  |
 |:------|:------------:|
+| ec2_instance_profile_role_name |   |
 | elb_dns_name |   |
 | elb_zone_id |   |
 | host |   |
