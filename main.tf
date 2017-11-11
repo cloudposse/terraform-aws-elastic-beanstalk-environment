@@ -488,7 +488,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener"
     name      = "ListenerEnabled"
-    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled  == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elb:listener:443"
@@ -512,6 +512,28 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
+    namespace = "aws:elb:listener:${var.ssh_listener_port}"
+    name      = "ListenerProtocol"
+    value     = "TCP"
+  }
+  setting {
+    namespace = "aws:elb:listener:${var.ssh_listener_port}"
+    name      = "InstancePort"
+    value     = "22"
+  }
+  setting {
+    namespace = "aws:elb:listener:${var.ssh_listener_port}"
+    name      = "ListenerEnabled"
+    value     = "${var.ssh_listener_enabled}"
+  }
+
+  setting {
+    namespace = "aws:elb:policies"
+    name      = "ConnectionSettingIdleTimeout"
+    value     = "${var.ssh_listener_enabled == "true" ? "3600" : "60"}"
+  }
+
+  setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionDrainingEnabled"
     value     = "true"
@@ -529,7 +551,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elbv2:listener:default"
     name      = "ListenerEnabled"
-    value     = "${var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    value     = "${var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elbv2:listener:443"
