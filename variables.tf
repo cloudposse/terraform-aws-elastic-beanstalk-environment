@@ -108,6 +108,10 @@ variable "solution_stack_name" {
   default = ""
 }
 
+variable "wait_for_ready_timeout" {
+  default = "20m"
+}
+
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
 # Via: https://github.com/hashicorp/terraform/issues/7071
 variable "alb_zone_id" {
