@@ -340,8 +340,11 @@ resource "aws_security_group" "default" {
 }
 
 #
+
 # Full list of options:
+
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
+
 #
 
 resource "aws_elastic_beanstalk_environment" "default" {
@@ -352,7 +355,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
   solution_stack_name = "${var.solution_stack_name}"
 
   wait_for_ready_timeout = "${var.wait_for_ready_timeout}"
-
 
   tags {
     Name      = "${module.label.id}"
@@ -513,7 +515,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "ListenerEnabled"
     value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
   }
-
   setting {
     namespace = "aws:elb:listener:${var.ssh_listener_port}"
     name      = "ListenerProtocol"
@@ -529,13 +530,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "ListenerEnabled"
     value     = "${var.ssh_listener_enabled}"
   }
-
   setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionSettingIdleTimeout"
     value     = "${var.ssh_listener_enabled == "true" ? "3600" : "60"}"
   }
-
   setting {
     namespace = "aws:elb:policies"
     name      = "ConnectionDrainingEnabled"
