@@ -12,42 +12,42 @@ Terraform module to provision AWS Elastic Beanstalk environment
 <!--------------------------------REQUIRE POSTPROCESSING-------------------------------->
 |  Name |  Default  |  Description  |
 |:------|:---------:|:--------------:|
-| alb_zone_id |{} |From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region Via: https://github.com/hashicorp/terraform/issues/7071   |
-| app |__REQUIRED__ |  |
-| attributes |[] |  |
-| autoscale_lower_bound |"20" |  |
-| autoscale_max |"3" |  |
-| autoscale_min |"2" |  |
-| autoscale_upper_bound |"80" |  |
-| config_source |"" |  |
-| delimiter |"-" |  |
-| env_default_key |"DEFAULT_ENV_%d" |  |
-| env_default_value |"UNSET" |  |
-| env_vars |{} |  |
-| healthcheck_url |"/healthcheck" |  |
-| http_listener_enabled |"false" |  |
-| instance_type |"t2.micro" |  |
-| keypair |__REQUIRED__ |  |
-| loadbalancer_certificate_arn |"" |  |
-| loadbalancer_type |"classic" |  |
-| name |"app" |  |
-| namespace |"global" |  |
-| notification_endpoint |"" |  |
-| notification_protocol |"email" |  |
-| notification_topic_arn |"" |  |
-| notification_topic_name |"" |  |
-| private_subnets |__REQUIRED__ |  |
-| public_subnets |__REQUIRED__ |  |
-| security_groups |__REQUIRED__ |  |
-| solution_stack_name |"" |  |
-| ssh_listener_enabled |"false" |  |
-| ssh_listener_port |"22" |  |
-| stage |"default" |  |
-| tags |{} |  |
-| updating_max_batch |"1" |  |
-| updating_min_in_service |"1" |  |
-| vpc_id |__REQUIRED__ |  |
-| zone_id |"" |  |
+| alb_zone_id |{} |ALB zone id  |
+| app |__REQUIRED__ |Application name  |
+| attributes |[] |Attributes for naming  |
+| autoscale_lower_bound |"20" |Minimum level of autoscale metric to add instance  |
+| autoscale_max |"3" |Maximum instances in charge  |
+| autoscale_min |"2" |Minumum instances in charge  |
+| autoscale_upper_bound |"80" |Maximum level of autoscale metric to remove instance  |
+| config_source |"" |S3 source for config  |
+| delimiter |"-" |Delimeter for naming  |
+| env_default_key |"DEFAULT_ENV_%d" |Empty environment variable name  |
+| env_default_value |"UNSET" |Empty environment variable value  |
+| env_vars |{} |Environment variables  |
+| healthcheck_url |"/healthcheck" |Healthcheck url  |
+| http_listener_enabled |"false" |Enable port 80 (http)  |
+| instance_type |"t2.micro" |Instances type  |
+| keypair |__REQUIRED__ |SSH keypair name for instances  |
+| loadbalancer_certificate_arn |"" |Loadbalancer https certificate arn  |
+| loadbalancer_type |"classic" |Loadbalancer type  |
+| name |"app" |Name  |
+| namespace |"global" |Namespace  |
+| notification_endpoint |"" |Notification endpoint  |
+| notification_protocol |"email" |Notification protocol  |
+| notification_topic_arn |"" |Notification arn topic  |
+| notification_topic_name |"" |Notification topic name  |
+| private_subnets |__REQUIRED__ |Private subnets for instances  |
+| public_subnets |__REQUIRED__ |Public subnets for lb  |
+| security_groups |__REQUIRED__ |Security groups  |
+| solution_stack_name |"" |Solution stack name  |
+| ssh_listener_enabled |"false" |Enable ssh port  |
+| ssh_listener_port |"22" |SSH port  |
+| stage |"default" |Staging  |
+| tags |{} |Tags  |
+| updating_max_batch |"1" |Maximum count of instances up during update  |
+| updating_min_in_service |"1" |Minimum count of instances up during update  |
+| vpc_id |__REQUIRED__ |VPC id  |
+| zone_id |"" |DNS zone id  |
 ## Output
 
 <!--------------------------------REQUIRE POSTPROCESSING-------------------------------->
