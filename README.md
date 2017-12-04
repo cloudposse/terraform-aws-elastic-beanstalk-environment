@@ -6,65 +6,66 @@
 
 Terraform module to provision AWS Elastic Beanstalk environment
 
-
 ## Input
 
 <!--------------------------------REQUIRE POSTPROCESSING-------------------------------->
 |  Name |  Default  |  Description  |
 |:------|:---------:|:--------------:|
 | alb_zone_id |{} |ALB zone id  |
-| app |__REQUIRED__ |Application name  |
-| attributes |[] |Attributes for naming  |
+| app |__REQUIRED__ |EBS application name  |
+| attributes |[] |Additional attributes (e.g. `policy` or `role`)  |
 | autoscale_lower_bound |"20" |Minimum level of autoscale metric to add instance  |
 | autoscale_max |"3" |Maximum instances in charge  |
 | autoscale_min |"2" |Minumum instances in charge  |
 | autoscale_upper_bound |"80" |Maximum level of autoscale metric to remove instance  |
 | config_source |"" |S3 source for config  |
-| delimiter |"-" |Delimeter for naming  |
-| env_default_key |"DEFAULT_ENV_%d" |Empty environment variable name  |
-| env_default_value |"UNSET" |Empty environment variable value  |
-| env_vars |{} |Environment variables  |
-| healthcheck_url |"/healthcheck" |Healthcheck url  |
+| delimiter |"-" |Delimiter to be used between `name`, `namespace`, `stage`, etc.  |
+| env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting  |
+| env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting  |
+| env_vars |{} |Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }  |
+| healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances  |
 | http_listener_enabled |"false" |Enable port 80 (http)  |
 | instance_type |"t2.micro" |Instances type  |
-| keypair |__REQUIRED__ |SSH keypair name for instances  |
-| loadbalancer_certificate_arn |"" |Loadbalancer https certificate arn  |
-| loadbalancer_type |"classic" |Loadbalancer type  |
-| name |"app" |Name  |
-| namespace |"global" |Namespace  |
+| keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS  |
+| loadbalancer_certificate_arn |"" |Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager  |
+| loadbalancer_type |"classic" |Load Balancer type, e.g. 'application' or 'classic'  |
+| name |"app" |Solution name, e.g. 'app' or 'jenkins'  |
+| namespace |"global" |Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'  |
 | notification_endpoint |"" |Notification endpoint  |
 | notification_protocol |"email" |Notification protocol  |
-| notification_topic_arn |"" |Notification arn topic  |
+| notification_topic_arn |"" |Notification topic arn  |
 | notification_topic_name |"" |Notification topic name  |
-| private_subnets |__REQUIRED__ |Private subnets for instances  |
-| public_subnets |__REQUIRED__ |Public subnets for lb  |
-| security_groups |__REQUIRED__ |Security groups  |
-| solution_stack_name |"" |Solution stack name  |
+| private_subnets |__REQUIRED__ |List of private subnets to place EC2 instances  |
+| public_subnets |__REQUIRED__ |List of public subnets to place Elastic Load Balancer  |
+| security_groups |__REQUIRED__ |List of security groups to be allowed to connect to the EC2 instances  |
+| solution_stack_name |"" |Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html  |
 | ssh_listener_enabled |"false" |Enable ssh port  |
 | ssh_listener_port |"22" |SSH port  |
-| stage |"default" |Staging  |
-| tags |{} |Tags  |
+| stage |"default" |Stage, e.g. 'prod', 'staging', 'dev', or 'test'  |
+| tags |{} |Additional tags (e.g. `map('BusinessUnit`,`XYZ`)  |
 | updating_max_batch |"1" |Maximum count of instances up during update  |
 | updating_min_in_service |"1" |Minimum count of instances up during update  |
-| vpc_id |__REQUIRED__ |VPC id  |
-| zone_id |"" |DNS zone id  |
+| vpc_id |__REQUIRED__ |ID of the VPC in which to provision the AWS resources  |
+| zone_id |"" |Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment  |
+
 ## Output
 
 <!--------------------------------REQUIRE POSTPROCESSING-------------------------------->
 |  Name | Description  |
 |:------|:------------:|
-| ec2_instance_profile_role_name |   |
-| elb_dns_name |   |
-| elb_zone_id |   |
-| host |   |
-| name |   |
-| security_group_id |   |
+| ec2_instance_profile_role_name | Instance IAM role name  |
+| elb_dns_name | ELB technical host  |
+| elb_zone_id | ELB zone id  |
+| host | DNS hostname  |
+| name | Name  |
+| security_group_id | Security group id  |
 
 ## Help
 
 **Got a question?**
 
 File a GitHub [issue](https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/issues), send us an [email](mailto:hello@cloudposse.com) or reach out to us on [Gitter](https://gitter.im/cloudposse/).
+
 ## Contributing
 
 ### Bug Reports & Feature Requests
@@ -84,6 +85,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
  5. Submit a **Pull request** so that we can review your changes
 
 **NOTE:** Be sure to merge the latest from "upstream" before making a pull request!
+
 ## License
 
 [APACHE 2.0](LICENSE) © 2017 [Cloud Posse, LLC](https://cloudposse.com)
@@ -106,6 +108,7 @@ See [LICENSE](LICENSE) for full details.
     KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
     under the License.
+
 ## About
 
 This project is maintained and funded by [Cloud Posse, LLC][website]. Like it? Please let us know at <hello@cloudposse.com>

@@ -1,33 +1,33 @@
 variable "namespace" {
   default = "global"
-  description = "Namespace"
+  description = "Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'"
 }
 
 variable "stage" {
   default = "default"
-  description = "Staging"
+  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
 }
 
 variable "delimiter" {
   type    = "string"
   default = "-"
-  description = "Delimeter for naming"
+  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
 }
 
 variable "attributes" {
   type    = "list"
   default = []
-  description = "Attributes for naming"
+  description = "Additional attributes (e.g. `policy` or `role`)"
 }
 
 variable "name" {
   default = "app"
-  description = "Name"
+  description = "Solution name, e.g. 'app' or 'jenkins'"
 }
 
 variable "healthcheck_url" {
   default = "/healthcheck"
-  description = "Healthcheck url"
+  description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
 }
 
 variable "notification_protocol" {
@@ -42,7 +42,7 @@ variable "notification_endpoint" {
 
 variable "notification_topic_arn" {
   default = ""
-  description = "Notification arn topic"
+  description = "Notification topic arn"
 }
 
 variable "notification_topic_name" {
@@ -52,12 +52,12 @@ variable "notification_topic_name" {
 
 variable "loadbalancer_type" {
   default = "classic"
-  description = "Loadbalancer type"
+  description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
 variable "loadbalancer_certificate_arn" {
   default = ""
-  description = "Loadbalancer https certificate arn"
+  description = "Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager"
 }
 
 variable "http_listener_enabled" {
@@ -77,7 +77,7 @@ variable "ssh_listener_port" {
 
 variable "zone_id" {
   default = ""
-  description = "DNS zone id"
+  description = "Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment"
 }
 
 variable "config_source" {
@@ -87,29 +87,29 @@ variable "config_source" {
 
 variable "security_groups" {
   type = "list"
-  description = "Security groups"
+  description = "List of security groups to be allowed to connect to the EC2 instances"
 }
 
 variable "app" {
-  description = "Application name"
+  description = "EBS application name"
 }
 
 variable "vpc_id" {
-  description = "VPC id"
+  description = "ID of the VPC in which to provision the AWS resources"
 }
 
 variable "public_subnets" {
   type = "list"
-  description = "Public subnets for lb"
+  description = "List of public subnets to place Elastic Load Balancer"
 }
 
 variable "private_subnets" {
   type = "list"
-  description = "Private subnets for instances"
+  description = "List of private subnets to place EC2 instances"
 }
 
 variable "keypair" {
-  description = "SSH keypair name for instances"
+  description = "Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS"
 }
 
 variable "updating_min_in_service" {
@@ -149,7 +149,7 @@ variable "autoscale_max" {
 
 variable "solution_stack_name" {
   default = ""
-  description = "Solution stack name"
+  description = "Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html"
 }
 
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
@@ -177,21 +177,21 @@ variable "alb_zone_id" {
 variable "tags" {
   type    = "map"
   default = {}
-  description = "Tags"
+  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
 }
 
 variable "env_default_key" {
   default = "DEFAULT_ENV_%d"
-  description = "Empty environment variable name"
+  description = "Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting"
 }
 
 variable "env_default_value" {
   default = "UNSET"
-  description = "Empty environment variable value"
+  description = "Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting"
 }
 
 variable "env_vars" {
   default = {}
   type    = "map"
-  description = "Environment variables"
+  description = "Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }"
 }
