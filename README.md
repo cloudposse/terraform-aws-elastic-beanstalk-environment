@@ -19,26 +19,26 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | autoscale_min |"2" |Minumum instances in charge  |
 | autoscale_upper_bound |"80" |Maximum level of autoscale metric to remove instance  |
 | config_source |"" |S3 source for config  |
-| delimiter |"-" |Delimiter to be used between `name`, `namespace`, `stage`, etc.  |
-| env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting  |
-| env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting  |
-| env_vars |{} |Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }  |
-| healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances  |
+| delimiter |"-" |Delimiter to be used between `name`, `namespace`, `stage`,<br/>etc.  |
+| env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment`<br/>setting  |
+| env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment`<br/>setting  |
+| env_vars |{} |Map of custom ENV variables to be provided to the Jenkins<br/>application running on Elastic Beanstalk, e.g. env_vars<br/>= { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx'<br/>}  |
+| healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will<br/>call this URL to check the health of the application<br/>running on EC2 instances  |
 | http_listener_enabled |"false" |Enable port 80 (http)  |
 | instance_type |"t2.micro" |Instances type  |
-| keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS  |
-| loadbalancer_certificate_arn |"" |Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager  |
+| keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk<br/>and DataPipeline instance. The key should be present<br/>in AWS  |
+| loadbalancer_certificate_arn |"" |Load Balancer SSL certificate ARN. The certificate<br/>must be present in AWS Certificate Manager  |
 | loadbalancer_type |"classic" |Load Balancer type, e.g. 'application' or 'classic'  |
 | name |"app" |Solution name, e.g. 'app' or 'jenkins'  |
-| namespace |"global" |Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'  |
+| namespace |"global" |Namespace, which could be your organization name, e.g.<br/>'cp' or 'cloudposse'  |
 | notification_endpoint |"" |Notification endpoint  |
 | notification_protocol |"email" |Notification protocol  |
 | notification_topic_arn |"" |Notification topic arn  |
 | notification_topic_name |"" |Notification topic name  |
 | private_subnets |__REQUIRED__ |List of private subnets to place EC2 instances  |
 | public_subnets |__REQUIRED__ |List of public subnets to place Elastic Load Balancer  |
-| security_groups |__REQUIRED__ |List of security groups to be allowed to connect to the EC2 instances  |
-| solution_stack_name |"" |Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html  |
+| security_groups |__REQUIRED__ |List of security groups to be allowed to connect to<br/>the EC2 instances  |
+| solution_stack_name |"" |Elastic Beanstalk stack, e.g. Docker, Go, Node, Java,<br/>IIS. For more info: http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html  |
 | ssh_listener_enabled |"false" |Enable ssh port  |
 | ssh_listener_port |"22" |SSH port  |
 | stage |"default" |Stage, e.g. 'prod', 'staging', 'dev', or 'test'  |
@@ -46,7 +46,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | updating_max_batch |"1" |Maximum count of instances up during update  |
 | updating_min_in_service |"1" |Minimum count of instances up during update  |
 | vpc_id |__REQUIRED__ |ID of the VPC in which to provision the AWS resources  |
-| zone_id |"" |Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment  |
+| zone_id |"" |Route53 parent zone ID. The module will create sub-domain<br/>DNS records in the parent zone for the EB environment  |
 
 ## Output
 
