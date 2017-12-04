@@ -22,7 +22,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | delimiter |"-" |Delimiter to be used between `name`, `namespace`, `stage`, etc.|
 | env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
 | env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
-| env_vars |{} |Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }|
+| env_vars |{} |Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }`|
 | healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances|
 | http_listener_enabled |"false" |Enable port 80 (http)|
 | instance_type |"t2.micro" |Instances type|
