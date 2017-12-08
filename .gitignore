@@ -6,3 +6,5 @@
 .terraform
 .idea
 *.iml
+
+.build-harness
