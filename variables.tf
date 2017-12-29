@@ -199,3 +199,8 @@ variable "env_vars" {
   type    = "map"
   description = "Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }`"
 }
+
+variable "tier" {
+  default = "WebServer"
+  description = "Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker')"
+}
