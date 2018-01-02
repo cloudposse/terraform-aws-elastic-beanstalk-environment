@@ -351,7 +351,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   name        = "${module.label.id}"
   application = "${var.app}"
 
-  tier                = "WebServer"
+  tier                = "${var.tier}"
   solution_stack_name = "${var.solution_stack_name}"
 
   wait_for_ready_timeout = "${var.wait_for_ready_timeout}"

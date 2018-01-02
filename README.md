@@ -43,9 +43,11 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | ssh_listener_port |"22" |SSH port|
 | stage |"default" |Stage, e.g. 'prod', 'staging', 'dev', or 'test'|
 | tags |{} |Additional tags (e.g. `map('BusinessUnit`,`XYZ`)|
+| tier |"WebServer" |Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker')|
 | updating_max_batch |"1" |Maximum count of instances up during update|
 | updating_min_in_service |"1" |Minimum count of instances up during update|
 | vpc_id |__REQUIRED__ |ID of the VPC in which to provision the AWS resources|
+| wait_for_ready_timeout |"20m" ||
 | zone_id |"" |Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment|
 
 ## Output
