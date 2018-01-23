@@ -307,16 +307,9 @@ resource "aws_iam_instance_profile" "ec2" {
 
 resource "aws_security_group" "default" {
   name        = "${module.label.id}"
-  description = "Allow all inbound traffic"
+  description = "Allow inbound traffic from provided Security Groups"
 
   vpc_id = "${var.vpc_id}"
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port       = 0
@@ -332,21 +325,13 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 }
 
 #
-
 # Full list of options:
-
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
-
 #
-
 resource "aws_elastic_beanstalk_environment" "default" {
   name        = "${module.label.id}"
   application = "${var.app}"
@@ -356,11 +341,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   wait_for_ready_timeout = "${var.wait_for_ready_timeout}"
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 
   setting {
     namespace = "aws:ec2:vpc"
