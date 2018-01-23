@@ -307,16 +307,9 @@ resource "aws_iam_instance_profile" "ec2" {
 
 resource "aws_security_group" "default" {
   name        = "${module.label.id}"
-  description = "Allow all inbound traffic"
+  description = "Allow inbound traffic from provided Security Groups"
 
   vpc_id = "${var.vpc_id}"
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = -1
-    cidr_blocks = ["0.0.0.0/0"]
-  }
 
   ingress {
     from_port       = 0
