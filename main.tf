@@ -332,21 +332,13 @@ resource "aws_security_group" "default" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 }
 
 #
-
 # Full list of options:
-
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
-
 #
-
 resource "aws_elastic_beanstalk_environment" "default" {
   name        = "${module.label.id}"
   application = "${var.app}"
@@ -356,11 +348,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   wait_for_ready_timeout = "${var.wait_for_ready_timeout}"
 
-  tags {
-    Name      = "${module.label.id}"
-    Namespace = "${var.namespace}"
-    Stage     = "${var.stage}"
-  }
+  tags = "${module.label.tags}"
 
   setting {
     namespace = "aws:ec2:vpc"
