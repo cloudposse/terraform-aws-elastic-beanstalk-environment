@@ -9,9 +9,7 @@ module "label" {
   tags       = "${var.tags}"
 }
 
-data "aws_region" "default" {
-  current = true
-}
+data "aws_region" "default" {}
 
 #
 # Service
