@@ -46,6 +46,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | stage |"default" |Stage, e.g. 'prod', 'staging', 'dev', or 'test'|
 | tags |{} |Additional tags (e.g. `map('BusinessUnit`,`XYZ`)|
 | tier |"WebServer" |Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker')|
+| rolling_update_type |"Health" |Set it to 'Immutable' to apply the configuration change to a fresh group of instances [Read more](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rollingupdates.html)|
 | updating_max_batch |"1" |Maximum count of instances up during update|
 | updating_min_in_service |"1" |Minimum count of instances up during update|
 | vpc_id |__REQUIRED__ |ID of the VPC in which to provision the AWS resources|

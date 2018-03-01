@@ -374,13 +374,19 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateType"
-    value     = "Health"
+    value     = "${var.rolling_update_type}"
   }
 
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MinInstancesInService"
     value     = "${var.updating_min_in_service}"
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:command"
+    name      = "DeploymentPolicy"
+    value     = "${var.rolling_update_type == "Immutable" ? "Immutable" : "Rolling"}"
   }
 
   setting {
