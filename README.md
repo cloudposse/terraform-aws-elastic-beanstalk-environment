@@ -29,6 +29,8 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | instance_type |"t2.micro" |Instances type|
 | associate_public_ip_address |"false" |Specifies whether to launch instances in your VPC with public IP addresses.|
 | keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS|
+| root_volume_size |"8" |The size of the EBS root volume|
+| root_volume_type |"gp2" |The type of the EBS root volume|
 | loadbalancer_certificate_arn |"" |Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager|
 | loadbalancer_type |"classic" |Load Balancer type, e.g. 'application' or 'classic'|
 | name |"app" |Solution name, e.g. 'app' or 'jenkins'|

@@ -112,6 +112,16 @@ variable "keypair" {
   description = "Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS"
 }
 
+variable "root_volume_size" {
+  default     = "8"
+  description = "The size of the EBS root volume"
+}
+
+variable "root_volume_type" {
+  default     = "gp2"
+  description = "The type of the EBS root volume"
+}
+
 variable "rolling_update_type" {
   default     = "Health"
   description = "Set it to Immutable to apply the configuration change to a fresh group of instances"
