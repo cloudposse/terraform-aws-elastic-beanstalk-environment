@@ -451,6 +451,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.keypair}"
   }
   setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "RootVolumeSize"
+    value     = "${var.root_volume_size}"
+  }
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "RootVolumeType"
+    value     = "${var.root_volume_type}"
+  }
+  setting {
     namespace = "aws:autoscaling:asg"
     name      = "Availability Zones"
     value     = "Any 2"
