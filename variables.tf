@@ -127,6 +127,11 @@ variable "updating_max_batch" {
   description = "Maximum count of instances up during update"
 }
 
+variable "ssh_source_restriction" {
+  default     = "0.0.0.0/0"
+  description = "Used to lock down SSH access to the EC2 instances."
+}
+
 variable "instance_type" {
   default     = "t2.micro"
   description = "Instances type"
