@@ -112,6 +112,11 @@ variable "keypair" {
   description = "Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS"
 }
 
+variable "rolling_update_type" {
+  default     = "Health"
+  description = "Set it to Immutable to apply the configuration change to a fresh group of instances"
+}
+
 variable "updating_min_in_service" {
   default     = "1"
   description = "Minimum count of instances up during update"
