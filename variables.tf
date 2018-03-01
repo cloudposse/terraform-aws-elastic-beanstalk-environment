@@ -127,6 +127,11 @@ variable "instance_type" {
   description = "Instances type"
 }
 
+variable "associate_public_ip_address" {
+  default     = "false"
+  description = "Specifies whether to launch instances in your VPC with public IP addresses."
+}
+
 variable "autoscale_lower_bound" {
   default     = "20"
   description = "Minimum level of autoscale metric to add instance"

@@ -27,6 +27,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances|
 | http_listener_enabled |"false" |Enable port 80 (http)|
 | instance_type |"t2.micro" |Instances type|
+| associate_public_ip_address |"false" |Specifies whether to launch instances in your VPC with public IP addresses.|
 | keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS|
 | loadbalancer_certificate_arn |"" |Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager|
 | loadbalancer_type |"classic" |Load Balancer type, e.g. 'application' or 'classic'|
