@@ -26,6 +26,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | env_vars |{} |Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }`|
 | healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances|
 | http_listener_enabled |"false" |Enable port 80 (http)|
+| ssh_source_restriction |"0.0.0.0/0" |Used to lock down SSH access to the EC2 instances. You can specify a CIDR or a security group id|
 | instance_type |"t2.micro" |Instances type|
 | associate_public_ip_address |"false" |Specifies whether to launch instances in your VPC with public IP addresses.|
 | keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS|
