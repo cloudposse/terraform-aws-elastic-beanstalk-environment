@@ -623,17 +623,17 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "PreferredStartTime"
-    value     = "Sun:10:00"
+    value     = "${var.preferred_start_time}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "UpdateLevel"
-    value     = "minor"
+    value     = "${var.update_level}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "InstanceRefreshEnabled"
-    value     = "true"
+    value     = "${var.instance_refresh_enabled}"
   }
   ###===================== Application ENV vars ======================###
   setting {

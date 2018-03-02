@@ -20,6 +20,9 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | autoscale_min |"2" |Minumum instances in charge|
 | autoscale_upper_bound |"80" |Maximum level of autoscale metric to remove instance|
 | config_source |"" |S3 source for config|
+| preferred_start_time |"Sun:10:00" |Configure a maintenance window for managed actions in UTC|
+| update_level |"minor" |The highest level of update to apply with managed platform updates. patch for patch version updates only. minor for both minor and patch version updates|
+| instance_refresh_enabled |"true" |Enable weekly instance replacement.|
 | delimiter |"-" |Delimiter to be used between `name`, `namespace`, `stage`, etc.|
 | env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
 | env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
