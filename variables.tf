@@ -25,6 +25,11 @@ variable "name" {
   description = "Solution name, e.g. 'app' or 'jenkins'"
 }
 
+variable "config_document" {
+  default     = "{ \"CloudWatchMetrics\": {}, \"Version\": 1}"
+  description = "A JSON document describing the environment and instance metrics to publish to CloudWatch."
+}
+
 variable "healthcheck_url" {
   default     = "/healthcheck"
   description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"

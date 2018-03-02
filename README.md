@@ -24,6 +24,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
 | env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
 | env_vars |{} |Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }`|
+| config_document |{ \"CloudWatchMetrics\": {}, \"Version\": 1} (none) |A JSON document describing the environment and instance metrics to publish to CloudWatch [Read more](https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/health-enhanced-cloudwatch.html#health-enhanced-cloudwatch-configdocument)|
 | healthcheck_url |"/healthcheck" |Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances|
 | http_listener_enabled |"false" |Enable port 80 (http)|
 | ssh_source_restriction |"0.0.0.0/0" |Used to lock down SSH access to the EC2 instances. You can specify a CIDR or a security group id|
