@@ -122,6 +122,11 @@ variable "root_volume_type" {
   description = "The type of the EBS root volume"
 }
 
+variable "availability_zones" {
+  default     = "Any 2"
+  description = "Choose the number of AZs for your instances"
+}
+
 variable "rolling_update_type" {
   default     = "Health"
   description = "Set it to Immutable to apply the configuration change to a fresh group of instances"
