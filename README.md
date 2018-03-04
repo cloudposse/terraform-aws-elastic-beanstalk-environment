@@ -20,6 +20,9 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | autoscale_min |"2" |Minumum instances in charge|
 | autoscale_upper_bound |"80" |Maximum level of autoscale metric to remove instance|
 | config_source |"" |S3 source for config|
+| preferred_start_time |"Sun:10:00" |Configure a maintenance window for managed actions in UTC|
+| update_level |"minor" |The highest level of update to apply with managed platform updates. patch for patch version updates only. minor for both minor and patch version updates|
+| instance_refresh_enabled |"true" |Enable weekly instance replacement.|
 | delimiter |"-" |Delimiter to be used between `name`, `namespace`, `stage`, etc.|
 | env_default_key |"DEFAULT_ENV_%d" |Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
 | env_default_value |"UNSET" |Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting|
@@ -33,6 +36,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | keypair |__REQUIRED__ |Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS|
 | root_volume_size |"8" |The size of the EBS root volume|
 | root_volume_type |"gp2" |The type of the EBS root volume|
+| availability_zones |"Any 2" |Choose the number of AZs for your instances|
 | loadbalancer_certificate_arn |"" |Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager|
 | loadbalancer_type |"classic" |Load Balancer type, e.g. 'application' or 'classic'|
 | name |"app" |Solution name, e.g. 'app' or 'jenkins'|

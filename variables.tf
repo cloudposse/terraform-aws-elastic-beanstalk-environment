@@ -90,6 +90,21 @@ variable "config_source" {
   description = "S3 source for config"
 }
 
+variable "preferred_start_time" {
+  default     = "Sun:10:00"
+  description = "Configure a maintenance window for managed actions in UTC"
+}
+
+variable "update_level" {
+  default     = "minor"
+  description = "The highest level of update to apply with managed platform updates"
+}
+
+variable "instance_refresh_enabled" {
+  default     = "true"
+  description = "Enable weekly instance replacement."
+}
+
 variable "security_groups" {
   type        = "list"
   description = "List of security groups to be allowed to connect to the EC2 instances"
@@ -125,6 +140,11 @@ variable "root_volume_size" {
 variable "root_volume_type" {
   default     = "gp2"
   description = "The type of the EBS root volume"
+}
+
+variable "availability_zones" {
+  default     = "Any 2"
+  description = "Choose the number of AZs for your instances"
 }
 
 variable "rolling_update_type" {
