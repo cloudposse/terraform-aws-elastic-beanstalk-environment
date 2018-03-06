@@ -571,6 +571,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_certificate_arn}"
   }
   setting {
+    namespace = "aws:elasticbeanstalk:healthreporting:system"
+    name      = "ConfigDocument"
+    value     = "${var.config_document}"
+  }
+  setting {
     namespace = "aws:elasticbeanstalk:application"
     name      = "Application Healthcheck URL"
     value     = "HTTP:80${var.healthcheck_url}"
