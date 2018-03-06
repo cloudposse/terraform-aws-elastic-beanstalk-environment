@@ -326,20 +326,25 @@ resource "aws_security_group" "default" {
   tags = "${module.label.tags}"
 }
 
+resource "aws_elastic_beanstalk_environment" "default" {
+  name                   = "${module.label.id}"
+  application            = "${var.app}"
+  tier                   = "${var.tier}"
+  template_name          = "${aws_elastic_beanstalk_configuration_template.default.id}"
+  depends_on             = ["aws_elastic_beanstalk_configuration_template.default"]
+  wait_for_ready_timeout = "${var.wait_for_ready_timeout}"
+  tags                   = "${module.label.tags}"
+}
+
 #
 # Full list of options:
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
 #
-resource "aws_elastic_beanstalk_environment" "default" {
+resource "aws_elastic_beanstalk_configuration_template" "default" {
   name        = "${module.label.id}"
   application = "${var.app}"
 
-  tier                = "${var.tier}"
   solution_stack_name = "${var.solution_stack_name}"
-
-  wait_for_ready_timeout = "${var.wait_for_ready_timeout}"
-
-  tags = "${module.label.tags}"
 
   setting {
     namespace = "aws:ec2:vpc"
