@@ -60,6 +60,7 @@ Terraform module to provision AWS Elastic Beanstalk environment
 | vpc_id |__REQUIRED__ |ID of the VPC in which to provision the AWS resources|
 | wait_for_ready_timeout |"20m" ||
 | zone_id |"" |Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment|
+| version_label |"" |Elastic Beanstalk Application version for deploy|
 
 ## Output
 
