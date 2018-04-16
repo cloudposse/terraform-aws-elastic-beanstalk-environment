@@ -255,3 +255,8 @@ variable "tier" {
   default     = "WebServer"
   description = "Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker')"
 }
+
+variable "version_label" {
+  default     = ""
+  description = "Elastic Beanstalk Application version for deploy"
+}
