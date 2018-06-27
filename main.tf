@@ -341,7 +341,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   version_label = "${var.version_label}"
 
-  tags = "${module.label.tags}"
+  tags = "${merge(map("Stage", "${module.label.stage}"), var.tags)}"
 
   setting {
     namespace = "aws:ec2:vpc"
