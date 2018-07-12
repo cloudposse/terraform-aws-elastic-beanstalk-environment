@@ -338,9 +338,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
   version_label = "${var.version_label}"
 
   tags = "${module.label.tags}"
-  
+
   # because of https://github.com/terraform-providers/terraform-provider-aws/issues/3963
-  lifecycle { ignore_changes = ["tags"]} 
+  lifecycle {
+    ignore_changes = ["tags"]
+  }
 
   setting {
     namespace = "aws:ec2:vpc"
