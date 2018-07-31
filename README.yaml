@@ -1,0 +1,73 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-aws-elastic-beanstalk-application
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/terraform-aws-elastic-beanstalk-application
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/cloudposse/terraform-aws-elastic-beanstalk-application.svg?branch=master"
+    url: "https://travis-ci.org/cloudposse/terraform-aws-elastic-beanstalk-application"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-application.svg"
+    url: "https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+related:
+  - name: "terraform-aws-elastic-beanstalk-environment"
+    description: "Terraform module to provision an AWS Elastic Beanstalk Environment"
+    url: "https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment"
+  - name: "terraform-aws-dynamic-subnets"
+    description: "Terraform module for public and private subnets provisioning in existing VPC"
+    url: "https://github.com/cloudposse/terraform-aws-dynamic-subnets"
+  - name: "terraform-aws-multi-az-subnets"
+    description: "Terraform module for multi-AZ public and private subnets provisioning"
+    url: "https://github.com/cloudposse/terraform-aws-multi-az-subnets"
+  - name: "terraform-aws-vpc"
+    description: "Terraform Module that defines a VPC with public/private subnets across multiple AZs with Internet Gateways"
+    url: "https://github.com/cloudposse/terraform-aws-vpc"
+  - name: "terraform-aws-named-subnets"
+    description: "Terraform module for named subnets provisioning."
+    url: "https://github.com/cloudposse/terraform-aws-named-subnets"
+  - name: "terraform-aws-cloudwatch-flow-logs"
+    description: "Terraform module for enabling flow logs for vpc and subnets."
+    url: "https://github.com/cloudposse/terraform-aws-cloudwatch-flow-logs"
+  - name: "terraform-aws-vpc-peering"
+    description: "Terraform module to create a peering connection between two VPCs"
+    url: "https://github.com/cloudposse/terraform-aws-vpc-peering"
+
+  
+references:
+  - name: "terraform-aws-jenkins"
+    description: "Terraform module to provision a complete Jenkins stack on Elastic Beanstalk by deploying Jenkins as a docker container using CodeBuild and CodePipeline with an ECR registry and EFS filesystem."
+    url: "https://github.com/cloudposse/terraform-aws-jenkins"
+
+# Short description of this project
+description: |-
+  Terraform module to provision AWS Elastic Beanstalk application
+
+include:
+  - "docs/targets.md"
+  - "docs/terraform.md"
+
+# Contributors to this project
+contributors:
+  - name: "Igor Rodionov"
+    github: "goruha"
+  - name: "Andriy Knysh"
+    github: "aknysh"
