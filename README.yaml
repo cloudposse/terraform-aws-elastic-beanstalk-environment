@@ -55,6 +55,8 @@ include:
 
 # Contributors to this project
 contributors:
+  - name: "Erik Osterman"
+    github: "osterman"
   - name: "Igor Rodionov"
     github: "goruha"
   - name: "Andriy Knysh"
