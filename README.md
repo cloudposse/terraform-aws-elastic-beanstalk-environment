@@ -26,6 +26,9 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 
+## Usage
+
+Complete example: [examples/complete](examples/complete)
 
 
 
@@ -36,8 +39,9 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 ```
 Available targets:
 
-  help                                This help screen
+  help                                Help screen
   help/all                            Display help for all targets
+  help/short                          This help short screen
   lint                                Lint terraform code
 
 ```
