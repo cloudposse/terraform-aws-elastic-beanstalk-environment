@@ -45,13 +45,18 @@ related:
 # Short description of this project
 description: |-
   Terraform module to provision AWS Elastic Beanstalk environment
-  
+
+usage: |-
+  Complete example: [examples/complete](examples/complete)
+
 include:
   - "docs/targets.md"
   - "docs/terraform.md"
 
 # Contributors to this project
 contributors:
+  - name: "Erik Osterman"
+    github: "osterman"
   - name: "Igor Rodionov"
     github: "goruha"
   - name: "Andriy Knysh"
