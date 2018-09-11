@@ -1,10 +1,10 @@
 variable "namespace" {
-  default     = "global"
-  description = "Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse'"
+  type        = "string"
+  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
 }
 
 variable "stage" {
-  default     = "default"
+  type        = "string"
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
 }
 
@@ -17,7 +17,7 @@ variable "delimiter" {
 variable "attributes" {
   type        = "list"
   default     = []
-  description = "Additional attributes (e.g. `policy` or `role`)"
+  description = "Additional attributes (e.g. `1`)"
 }
 
 variable "name" {
@@ -258,5 +258,5 @@ variable "tier" {
 
 variable "version_label" {
   default     = ""
-  description = "Elastic Beanstalk Application version for deploy"
+  description = "Elastic Beanstalk Application version to deploy"
 }
