@@ -53,7 +53,7 @@ Available targets:
 | alb_zone_id | ALB zone id | string | `<map>` | no |
 | app | EBS application name | string | - | yes |
 | associate_public_ip_address | Specifies whether to launch instances in your VPC with public IP addresses. | string | `false` | no |
-| attributes | Additional attributes (e.g. `policy` or `role`) | list | `<list>` | no |
+| attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | autoscale_lower_bound | Minimum level of autoscale metric to add instance | string | `20` | no |
 | autoscale_max | Maximum instances in charge | string | `3` | no |
 | autoscale_min | Minumum instances in charge | string | `2` | no |
@@ -73,7 +73,7 @@ Available targets:
 | loadbalancer_certificate_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | string | `` | no |
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
-| namespace | Namespace, which could be your organization name, e.g. 'cp' or 'cloudposse' | string | `global` | no |
+| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
 | notification_endpoint | Notification endpoint | string | `` | no |
 | notification_protocol | Notification protocol | string | `email` | no |
 | notification_topic_arn | Notification topic arn | string | `` | no |
@@ -89,13 +89,13 @@ Available targets:
 | ssh_listener_enabled | Enable ssh port | string | `false` | no |
 | ssh_listener_port | SSH port | string | `22` | no |
 | ssh_source_restriction | Used to lock down SSH access to the EC2 instances. | string | `0.0.0.0/0` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `default` | no |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
 | tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map | `<map>` | no |
 | tier | Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker') | string | `WebServer` | no |
 | update_level | The highest level of update to apply with managed platform updates | string | `minor` | no |
 | updating_max_batch | Maximum count of instances up during update | string | `1` | no |
 | updating_min_in_service | Minimum count of instances up during update | string | `1` | no |
-| version_label | Elastic Beanstalk Application version for deploy | string | `` | no |
+| version_label | Elastic Beanstalk Application version to deploy | string | `` | no |
 | vpc_id | ID of the VPC in which to provision the AWS resources | string | - | yes |
 | wait_for_ready_timeout |  | string | `20m` | no |
 | zone_id | Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment | string | `` | no |
