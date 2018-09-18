@@ -484,6 +484,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "true"
   }
   setting {
+    namespace = "aws:elb:loadbalancer"
+    name      = "SecurityGroups"
+    value     = "${join(",", var.loadbalancer_security_groups)}"
+  }
+  setting {
+    namespace = "aws:elb:loadbalancer"
+    name      = "ManagedSecurityGroup"
+    value     = "${var.loadbalancer_managed_security_group}"
+  }
+  setting {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "HTTP"
@@ -552,6 +562,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elbv2:loadbalancer"
     name      = "AccessLogsS3Enabled"
     value     = "true"
+  }
+  setting {
+    namespace = "aws:elbv2:loadbalancer"
+    name      = "SecurityGroups"
+    value     = "${join(",", var.loadbalancer_security_groups)}"
+  }
+  setting {
+    namespace = "aws:elbv2:loadbalancer"
+    name      = "ManagedSecurityGroup"
+    value     = "${var.loadbalancer_managed_security_group}"
   }
   setting {
     namespace = "aws:elbv2:listener:default"

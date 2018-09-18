@@ -65,6 +65,18 @@ variable "loadbalancer_certificate_arn" {
   description = "Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager"
 }
 
+variable "loadbalancer_security_groups" {
+  type        = "list"
+  default     = []
+  description = "Load balancer security groups"
+}
+
+variable "loadbalancer_managed_security_group" {
+  type        = "string"
+  default     = ""
+  description = "Load balancer managed security group"
+}
+
 variable "http_listener_enabled" {
   default     = "false"
   description = "Enable port 80 (http)"
