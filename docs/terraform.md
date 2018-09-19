@@ -24,6 +24,8 @@
 | instance_type | Instances type | string | `t2.micro` | no |
 | keypair | Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS | string | - | yes |
 | loadbalancer_certificate_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | string | `` | no |
+| loadbalancer_managed_security_group | Load balancer managed security group | string | `` | no |
+| loadbalancer_security_groups | Load balancer security groups | list | `<list>` | no |
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
