@@ -29,6 +29,7 @@
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
+| nodejs_version | Elastic Beanstalk NodeJS version to deploy | string | `` | no |
 | notification_endpoint | Notification endpoint | string | `` | no |
 | notification_protocol | Notification protocol | string | `email` | no |
 | notification_topic_arn | Notification topic arn | string | `` | no |

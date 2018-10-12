@@ -274,5 +274,5 @@ variable "version_label" {
 }
 variable "nodejs_version" {
   default     = ""
-  description = "Elastic Beanstalk Application version to deploy"
+  description = "Elastic Beanstalk NodeJS version to deploy"
 }
