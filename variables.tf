@@ -283,7 +283,7 @@ variable "health_reporting_system" {
   description = "Which health system, `enhanched` (default) or `basic` to deploy to the environment"
 }
 
-variable "managed_actions_enables" {
+variable "managed_actions_enabled" {
   default = "true"
   description = "whether managed actions are turned on for this environment"
 }
