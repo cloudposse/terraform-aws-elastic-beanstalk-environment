@@ -277,3 +277,8 @@ variable "nodejs_version" {
   default     = ""
   description = "Elastic Beanstalk NodeJS version to deploy"
 }
+
+variable "health_reporting_system" {
+  default = "enhanched" 
+  description = "Which health system, `enhanched` (default) or `basic` to deploy to the environment"
+}
