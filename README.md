@@ -103,6 +103,7 @@ Available targets:
 | vpc_id | ID of the VPC in which to provision the AWS resources | string | - | yes |
 | wait_for_ready_timeout |  | string | `20m` | no |
 | zone_id | Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment | string | `` | no |
+| force_destroy | Destroy S3 bucket for load balancer logs | boolean | false | no |
 
 ## Outputs
 
