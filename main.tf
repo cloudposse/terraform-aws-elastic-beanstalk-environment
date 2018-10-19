@@ -991,7 +991,7 @@ resource "aws_s3_bucket" "elb_logs" {
   bucket        = "${module.label.id}-logs"
   acl           = "private"
   force_destroy = "${force_destroy}"
-  policy = "${data.aws_iam_policy_document.elb_logs.json}"
+  policy        = "${data.aws_iam_policy_document.elb_logs.json}"
 }
 
 module "tld" {
