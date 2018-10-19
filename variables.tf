@@ -277,3 +277,8 @@ variable "nodejs_version" {
   default     = ""
   description = "Elastic Beanstalk NodeJS version to deploy"
 }
+
+variable "force_destroy" {
+  default     = false
+  description = "Destroy S3 bucket for load balancer logs"
+}
