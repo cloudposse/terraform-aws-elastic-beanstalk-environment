@@ -66,6 +66,7 @@ Available targets:
 | env_default_key | Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `DEFAULT_ENV_%d` | no |
 | env_default_value | Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `UNSET` | no |
 | env_vars | Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }` | map | `<map>` | no |
+| health_reporting_system | Which health system, `enhanched` (default) or `basic` to deploy to the environment | string | `enhanched` | no |
 | healthcheck_url | Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances | string | `/healthcheck` | no |
 | http_listener_enabled | Enable port 80 (http) | string | `false` | no |
 | instance_refresh_enabled | Enable weekly instance replacement. | string | `true` | no |
@@ -75,6 +76,7 @@ Available targets:
 | loadbalancer_managed_security_group | Load balancer managed security group | string | `` | no |
 | loadbalancer_security_groups | Load balancer security groups | list | `<list>` | no |
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
+| managed_actions_enabled | whether managed actions are turned on for this environment | string | `true` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
 | nodejs_version | Elastic Beanstalk NodeJS version to deploy | string | `` | no |
