@@ -285,5 +285,5 @@ variable "health_reporting_system" {
 
 variable "managed_actions_enabled" {
   default     = "true"
-  description = "whether managed actions are turned on for this environment"
+  description = "Flag used to control whether or not managed actions are turned on for this environment"
 }
