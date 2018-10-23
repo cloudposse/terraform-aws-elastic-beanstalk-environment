@@ -629,11 +629,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "1"
   }
   setting {
-    namespace = "aws:elasticbeanstalk:command"
-    name      = "DeploymentPolicy"
-    value     = "Rolling"
-  }
-  setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BASE_HOST"
     value     = "${var.name}"
