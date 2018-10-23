@@ -102,6 +102,16 @@ variable "config_source" {
   description = "S3 source for config"
 }
 
+variable "enable_managed_actions" {
+  default = true
+
+  description = <<EOF
+Enable managed platform updates.
+
+When you set this to true, you must also specify a PreferredStartTime and UpdateLevel.
+EOF
+}
+
 variable "preferred_start_time" {
   default     = "Sun:10:00"
   description = "Configure a maintenance window for managed actions in UTC"

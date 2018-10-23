@@ -646,7 +646,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
-    value     = "true"
+    value     = "${var.enable_managed_actions}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
