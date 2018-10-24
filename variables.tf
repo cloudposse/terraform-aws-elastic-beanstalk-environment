@@ -189,14 +189,39 @@ variable "associate_public_ip_address" {
   description = "Specifies whether to launch instances in your VPC with public IP addresses."
 }
 
+variable "autoscale_measure_name" {
+  default     = "CPUUtilization"
+  description = "Metric used for your Auto Scaling trigger"
+}
+
+variable "autoscale_statistic" {
+  default     = "Average"
+  description = "Statistic the trigger should use, such as Average"
+}
+
+variable "autoscale_unit" {
+  default     = "Percent"
+  description = "Unit for the trigger measurement, such as Bytes"
+}
+
 variable "autoscale_lower_bound" {
   default     = "20"
-  description = "Minimum level of autoscale metric to add instance"
+  description = "Minimum level of autoscale metric to remove an instance"
+}
+
+variable "autoscale_lower_increment" {
+  default     = "-1"
+  description = "How many Amazon EC2 instances to remove when performing a scaling activity."
 }
 
 variable "autoscale_upper_bound" {
   default     = "80"
-  description = "Maximum level of autoscale metric to remove instance"
+  description = "Maximum level of autoscale metric to add an instance"
+}
+
+variable "autoscale_upper_increment" {
+  default     = "1"
+  description = "How many Amazon EC2 instances to add when performing a scaling activity"
 }
 
 variable "autoscale_min" {
@@ -221,6 +246,7 @@ variable "wait_for_ready_timeout" {
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
 # Via: https://github.com/hashicorp/terraform/issues/7071
 variable "alb_zone_id" {
+  type = "map"
   default = {
     ap-northeast-1 = "Z1R25G3KIG2GBW"
     ap-northeast-2 = "Z3JE5OI70TWKCP"

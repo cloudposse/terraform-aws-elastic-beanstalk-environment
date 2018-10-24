@@ -403,17 +403,17 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "MeasureName"
-    value     = "CPUUtilization"
+    value     = "${var.autoscale_measure_name}"
   }
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Statistic"
-    value     = "Average"
+    value     = "${var.autoscale_statistic}"
   }
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Unit"
-    value     = "Percent"
+    value     = "${var.autoscale_unit}"
   }
   setting {
     namespace = "aws:autoscaling:trigger"
@@ -422,8 +422,18 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
   setting {
     namespace = "aws:autoscaling:trigger"
+    name      = "LowerBreachScaleIncrement"
+    value     = "${var.autoscale_lower_increment}"
+  }
+  setting {
+    namespace = "aws:autoscaling:trigger"
     name      = "UpperThreshold"
     value     = "${var.autoscale_upper_bound}"
+  }
+  setting {
+    namespace = "aws:autoscaling:trigger"
+    name      = "UpperThreshold"
+    value     = "${var.autoscale_upper_increment}"
   }
 
   ###=========================== Autoscale trigger ========================== ###
