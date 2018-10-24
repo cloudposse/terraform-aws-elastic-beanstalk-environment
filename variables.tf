@@ -247,6 +247,7 @@ variable "wait_for_ready_timeout" {
 # Via: https://github.com/hashicorp/terraform/issues/7071
 variable "alb_zone_id" {
   type = "map"
+
   default = {
     ap-northeast-1 = "Z1R25G3KIG2GBW"
     ap-northeast-2 = "Z3JE5OI70TWKCP"
