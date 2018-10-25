@@ -4,7 +4,7 @@ output "host" {
 }
 
 output "id" {
-  description = "ID of the Elastic Beanstalk Environment."
+  description = "ID of the Elastic Beanstalk environment."
   value       = "${aws_elastic_beanstalk_environment.default.id}"
 }
 
@@ -34,7 +34,7 @@ output "ec2_instance_profile_role_name" {
 }
 
 output "description" {
-  description = "Description of the Elastic Beanstalk Environment."
+  description = "Description of the Elastic Beanstalk environment."
   value       = "${aws_elastic_beanstalk_environment.default.description}"
 }
 
@@ -49,17 +49,17 @@ output "application" {
 }
 
 output "setting" {
-  description = "Settings specifically set for this Environment."
+  description = "Settings specifically set for this environment."
   value       = "${aws_elastic_beanstalk_environment.default.setting}"
 }
 
 output "all_settings" {
-  description = "List of all option settings configured in the Environment. These are a combination of default settings and their overrides from setting in the configuration."
+  description = "List of all option settings configured in the environment. These are a combination of default settings and their overrides from setting in the configuration."
   value       = "${aws_elastic_beanstalk_environment.default.all_settings}"
 }
 
 output "cname" {
-  description = "Fully qualified DNS name for the Environment."
+  description = "Fully qualified DNS name for the environment."
   value       = "${aws_elastic_beanstalk_environment.default.cname}"
 }
 
@@ -79,7 +79,7 @@ output "launch_configurations" {
 }
 
 output "load_balancers" {
-  description = "Elastic load balancers in use by this environment."
+  description = "Elastic Load Balancers in use by this environment."
   value       = "${aws_elastic_beanstalk_environment.default.load_balancers}"
 }
 
