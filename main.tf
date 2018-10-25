@@ -432,7 +432,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
   setting {
     namespace = "aws:autoscaling:trigger"
-    name      = "UpperThreshold"
+    name      = "UpperBreachScaleIncrement"
     value     = "${var.autoscale_upper_increment}"
   }
 
