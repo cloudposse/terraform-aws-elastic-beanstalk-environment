@@ -61,10 +61,23 @@
 
 | Name | Description |
 |------|-------------|
+| all_settings | List of all option settings configured in the Environment. These are a combination of default settings and their overrides from setting in the configuration. |
+| application | The Elastic Beanstalk Application specified for this environment. |
+| autoscaling_groups | The autoscaling groups used by this environment. |
+| cname | Fully qualified DNS name for the Environment. |
+| description | Description of the Elastic Beanstalk Environment. |
 | ec2_instance_profile_role_name | Instance IAM role name |
 | elb_dns_name | ELB technical host |
 | elb_zone_id | ELB zone id |
 | host | DNS hostname |
+| id | ID of the Elastic Beanstalk Environment. |
+| instances | Instances used by this environment. |
+| launch_configurations | Launch configurations in use by this environment. |
+| load_balancers | Elastic load balancers in use by this environment. |
 | name | Name |
+| queues | SQS queues in use by this environment. |
 | security_group_id | Security group id |
+| setting | Settings specifically set for this Environment. |
+| tier | The environment tier specified. |
+| triggers | Autoscaling triggers in use by this environment. |
 
