@@ -673,6 +673,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "InstanceRefreshEnabled"
     value     = "${var.instance_refresh_enabled}"
   }
+  setting {
+    namespace = "aws:elasticbeanstalk:container:nodejs"
+    name      = "NodeVersion"
+    value     = "${var.nodejs_version}"
+  }
   ###===================== Application ENV vars ======================###
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
@@ -993,10 +998,10 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
-  bucket = "${module.label.id}-logs"
-  acl    = "private"
-
-  policy = "${data.aws_iam_policy_document.elb_logs.json}"
+  bucket        = "${module.label.id}-logs"
+  acl           = "private"
+  force_destroy = "${var.force_destroy}"
+  policy        = "${data.aws_iam_policy_document.elb_logs.json}"
 }
 
 module "tld" {

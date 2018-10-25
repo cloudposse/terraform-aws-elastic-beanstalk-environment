@@ -19,6 +19,7 @@
 | env_default_key | Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `DEFAULT_ENV_%d` | no |
 | env_default_value | Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `UNSET` | no |
 | env_vars | Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }` | map | `<map>` | no |
+| force_destroy | Destroy S3 bucket for load balancer logs | string | `false` | no |
 | health_streaming_delete_on_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | string | `false` | no |
 | health_streaming_enabled | For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system. | string | `false` | no |
 | health_streaming_retention_in_days | The number of days to keep the archived health data before it expires. | string | `7` | no |
@@ -33,6 +34,7 @@
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
+| nodejs_version | Elastic Beanstalk NodeJS version to deploy | string | `` | no |
 | notification_endpoint | Notification endpoint | string | `` | no |
 | notification_protocol | Notification protocol | string | `email` | no |
 | notification_topic_arn | Notification topic arn | string | `` | no |
