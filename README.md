@@ -68,10 +68,15 @@ Available targets:
 | config_document | A JSON document describing the environment and instance metrics to publish to CloudWatch. | string | `{ "CloudWatchMetrics": {}, "Version": 1}` | no |
 | config_source | S3 source for config | string | `` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
+| description | Short description of the Environment | string | `` | no |
+| enable_managed_actions | Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel` | string | `true` | no |
 | env_default_key | Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `DEFAULT_ENV_%d` | no |
 | env_default_value | Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `UNSET` | no |
 | env_vars | Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }` | map | `<map>` | no |
 | force_destroy | Destroy S3 bucket for load balancer logs | string | `false` | no |
+| health_streaming_delete_on_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | string | `false` | no |
+| health_streaming_enabled | For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system. | string | `false` | no |
+| health_streaming_retention_in_days | The number of days to keep the archived health data before it expires. | string | `7` | no |
 | healthcheck_url | Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances | string | `/healthcheck` | no |
 | http_listener_enabled | Enable port 80 (http) | string | `false` | no |
 | instance_refresh_enabled | Enable weekly instance replacement. | string | `true` | no |
@@ -114,12 +119,24 @@ Available targets:
 
 | Name | Description |
 |------|-------------|
+| all_settings | List of all option settings configured in the environment. These are a combination of default settings and their overrides from setting in the configuration. |
+| application | The Elastic Beanstalk Application specified for this environment. |
+| autoscaling_groups | The autoscaling groups used by this environment. |
+| cname | Fully qualified DNS name for the environment. |
 | ec2_instance_profile_role_name | Instance IAM role name |
 | elb_dns_name | ELB technical host |
 | elb_zone_id | ELB zone id |
 | host | DNS hostname |
+| id | ID of the Elastic Beanstalk environment. |
+| instances | Instances used by this environment. |
+| launch_configurations | Launch configurations in use by this environment. |
+| load_balancers | Elastic Load Balancers in use by this environment. |
 | name | Name |
+| queues | SQS queues in use by this environment. |
 | security_group_id | Security group id |
+| setting | Settings specifically set for this environment. |
+| tier | The environment tier specified. |
+| triggers | Autoscaling triggers in use by this environment. |
 
 
 

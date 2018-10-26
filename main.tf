@@ -329,6 +329,7 @@ resource "aws_security_group" "default" {
 resource "aws_elastic_beanstalk_environment" "default" {
   name        = "${module.label.id}"
   application = "${var.app}"
+  description = "${var.description}"
 
   tier                = "${var.tier}"
   solution_stack_name = "${var.solution_stack_name}"
@@ -604,6 +605,21 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_certificate_arn}"
   }
   setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "HealthStreamingEnabled"
+    value     = "${var.health_streaming_enabled ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "DeleteOnTerminate"
+    value     = "${var.health_streaming_delete_on_terminate ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "RetentionInDays"
+    value     = "${var.health_streaming_retention_in_days}"
+  }
+  setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "ConfigDocument"
     value     = "${var.config_document}"
@@ -639,11 +655,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "1"
   }
   setting {
-    namespace = "aws:elasticbeanstalk:command"
-    name      = "DeploymentPolicy"
-    value     = "Rolling"
-  }
-  setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BASE_HOST"
     value     = "${var.name}"
@@ -656,7 +667,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
-    value     = "true"
+    value     = "${var.enable_managed_actions ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
