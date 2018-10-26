@@ -51,14 +51,19 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| alb_zone_id | ALB zone id | string | `<map>` | no |
+| alb_zone_id | ALB zone id | map | `<map>` | no |
 | app | EBS application name | string | - | yes |
 | associate_public_ip_address | Specifies whether to launch instances in your VPC with public IP addresses. | string | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
-| autoscale_lower_bound | Minimum level of autoscale metric to add instance | string | `20` | no |
+| autoscale_lower_bound | Minimum level of autoscale metric to remove an instance | string | `20` | no |
+| autoscale_lower_increment | How many Amazon EC2 instances to remove when performing a scaling activity. | string | `-1` | no |
 | autoscale_max | Maximum instances in charge | string | `3` | no |
+| autoscale_measure_name | Metric used for your Auto Scaling trigger | string | `CPUUtilization` | no |
 | autoscale_min | Minumum instances in charge | string | `2` | no |
-| autoscale_upper_bound | Maximum level of autoscale metric to remove instance | string | `80` | no |
+| autoscale_statistic | Statistic the trigger should use, such as Average | string | `Average` | no |
+| autoscale_unit | Unit for the trigger measurement, such as Bytes | string | `Percent` | no |
+| autoscale_upper_bound | Maximum level of autoscale metric to add an instance | string | `80` | no |
+| autoscale_upper_increment | How many Amazon EC2 instances to add when performing a scaling activity | string | `1` | no |
 | availability_zones | Choose the number of AZs for your instances | string | `Any 2` | no |
 | config_document | A JSON document describing the environment and instance metrics to publish to CloudWatch. | string | `{ "CloudWatchMetrics": {}, "Version": 1}` | no |
 | config_source | S3 source for config | string | `` | no |
