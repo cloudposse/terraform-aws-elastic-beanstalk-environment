@@ -123,7 +123,6 @@ Available targets:
 | application | The Elastic Beanstalk Application specified for this environment. |
 | autoscaling_groups | The autoscaling groups used by this environment. |
 | cname | Fully qualified DNS name for the environment. |
-| description | Description of the Elastic Beanstalk environment. |
 | ec2_instance_profile_role_name | Instance IAM role name |
 | elb_dns_name | ELB technical host |
 | elb_zone_id | ELB zone id |
