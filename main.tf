@@ -329,6 +329,7 @@ resource "aws_security_group" "default" {
 resource "aws_elastic_beanstalk_environment" "default" {
   name        = "${module.label.id}"
   application = "${var.app}"
+  description = "${var.description}"
 
   tier                = "${var.tier}"
   solution_stack_name = "${var.solution_stack_name}"
@@ -606,12 +607,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
     name      = "HealthStreamingEnabled"
-    value     = "${var.health_streaming_enabled}"
+    value     = "${var.health_streaming_enabled ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
     name      = "DeleteOnTerminate"
-    value     = "${var.health_streaming_delete_on_terminate}"
+    value     = "${var.health_streaming_delete_on_terminate ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
@@ -666,7 +667,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
-    value     = "${var.enable_managed_actions}"
+    value     = "${var.enable_managed_actions ? "true" : "false"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
