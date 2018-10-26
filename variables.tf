@@ -123,7 +123,7 @@ variable "config_source" {
 }
 
 variable "enable_managed_actions" {
-  default = true
+  default     = true
   description = "Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel`"
 }
 
