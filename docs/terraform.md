@@ -20,6 +20,7 @@
 | config_document | A JSON document describing the environment and instance metrics to publish to CloudWatch. | string | `{ "CloudWatchMetrics": {}, "Version": 1}` | no |
 | config_source | S3 source for config | string | `` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
+| description | Short description of the Environment | string | `` | no |
 | enable_managed_actions | Enable managed platform updates.<br><br>When you set this to true, you must also specify a PreferredStartTime and UpdateLevel. | string | `true` | no |
 | env_default_key | Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `DEFAULT_ENV_%d` | no |
 | env_default_value | Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `UNSET` | no |

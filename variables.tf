@@ -25,6 +25,11 @@ variable "name" {
   description = "Solution name, e.g. 'app' or 'jenkins'"
 }
 
+variable "description" {
+  default     = ""
+  description = "Short description of the Environment"
+}
+
 variable "config_document" {
   default     = "{ \"CloudWatchMetrics\": {}, \"Version\": 1}"
   description = "A JSON document describing the environment and instance metrics to publish to CloudWatch."
