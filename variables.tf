@@ -30,6 +30,21 @@ variable "config_document" {
   description = "A JSON document describing the environment and instance metrics to publish to CloudWatch."
 }
 
+variable "health_streaming_enabled" {
+  default     = false
+  description = "For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system."
+}
+
+variable "health_streaming_delete_on_terminate" {
+  default     = false
+  description = "Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days."
+}
+
+variable "health_streaming_retention_in_days" {
+  default     = "7"
+  description = "The number of days to keep the archived health data before it expires."
+}
+
 variable "healthcheck_url" {
   default     = "/healthcheck"
   description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
@@ -100,6 +115,16 @@ variable "zone_id" {
 variable "config_source" {
   default     = ""
   description = "S3 source for config"
+}
+
+variable "enable_managed_actions" {
+  default = true
+
+  description = <<EOF
+Enable managed platform updates.
+
+When you set this to true, you must also specify a PreferredStartTime and UpdateLevel.
+EOF
 }
 
 variable "preferred_start_time" {
