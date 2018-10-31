@@ -399,6 +399,14 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.updating_max_batch}"
   }
 
+  ###=========================== Debugging ========================== ###
+
+  setting {
+    namespace = "aws:elasticbeanstalk:xray"
+    name = "XRayEnabled"
+    value = "${var.enable_xray ? "true" : "false"}"
+  }
+
   ###=========================== Logging ========================== ###
 
   setting {

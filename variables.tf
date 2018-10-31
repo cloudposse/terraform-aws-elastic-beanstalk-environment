@@ -75,6 +75,12 @@ variable "notification_topic_name" {
   description = "Notification topic name"
 }
 
+variable "enable_xray" {
+  default = false
+  description = ""
+}
+
+
 variable "enable_log_publication_control" {
   default     = false
   description = "Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application."
