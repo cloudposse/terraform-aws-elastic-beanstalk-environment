@@ -76,10 +76,9 @@ variable "notification_topic_name" {
 }
 
 variable "enable_xray" {
-  default = false
-  description = ""
+  default     = false
+  description = "AWS X-Ray is an AWS service that gathers data about the requests that your application serves, and uses it to construct a service map that you can use to identify issues with your application and opportunities for optimization. Some regions don't offer AWS X-Ray. If you create an environment in one of these regions, you can't run the AWS X-Ray daemon on the instances in your environment."
 }
-
 
 variable "enable_log_publication_control" {
   default     = false
