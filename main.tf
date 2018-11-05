@@ -643,19 +643,9 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_certificate_arn}"
   }
   setting {
-    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
-    name      = "HealthStreamingEnabled"
-    value     = "${var.health_streaming_enabled ? "true" : "false"}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
-    name      = "DeleteOnTerminate"
-    value     = "${var.health_streaming_delete_on_terminate ? "true" : "false"}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
-    name      = "RetentionInDays"
-    value     = "${var.health_streaming_retention_in_days}"
+    namespace = "aws:elbv2:listener:443"
+    name      = "SSLPolicy"
+    value     = "${var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"

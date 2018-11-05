@@ -105,6 +105,11 @@ variable "loadbalancer_certificate_arn" {
   description = "Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager"
 }
 
+variable "loadbalancer_ssl_policy" {
+  default     = ""
+  description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer."
+}
+
 variable "loadbalancer_security_groups" {
   type        = "list"
   default     = []
