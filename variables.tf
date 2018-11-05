@@ -75,6 +75,26 @@ variable "notification_topic_name" {
   description = "Notification topic name"
 }
 
+variable "enable_log_publication_control" {
+  default     = false
+  description = "Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application."
+}
+
+variable "enable_stream_logs" {
+  default     = false
+  description = "Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment."
+}
+
+variable "logs_delete_on_terminate" {
+  default     = false
+  description = "Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days."
+}
+
+variable "logs_retention_in_days" {
+  default     = "7"
+  description = "The number of days to keep log events before they expire."
+}
+
 variable "loadbalancer_type" {
   default     = "classic"
   description = "Load Balancer type, e.g. 'application' or 'classic'"

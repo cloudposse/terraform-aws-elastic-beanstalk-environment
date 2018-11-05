@@ -399,6 +399,44 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.updating_max_batch}"
   }
 
+  ###=========================== Logging ========================== ###
+
+  setting {
+    namespace = "aws:elasticbeanstalk:hostmanager"
+    name      = "LogPublicationControl"
+    value     = "${var.enable_log_publication_control ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs"
+    name      = "StreamLogs"
+    value     = "${var.enable_stream_logs ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs"
+    name      = "DeleteOnTerminate"
+    value     = "${var.logs_delete_on_terminate ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs"
+    name      = "RetentionInDays"
+    value     = "${var.logs_retention_in_days}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "HealthStreamingEnabled"
+    value     = "${var.health_streaming_enabled ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "DeleteOnTerminate"
+    value     = "${var.health_streaming_delete_on_terminate ? "true" : "false"}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
+    name      = "RetentionInDays"
+    value     = "${var.health_streaming_retention_in_days}"
+  }
+
   ###=========================== Autoscale trigger ========================== ###
 
   setting {
