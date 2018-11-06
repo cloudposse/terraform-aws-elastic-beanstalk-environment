@@ -39,6 +39,7 @@
 | loadbalancer_certificate_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | string | `` | no |
 | loadbalancer_managed_security_group | Load balancer managed security group | string | `` | no |
 | loadbalancer_security_groups | Load balancer security groups | list | `<list>` | no |
+| loadbalancer_ssl_policy | Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer. | string | `` | no |
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | logs_delete_on_terminate | Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days. | string | `false` | no |
 | logs_retention_in_days | The number of days to keep log events before they expire. | string | `7` | no |

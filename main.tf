@@ -643,6 +643,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_certificate_arn}"
   }
   setting {
+    namespace = "aws:elbv2:listener:443"
+    name      = "SSLPolicy"
+    value     = "${var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""}"
+  }
+  setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "ConfigDocument"
     value     = "${var.config_document}"
