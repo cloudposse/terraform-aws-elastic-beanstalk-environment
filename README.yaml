@@ -11,13 +11,15 @@ name: terraform-aws-elastic-beanstalk-environment
 tags:
   - aws
   - terraform
+  - terraform-modules
   - platform
-  - elastic
-  - beanstalk
+  - elastic-beanstalk
+  - elasticbeanstalk
+  - environment
 
 # Categories of this project
 categories:
-  - terraform-platform
+  - terraform-modules/platform
 
 # Logo for this project
 #logo: docs/logo.png
