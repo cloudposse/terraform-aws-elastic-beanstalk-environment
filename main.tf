@@ -670,7 +670,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
-    value     = "enhanced"
+    value     = "${var.enhanced_reporting_enabled ? "enhanced" : "basic"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:command"
