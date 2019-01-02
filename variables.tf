@@ -100,6 +100,11 @@ variable "logs_retention_in_days" {
   description = "The number of days to keep log events before they expire."
 }
 
+variable "environment_type" {
+  default     = "LoadBalanced"
+  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'"
+}
+
 variable "loadbalancer_type" {
   default     = "classic"
   description = "Load Balancer type, e.g. 'application' or 'classic'"
