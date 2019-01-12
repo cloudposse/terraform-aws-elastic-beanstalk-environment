@@ -102,7 +102,7 @@ variable "logs_retention_in_days" {
 
 variable "environment_type" {
   default     = "LoadBalanced"
-  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be changed to 'Time'"
+  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time' and `updating_min_in_service` must be set to 0"
 }
 
 variable "loadbalancer_type" {
