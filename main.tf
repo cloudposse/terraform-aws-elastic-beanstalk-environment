@@ -566,7 +566,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener:443" : ""}"
     name      = "${var.environment_type == "LoadBalanced" ? "InstancePort" : ""}"
-    value     = "${var.environment_type == "LoadBalanced" ? "443" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "80" : ""}"
   }
   setting {
     namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener:443" : ""}"
@@ -586,7 +586,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "${var.environment_type == "LoadBalanced" ? format("aws:elb:listener:%s", var.ssh_listener_port) : ""}"
     name      = "${var.environment_type == "LoadBalanced" ? "InstancePort" : ""}"
-    value     = "${var.environment_type == "LoadBalanced" ? var.ssh_listener_port : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "22" : ""}"
   }
   setting {
     namespace = "${var.environment_type == "LoadBalanced" ? format("aws:elb:listener:%s", var.ssh_listener_port) : ""}"
