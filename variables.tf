@@ -102,7 +102,7 @@ variable "logs_retention_in_days" {
 
 variable "environment_type" {
   default     = "LoadBalanced"
-  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time' and `updating_min_in_service` must be set to 0"
+  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `public_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments)"
 }
 
 variable "loadbalancer_type" {
