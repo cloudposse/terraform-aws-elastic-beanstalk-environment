@@ -441,39 +441,39 @@ resource "aws_elastic_beanstalk_environment" "default" {
   ###=========================== Autoscale trigger ========================== ###
 
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "MeasureName"
-    value     = "${var.autoscale_measure_name}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "MeasureName" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_measure_name : ""}"
   }
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "Statistic"
-    value     = "${var.autoscale_statistic}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "Statistic" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_statistic : ""}"
   }
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "Unit"
-    value     = "${var.autoscale_unit}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "Unit" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_unit : ""}"
   }
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "LowerThreshold"
-    value     = "${var.autoscale_lower_bound}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "LowerThreshold" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_lower_bound : ""}"
   }
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "LowerBreachScaleIncrement"
-    value     = "${var.autoscale_lower_increment}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "LowerBreachScaleIncrement" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_lower_increment : ""}"
   }
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "UpperThreshold"
-    value     = "${var.autoscale_upper_bound}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "UpperThreshold" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_upper_bound : ""}"
   }
   setting {
-    namespace = "aws:autoscaling:trigger"
-    name      = "UpperBreachScaleIncrement"
-    value     = "${var.autoscale_upper_increment}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:autoscaling:trigger" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "UpperBreachScaleIncrement" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_upper_increment : ""}"
   }
 
   ###=========================== Autoscale trigger ========================== ###
@@ -521,132 +521,132 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
-    value     = "${var.autoscale_min}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_min : 1}"
   }
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
-    value     = "${var.autoscale_max}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.autoscale_max : 1}"
   }
   setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "CrossZone"
-    value     = "true"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "CrossZone" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "true" : ""}"
   }
   setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "SecurityGroups"
-    value     = "${join(",", var.loadbalancer_security_groups)}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:loadbalancer" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "SecurityGroups" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? join(",", var.loadbalancer_security_groups) : ""}"
   }
   setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "ManagedSecurityGroup"
-    value     = "${var.loadbalancer_managed_security_group}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:loadbalancer" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ManagedSecurityGroup" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.loadbalancer_managed_security_group : ""}"
   }
   setting {
-    namespace = "aws:elb:listener"
-    name      = "ListenerProtocol"
-    value     = "HTTP"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerProtocol" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "HTTP" : ""}"
   }
   setting {
-    namespace = "aws:elb:listener"
-    name      = "InstancePort"
-    value     = "80"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "InstancePort" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "80" : ""}"
   }
   setting {
-    namespace = "aws:elb:listener"
-    name      = "ListenerEnabled"
-    value     = "${var.http_listener_enabled  == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerEnabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? (var.http_listener_enabled  == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false") : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:443"
-    name      = "ListenerProtocol"
-    value     = "HTTPS"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerProtocol" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "HTTPS" : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:443"
-    name      = "InstancePort"
-    value     = "80"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "InstancePort" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "443" : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:443"
-    name      = "SSLCertificateId"
-    value     = "${var.loadbalancer_certificate_arn}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "SSLCertificateId" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.loadbalancer_certificate_arn : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:443"
-    name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerEnabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.loadbalancer_certificate_arn == "" ? "false" : "true" : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:${var.ssh_listener_port}"
-    name      = "ListenerProtocol"
-    value     = "TCP"
+    namespace = "${var.environment_type == "LoadBalanced" ? format("aws:elb:listener:%s", var.ssh_listener_port) : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerProtocol" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "TCP" : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:${var.ssh_listener_port}"
-    name      = "InstancePort"
-    value     = "22"
+    namespace = "${var.environment_type == "LoadBalanced" ? format("aws:elb:listener:%s", var.ssh_listener_port) : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "InstancePort" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.ssh_listener_port : ""}"
   }
   setting {
-    namespace = "aws:elb:listener:${var.ssh_listener_port}"
-    name      = "ListenerEnabled"
-    value     = "${var.ssh_listener_enabled}"
+    namespace = "${var.environment_type == "LoadBalanced" ? format("aws:elb:listener:%s", var.ssh_listener_port) : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerEnabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.ssh_listener_enabled : ""}"
   }
   setting {
-    namespace = "aws:elb:policies"
-    name      = "ConnectionSettingIdleTimeout"
-    value     = "${var.ssh_listener_enabled == "true" ? "3600" : "60"}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:policies" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ConnectionSettingIdleTimeout" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? (var.ssh_listener_enabled == "true" ? "3600" : "60") : ""}"
   }
   setting {
-    namespace = "aws:elb:policies"
-    name      = "ConnectionDrainingEnabled"
-    value     = "true"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elb:policies" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ConnectionDrainingEnabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "true" : ""}"
   }
   setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "AccessLogsS3Bucket"
-    value     = "${aws_s3_bucket.elb_logs.id}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:loadbalancer" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "AccessLogsS3Bucket" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? aws_s3_bucket.elb_logs.id : ""}"
   }
   setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "AccessLogsS3Enabled"
-    value     = "true"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:loadbalancer" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "AccessLogsS3Enabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "true" : ""}"
   }
   setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "SecurityGroups"
-    value     = "${join(",", var.loadbalancer_security_groups)}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:loadbalancer" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "SecurityGroups" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? join(",", var.loadbalancer_security_groups) : ""}"
   }
   setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "ManagedSecurityGroup"
-    value     = "${var.loadbalancer_managed_security_group}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:loadbalancer" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ManagedSecurityGroup" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.loadbalancer_managed_security_group : ""}"
   }
   setting {
-    namespace = "aws:elbv2:listener:default"
-    name      = "ListenerEnabled"
-    value     = "${var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:listener:default" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerEnabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? (var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false") : ""}"
   }
   setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "ListenerEnabled"
-    value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "ListenerEnabled" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? (var.loadbalancer_certificate_arn == "" ? "false" : "true") : ""}"
   }
   setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "Protocol"
-    value     = "HTTPS"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "Protocol" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? "HTTPS" : ""}"
   }
   setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLCertificateArns"
-    value     = "${var.loadbalancer_certificate_arn}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "SSLCertificateArns" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.loadbalancer_certificate_arn : ""}"
   }
   setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLPolicy"
-    value     = "${var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elbv2:listener:443" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "SSLPolicy" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? (var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : "") : ""}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
@@ -664,9 +664,9 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.environment_type}"
   }
   setting {
-    namespace = "aws:elasticbeanstalk:environment"
-    name      = "LoadBalancerType"
-    value     = "${var.loadbalancer_type}"
+    namespace = "${var.environment_type == "LoadBalanced" ? "aws:elasticbeanstalk:environment" : ""}"
+    name      = "${var.environment_type == "LoadBalanced" ? "LoadBalancerType" : ""}"
+    value     = "${var.environment_type == "LoadBalanced" ? var.loadbalancer_type : ""}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
