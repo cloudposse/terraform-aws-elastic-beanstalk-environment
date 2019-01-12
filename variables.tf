@@ -37,7 +37,7 @@ variable "config_document" {
 
 variable "enhanced_reporting_enabled" {
   default     = true
-  description = "Whether to enable \"enhanced\" health reporting for this environment.  If false, \"basic\" reporting is used"
+  description = "Whether to enable \"enhanced\" health reporting for this environment.  If false, \"basic\" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false"
 }
 
 variable "health_streaming_enabled" {
