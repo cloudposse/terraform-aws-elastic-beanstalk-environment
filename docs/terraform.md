@@ -70,7 +70,7 @@
 | updating_min_in_service | Minimum count of instances up during update | string | `1` | no |
 | version_label | Elastic Beanstalk Application version to deploy | string | `` | no |
 | vpc_id | ID of the VPC in which to provision the AWS resources | string | - | yes |
-| wait_for_ready_timeout | - | string | `20m` | no |
+| wait_for_ready_timeout | The maximum duration that Terraform should wait for an Elastic Beanstalk Environment to be in a ready state before timing out. | string | `20m` | no |
 | zone_id | Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment | string | `` | no |
 
 ## Outputs

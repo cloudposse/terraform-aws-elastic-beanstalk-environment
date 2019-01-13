@@ -300,7 +300,8 @@ variable "solution_stack_name" {
 }
 
 variable "wait_for_ready_timeout" {
-  default = "20m"
+  default     = "20m"
+  description = "The maximum duration that Terraform should wait for an Elastic Beanstalk Environment to be in a ready state before timing out."
 }
 
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
