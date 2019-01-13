@@ -35,6 +35,11 @@ variable "config_document" {
   description = "A JSON document describing the environment and instance metrics to publish to CloudWatch."
 }
 
+variable "enhanced_reporting_enabled" {
+  default     = true
+  description = "Whether to enable \"enhanced\" health reporting for this environment.  If false, \"basic\" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false"
+}
+
 variable "health_streaming_enabled" {
   default     = false
   description = "For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system."

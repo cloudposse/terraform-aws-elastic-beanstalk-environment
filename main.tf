@@ -37,6 +37,7 @@ resource "aws_iam_role" "service" {
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced-health" {
+  count      = "${var.enhanced_reporting_enabled ? 1 : 0}"
   role       = "${aws_iam_role.service.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
@@ -670,7 +671,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
-    value     = "enhanced"
+    value     = "${var.enhanced_reporting_enabled ? "enhanced" : "basic"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:command"
