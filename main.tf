@@ -660,6 +660,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
+    name      = "EnvironmentType"
+    value     = "${var.environment_type}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:environment"
     name      = "LoadBalancerType"
     value     = "${var.loadbalancer_type}"
   }

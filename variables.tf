@@ -100,6 +100,11 @@ variable "logs_retention_in_days" {
   description = "The number of days to keep log events before they expire."
 }
 
+variable "environment_type" {
+  default     = "LoadBalanced"
+  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `public_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments)"
+}
+
 variable "loadbalancer_type" {
   default     = "classic"
   description = "Load Balancer type, e.g. 'application' or 'classic'"
@@ -295,7 +300,8 @@ variable "solution_stack_name" {
 }
 
 variable "wait_for_ready_timeout" {
-  default = "20m"
+  default     = "20m"
+  description = "The maximum duration that Terraform should wait for an Elastic Beanstalk Environment to be in a ready state before timing out."
 }
 
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
