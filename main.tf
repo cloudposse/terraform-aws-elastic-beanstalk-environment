@@ -486,7 +486,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SSHSourceRestriction"
-    value     = "tcp, 22, 22, ${var.ssh_source_restriction}"
+    value     = "tcp,22,22,${var.ssh_source_restriction}"
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
