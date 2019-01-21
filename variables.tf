@@ -373,7 +373,6 @@ variable "force_destroy" {
 }
 
 variable "elb_scheme" {
-  default = "internal"
+  default     = "internal"
   description = "Whether the load balancer should be 'internal' or 'public'"
 }
-
