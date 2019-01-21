@@ -371,3 +371,9 @@ variable "force_destroy" {
   default     = false
   description = "Destroy S3 bucket for load balancer logs"
 }
+
+variable "elb_scheme" {
+  default = "internal"
+  description = "Whether the load balancer should be 'internal' or 'public'"
+}
+
