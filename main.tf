@@ -37,6 +37,7 @@ resource "aws_iam_role" "service" {
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced-health" {
+  count      = "${var.enhanced_reporting_enabled ? 1 : 0}"
   role       = "${aws_iam_role.service.name}"
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
@@ -485,7 +486,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SSHSourceRestriction"
-    value     = "tcp, 22, 22, ${var.ssh_source_restriction}"
+    value     = "tcp,22,22,${var.ssh_source_restriction}"
   }
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -643,19 +644,9 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_certificate_arn}"
   }
   setting {
-    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
-    name      = "HealthStreamingEnabled"
-    value     = "${var.health_streaming_enabled ? "true" : "false"}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
-    name      = "DeleteOnTerminate"
-    value     = "${var.health_streaming_delete_on_terminate ? "true" : "false"}"
-  }
-  setting {
-    namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
-    name      = "RetentionInDays"
-    value     = "${var.health_streaming_retention_in_days}"
+    namespace = "aws:elbv2:listener:443"
+    name      = "SSLPolicy"
+    value     = "${var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
@@ -666,6 +657,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elasticbeanstalk:application"
     name      = "Application Healthcheck URL"
     value     = "HTTP:80${var.healthcheck_url}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:environment"
+    name      = "EnvironmentType"
+    value     = "${var.environment_type}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
@@ -680,7 +676,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
-    value     = "enhanced"
+    value     = "${var.enhanced_reporting_enabled ? "enhanced" : "basic"}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:command"

@@ -1,4 +1,3 @@
-
 ## Inputs
 
 | Name | Description | Type | Default | Required |
@@ -24,9 +23,11 @@
 | enable_log_publication_control | Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application. | string | `false` | no |
 | enable_managed_actions | Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel` | string | `true` | no |
 | enable_stream_logs | Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment. | string | `false` | no |
+| enhanced_reporting_enabled | Whether to enable "enhanced" health reporting for this environment.  If false, "basic" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false | string | `true` | no |
 | env_default_key | Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `DEFAULT_ENV_%d` | no |
 | env_default_value | Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `UNSET` | no |
 | env_vars | Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }` | map | `<map>` | no |
+| environment_type | Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `public_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments) | string | `LoadBalanced` | no |
 | force_destroy | Destroy S3 bucket for load balancer logs | string | `false` | no |
 | health_streaming_delete_on_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | string | `false` | no |
 | health_streaming_enabled | For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system. | string | `false` | no |
@@ -39,6 +40,7 @@
 | loadbalancer_certificate_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | string | `` | no |
 | loadbalancer_managed_security_group | Load balancer managed security group | string | `` | no |
 | loadbalancer_security_groups | Load balancer security groups | list | `<list>` | no |
+| loadbalancer_ssl_policy | Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer. | string | `` | no |
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | logs_delete_on_terminate | Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days. | string | `false` | no |
 | logs_retention_in_days | The number of days to keep log events before they expire. | string | `7` | no |
@@ -68,7 +70,7 @@
 | updating_min_in_service | Minimum count of instances up during update | string | `1` | no |
 | version_label | Elastic Beanstalk Application version to deploy | string | `` | no |
 | vpc_id | ID of the VPC in which to provision the AWS resources | string | - | yes |
-| wait_for_ready_timeout |  | string | `20m` | no |
+| wait_for_ready_timeout | The maximum duration that Terraform should wait for an Elastic Beanstalk Environment to be in a ready state before timing out. | string | `20m` | no |
 | zone_id | Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment | string | `` | no |
 
 ## Outputs

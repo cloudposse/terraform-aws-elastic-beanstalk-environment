@@ -35,6 +35,11 @@ variable "config_document" {
   description = "A JSON document describing the environment and instance metrics to publish to CloudWatch."
 }
 
+variable "enhanced_reporting_enabled" {
+  default     = true
+  description = "Whether to enable \"enhanced\" health reporting for this environment.  If false, \"basic\" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false"
+}
+
 variable "health_streaming_enabled" {
   default     = false
   description = "For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system."
@@ -95,6 +100,11 @@ variable "logs_retention_in_days" {
   description = "The number of days to keep log events before they expire."
 }
 
+variable "environment_type" {
+  default     = "LoadBalanced"
+  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `public_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments)"
+}
+
 variable "loadbalancer_type" {
   default     = "classic"
   description = "Load Balancer type, e.g. 'application' or 'classic'"
@@ -103,6 +113,11 @@ variable "loadbalancer_type" {
 variable "loadbalancer_certificate_arn" {
   default     = ""
   description = "Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager"
+}
+
+variable "loadbalancer_ssl_policy" {
+  default     = ""
+  description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer."
 }
 
 variable "loadbalancer_security_groups" {
@@ -285,7 +300,8 @@ variable "solution_stack_name" {
 }
 
 variable "wait_for_ready_timeout" {
-  default = "20m"
+  default     = "20m"
+  description = "The maximum duration that Terraform should wait for an Elastic Beanstalk Environment to be in a ready state before timing out."
 }
 
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
@@ -308,6 +324,7 @@ variable "alb_zone_id" {
     us-east-2      = "Z14LCN19Q5QHIC"
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
+    eu-west-3      = "ZCMLWB8V5SYIT"
   }
 
   description = "ALB zone id"
