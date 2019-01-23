@@ -298,8 +298,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 
 ### Contributors
 
-|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Guillaume Delacour][guikcd_avatar]][guikcd_homepage]<br/>[Guillaume Delacour][guikcd_homepage] | [![Viktor Erpylev][velmoga_avatar]][velmoga_homepage]<br/>[Viktor Erpylev][velmoga_homepage] | [![Lucas Pearson][pearson-lucas-dev_avatar]][pearson-lucas-dev_homepage]<br/>[Lucas Pearson][pearson-lucas-dev_homepage] |
-|---|---|---|---|---|---|
+|  [![Erik Osterman][osterman_avatar]][osterman_homepage]<br/>[Erik Osterman][osterman_homepage] | [![Igor Rodionov][goruha_avatar]][goruha_homepage]<br/>[Igor Rodionov][goruha_homepage] | [![Andriy Knysh][aknysh_avatar]][aknysh_homepage]<br/>[Andriy Knysh][aknysh_homepage] | [![Guillaume Delacour][guikcd_avatar]][guikcd_homepage]<br/>[Guillaume Delacour][guikcd_homepage] | [![Viktor Erpylev][velmoga_avatar]][velmoga_homepage]<br/>[Viktor Erpylev][velmoga_homepage] | [![Lucas Pearson][pearson-lucas-dev_avatar]][pearson-lucas-dev_homepage]<br/>[Lucas Pearson][pearson-lucas-dev_homepage] | [![Chris Green][DirectRoot_avatar]][DirectRoot_homepage]<br/>[Chris Green][DirectRoot_homepage] |
+|---|---|---|---|---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
   [osterman_avatar]: https://github.com/osterman.png?size=150
@@ -313,6 +313,8 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [velmoga_avatar]: https://github.com/velmoga.png?size=150
   [pearson-lucas-dev_homepage]: https://github.com/pearson-lucas-dev
   [pearson-lucas-dev_avatar]: https://github.com/pearson-lucas-dev.png?size=150
+  [DirectRoot_homepage]: https://github.com/DirectRoot
+  [DirectRoot_avatar]: https://github.com/DirectRoot.png?size=150
 
 
 
