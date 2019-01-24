@@ -87,3 +87,8 @@ output "triggers" {
   description = "Autoscaling triggers in use by this environment."
   value       = "${aws_elastic_beanstalk_environment.default.triggers}"
 }
+
+output "elb_load_balancers" {
+  description = "Elastic Load Balancers in use by this environment."
+  value       = "${aws_elastic_beanstalk_environment.default.load_balancers}"
+}
