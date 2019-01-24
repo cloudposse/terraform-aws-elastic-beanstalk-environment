@@ -83,6 +83,7 @@
 | cname | Fully qualified DNS name for the environment. |
 | ec2_instance_profile_role_name | Instance IAM role name |
 | elb_dns_name | ELB technical host |
+| elb_load_balancers | Elastic Load Balancers in use by this environment. |
 | elb_zone_id | ELB zone id |
 | host | DNS hostname |
 | id | ID of the Elastic Beanstalk environment. |
