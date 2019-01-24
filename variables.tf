@@ -371,3 +371,8 @@ variable "force_destroy" {
   default     = false
   description = "Destroy S3 bucket for load balancer logs"
 }
+
+variable "elb_scheme" {
+  default     = "public"
+  description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
+}

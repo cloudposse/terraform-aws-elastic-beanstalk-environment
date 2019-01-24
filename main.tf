@@ -544,6 +544,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "${var.loadbalancer_managed_security_group}"
   }
   setting {
+    namespace = "aws:ec2:vpc"
+    name      = "ELBScheme"
+    value     = "${var.environment_type == "LoadBalanced" ? var.elb_scheme : ""}"
+  }
+  setting {
     namespace = "aws:elb:listener"
     name      = "ListenerProtocol"
     value     = "HTTP"
