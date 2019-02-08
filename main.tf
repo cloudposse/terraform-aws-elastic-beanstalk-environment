@@ -556,7 +556,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener"
     name      = "InstancePort"
-    value     = "80"
+    value     = "${var.application_port}"
   }
   setting {
     namespace = "aws:elb:listener"
@@ -571,7 +571,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elb:listener:443"
     name      = "InstancePort"
-    value     = "80"
+    value     = "${var.application_port}"
   }
   setting {
     namespace = "aws:elb:listener:443"
@@ -661,7 +661,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:application"
     name      = "Application Healthcheck URL"
-    value     = "HTTP:80${var.healthcheck_url}"
+    value     = "HTTP:${var.application_port}${var.healthcheck_url}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment"
@@ -991,7 +991,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:environment:process:default"
     name      = "Port"
-    value     = "80"
+    value     = "${var.application_port}"
   }
   setting {
     namespace = "aws:elasticbeanstalk:environment:process:default"
