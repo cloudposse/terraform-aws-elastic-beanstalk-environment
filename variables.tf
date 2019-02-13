@@ -137,6 +137,11 @@ variable "http_listener_enabled" {
   description = "Enable port 80 (http)"
 }
 
+variable "application_port" {
+  default     = "80"
+  description = "Port application is listening on"
+}
+
 variable "ssh_listener_enabled" {
   default     = "false"
   description = "Enable ssh port"

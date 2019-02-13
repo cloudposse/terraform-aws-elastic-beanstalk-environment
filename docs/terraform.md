@@ -4,6 +4,7 @@
 |------|-------------|:----:|:-----:|:-----:|
 | alb_zone_id | ALB zone id | map | `<map>` | no |
 | app | EBS application name | string | - | yes |
+| application_port | Port application is listening on | string | `80` | no |
 | associate_public_ip_address | Specifies whether to launch instances in your VPC with public IP addresses. | string | `false` | no |
 | attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
 | autoscale_lower_bound | Minimum level of autoscale metric to remove an instance | string | `20` | no |
