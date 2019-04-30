@@ -1012,12 +1012,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   # This should make it work with Classic Load balancer
   # https://github.com/terraform-providers/terraform-provider-aws/issues/4000
   setting {
-    namespace = "aws:elb:policies:AWSEB-ELB-StickinessPolicy"
+    namespace = "aws:elb:policies"
     name      = "Stickiness Policy"
     value     = "${var.stickiness_enabled}"
   }
   setting {
-    namespace = "aws:elb:policies:AWSEB-ELB-StickinessPolicy"
+    namespace = "aws:elb:policies"
     name      = "Stickiness Cookie Expiration"
     value     = "${var.stickiness_lb_cookie_duration}"
   }
