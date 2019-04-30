@@ -153,7 +153,7 @@ variable "stickiness_lb_cookie_duration" {
 }
 
 variable "stickiness_type" {
-  default     = "lb_cookie"
+  default     = ""
   description = "Set to lb_cookie to use cookies for sticky sessions"
 }
 
