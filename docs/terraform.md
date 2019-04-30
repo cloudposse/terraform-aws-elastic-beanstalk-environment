@@ -67,7 +67,6 @@
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
 | stickiness_enabled | Set to true to enable sticky sessions. This option is only applicable to environments with a classic load balancer or an application load balancer. | string | `false` | no |
 | stickiness_lb_cookie_duration | Lifetime, in seconds, of the sticky session cookie. This option is only applicable to environments with a classic load balancer or an application load balancer. | string | `86400` | no |
-| stickiness_type | Set to lb_cookie to use cookies for sticky sessions. This option is only applicable to environments with a classic load balancer or an application load balancer. | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map | `<map>` | no |
 | tier | Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker') | string | `WebServer` | no |
 | update_level | The highest level of update to apply with managed platform updates | string | `minor` | no |
