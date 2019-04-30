@@ -999,16 +999,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = "HTTP"
   }
   ###===================== Load Balancer stickiness settings =====================================================###
-  # setting {
-  #   namespace = "aws:elasticbeanstalk:environment:process:default"
-  #   name      = "StickinessEnabled"
-  #   value     = "${var.stickiness_enabled}"
-  # }
-  # setting {
-  #   namespace = "aws:elasticbeanstalk:environment:process:default"
-  #   name      = "StickinessLBCookieDuration"
-  #   value     = "${var.stickiness_lb_cookie_duration}"
-  # }
+  setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "StickinessEnabled"
+    value     = "${var.stickiness_enabled}"
+  }
+  setting {
+    namespace = "aws:elasticbeanstalk:environment:process:default"
+    name      = "StickinessLBCookieDuration"
+    value     = "${var.stickiness_lb_cookie_duration}"
+  }
   # This should make it work with Classic Load balancer
   # https://github.com/terraform-providers/terraform-provider-aws/issues/4000
   setting {
