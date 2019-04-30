@@ -1008,11 +1008,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "StickinessLBCookieDuration"
     value     = "${var.stickiness_lb_cookie_duration}"
   }
-  setting {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "StickinessType"
-    value     = "${var.stickiness_type}"
-  }
+
   ###===================== Notification =====================================================###
 
   setting {

@@ -152,11 +152,6 @@ variable "stickiness_lb_cookie_duration" {
   description = "Lifetime, in seconds, of the sticky session cookie"
 }
 
-variable "stickiness_type" {
-  default     = "lb_cookie"
-  description = "Set to lb_cookie to use cookies for sticky sessions"
-}
-
 variable "ssh_listener_enabled" {
   default     = "false"
   description = "Enable ssh port"
