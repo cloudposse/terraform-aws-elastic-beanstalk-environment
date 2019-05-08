@@ -142,6 +142,16 @@ variable "application_port" {
   description = "Port application is listening on"
 }
 
+variable "stickiness_enabled" {
+  default     = "false"
+  description = "Set to true to enable sticky sessions"
+}
+
+variable "stickiness_lb_cookie_duration" {
+  default     = "86400"
+  description = "Lifetime, in seconds, of the sticky session cookie"
+}
+
 variable "ssh_listener_enabled" {
   default     = "false"
   description = "Enable ssh port"
