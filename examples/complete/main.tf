@@ -61,7 +61,7 @@ module "elastic_beanstalk_environment" {
   public_subnets      = "${module.subnets.public_subnet_ids}"
   private_subnets     = "${module.subnets.private_subnet_ids}"
   security_groups     = ["${module.vpc.vpc_default_security_group_id}"]
-  solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.2 running Docker 18.03.1-ce"
+  solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.10 running Docker 18.06.1-ce"
   keypair             = ""
 
   env_vars = "${
