@@ -82,6 +82,11 @@ data "aws_iam_policy_document" "ec2" {
   }
 }
 
+resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
+  role       = "${aws_iam_role.ec2.name}"
+  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+}
+
 resource "aws_iam_role" "ec2" {
   name               = "${module.label.id}-ec2"
   assume_role_policy = "${data.aws_iam_policy_document.ec2.json}"
