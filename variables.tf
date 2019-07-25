@@ -1,21 +1,21 @@
 variable "namespace" {
-  type        = "string"
+  type        = string
   description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
 }
 
 variable "stage" {
-  type        = "string"
+  type        = string
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
 }
 
 variable "delimiter" {
-  type        = "string"
+  type        = string
   default     = "-"
   description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
 }
 
 variable "attributes" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "Additional attributes (e.g. `1`)"
 }
@@ -121,13 +121,13 @@ variable "loadbalancer_ssl_policy" {
 }
 
 variable "loadbalancer_security_groups" {
-  type        = "list"
+  type        = list(string)
   default     = []
   description = "Load balancer security groups"
 }
 
 variable "loadbalancer_managed_security_group" {
-  type        = "string"
+  type        = string
   default     = ""
   description = "Load balancer managed security group"
 }
@@ -193,7 +193,7 @@ variable "instance_refresh_enabled" {
 }
 
 variable "security_groups" {
-  type        = "list"
+  type        = list(string)
   description = "List of security groups to be allowed to connect to the EC2 instances"
 }
 
@@ -206,12 +206,12 @@ variable "vpc_id" {
 }
 
 variable "public_subnets" {
-  type        = "list"
+  type        = list(string)
   description = "List of public subnets to place Elastic Load Balancer"
 }
 
 variable "private_subnets" {
-  type        = "list"
+  type        = list(string)
   description = "List of private subnets to place EC2 instances"
 }
 
@@ -322,7 +322,7 @@ variable "wait_for_ready_timeout" {
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
 # Via: https://github.com/hashicorp/terraform/issues/7071
 variable "alb_zone_id" {
-  type = "map"
+  type = map(string)
 
   default = {
     ap-northeast-1 = "Z1R25G3KIG2GBW"
@@ -346,7 +346,7 @@ variable "alb_zone_id" {
 }
 
 variable "tags" {
-  type        = "map"
+  type        = map(string)
   default     = {}
   description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
 }
@@ -363,7 +363,7 @@ variable "env_default_value" {
 
 variable "env_vars" {
   default     = {}
-  type        = "map"
+  type        = map(string)
   description = "Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }`"
 }
 
@@ -391,3 +391,4 @@ variable "elb_scheme" {
   default     = "public"
   description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
 }
+
