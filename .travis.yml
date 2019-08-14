@@ -5,6 +5,12 @@ addons:
       - make
       - curl
 
+matrix:
+  include:
+    - env: TERRAFORM_VERSION=0.12.6
+  allow_failures:
+    - env: TERRAFORM_VERSION=0.11.11
+
 install:
   - make init
 
