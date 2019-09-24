@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "us-east-1"
+  region = var.region
 }
 
 data "aws_availability_zones" "available" {
@@ -25,7 +25,6 @@ module "subnets" {
   namespace           = var.namespace
   stage               = var.stage
   name                = var.name
-  region              = "us-east-1"
   vpc_id              = module.vpc.vpc_id
   igw_id              = module.vpc.igw_id
   cidr_block          = module.vpc.vpc_cidr_block
@@ -33,7 +32,7 @@ module "subnets" {
 }
 
 module "elastic_beanstalk_application" {
-  source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=master"
+  source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=terraform-0.12"
   namespace   = "eg"
   stage       = "dev"
   name        = "test"
