@@ -5,7 +5,7 @@
 
 # terraform-aws-elastic-beanstalk-environment
 
- [![Build Status](https://travis-ci.org/cloudposse/terraform-aws-elastic-beanstalk-environment.svg?branch=master)](https://travis-ci.org/cloudposse/terraform-aws-elastic-beanstalk-environment) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-environment.svg)](https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
+ [![Codefresh Status](https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-elastic-beanstalk-environment?type=cf-1)](https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d182cb1ac440444a6c0082b) [![Latest Release](https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-environment.svg)](https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/releases/latest) [![Slack Community](https://slack.cloudposse.com/badge.svg)](https://slack.cloudposse.com)
 
 
 Terraform module to provision AWS Elastic Beanstalk environment
@@ -44,6 +44,11 @@ We literally have [*hundreds of terraform modules*][terraform_modules] that are 
 
 ## Usage
 
+
+**IMPORTANT:** The `master` branch is used in `source` just as an example. In your code, do not pin to `master` because there may be breaking changes between releases.
+Instead pin to the release tag (e.g. `?ref=tags/x.y.z`) of one of our [latest releases](https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/releases).
+
+
 Complete example: [examples/complete](examples/complete)
 
 
@@ -65,11 +70,11 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|:----:|:-----:|:-----:|
-| alb_zone_id | ALB zone id | map | `<map>` | no |
+| alb_zone_id | ALB zone id | map(string) | `<map>` | no |
 | app | EBS application name | string | - | yes |
 | application_port | Port application is listening on | string | `80` | no |
 | associate_public_ip_address | Specifies whether to launch instances in your VPC with public IP addresses. | string | `false` | no |
-| attributes | Additional attributes (e.g. `1`) | list | `<list>` | no |
+| attributes | Additional attributes (e.g. `1`) | list(string) | `<list>` | no |
 | autoscale_lower_bound | Minimum level of autoscale metric to remove an instance | string | `20` | no |
 | autoscale_lower_increment | How many Amazon EC2 instances to remove when performing a scaling activity. | string | `-1` | no |
 | autoscale_max | Maximum instances in charge | string | `3` | no |
@@ -91,7 +96,7 @@ Available targets:
 | enhanced_reporting_enabled | Whether to enable "enhanced" health reporting for this environment.  If false, "basic" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false | string | `true` | no |
 | env_default_key | Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `DEFAULT_ENV_%d` | no |
 | env_default_value | Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting | string | `UNSET` | no |
-| env_vars | Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }` | map | `<map>` | no |
+| env_vars | Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }` | map(string) | `<map>` | no |
 | environment_type | Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `public_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments) | string | `LoadBalanced` | no |
 | force_destroy | Destroy S3 bucket for load balancer logs | string | `false` | no |
 | health_streaming_delete_on_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | string | `false` | no |
@@ -104,7 +109,7 @@ Available targets:
 | keypair | Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS | string | - | yes |
 | loadbalancer_certificate_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | string | `` | no |
 | loadbalancer_managed_security_group | Load balancer managed security group | string | `` | no |
-| loadbalancer_security_groups | Load balancer security groups | list | `<list>` | no |
+| loadbalancer_security_groups | Load balancer security groups | list(string) | `<list>` | no |
 | loadbalancer_ssl_policy | Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer. | string | `` | no |
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | logs_delete_on_terminate | Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days. | string | `false` | no |
@@ -117,20 +122,20 @@ Available targets:
 | notification_topic_arn | Notification topic arn | string | `` | no |
 | notification_topic_name | Notification topic name | string | `` | no |
 | preferred_start_time | Configure a maintenance window for managed actions in UTC | string | `Sun:10:00` | no |
-| private_subnets | List of private subnets to place EC2 instances | list | - | yes |
-| public_subnets | List of public subnets to place Elastic Load Balancer | list | - | yes |
+| private_subnets | List of private subnets to place EC2 instances | list(string) | - | yes |
+| public_subnets | List of public subnets to place Elastic Load Balancer | list(string) | - | yes |
 | rolling_update_type | Set it to Immutable to apply the configuration change to a fresh group of instances | string | `Health` | no |
 | root_volume_size | The size of the EBS root volume | string | `8` | no |
 | root_volume_type | The type of the EBS root volume | string | `gp2` | no |
-| security_groups | List of security groups to be allowed to connect to the EC2 instances | list | - | yes |
+| security_groups | List of security groups to be allowed to connect to the EC2 instances | list(string) | - | yes |
 | solution_stack_name | Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. [Read more](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html) | string | `` | no |
 | ssh_listener_enabled | Enable ssh port | string | `false` | no |
 | ssh_listener_port | SSH port | string | `22` | no |
 | ssh_source_restriction | Used to lock down SSH access to the EC2 instances. | string | `0.0.0.0/0` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
-| stickiness_enabled | Set to true to enable sticky sessions. This option is only applicable to environments with a classic load balancer or an application load balancer. | string | `false` | no |
-| stickiness_lb_cookie_duration | Lifetime, in seconds, of the sticky session cookie. This option is only applicable to environments with a classic load balancer or an application load balancer. | string | `86400` | no |
-| tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map | `<map>` | no |
+| stickiness_enabled | Set to true to enable sticky sessions | string | `false` | no |
+| stickiness_lb_cookie_duration | Lifetime, in seconds, of the sticky session cookie | string | `86400` | no |
+| tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map(string) | `<map>` | no |
 | tier | Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker') | string | `WebServer` | no |
 | update_level | The highest level of update to apply with managed platform updates | string | `minor` | no |
 | updating_max_batch | Maximum count of instances up during update | string | `1` | no |
@@ -306,19 +311,19 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
 |---|---|---|---|---|---|---|
 
   [osterman_homepage]: https://github.com/osterman
-  [osterman_avatar]: https://github.com/osterman.png?size=150
+  [osterman_avatar]: https://img.cloudposse.com/150x150/https://github.com/osterman.png
   [goruha_homepage]: https://github.com/goruha
-  [goruha_avatar]: https://github.com/goruha.png?size=150
+  [goruha_avatar]: https://img.cloudposse.com/150x150/https://github.com/goruha.png
   [aknysh_homepage]: https://github.com/aknysh
-  [aknysh_avatar]: https://github.com/aknysh.png?size=150
+  [aknysh_avatar]: https://img.cloudposse.com/150x150/https://github.com/aknysh.png
   [guikcd_homepage]: https://github.com/guikcd
-  [guikcd_avatar]: https://github.com/guikcd.png?size=150
+  [guikcd_avatar]: https://img.cloudposse.com/150x150/https://github.com/guikcd.png
   [velmoga_homepage]: https://github.com/velmoga
-  [velmoga_avatar]: https://github.com/velmoga.png?size=150
+  [velmoga_avatar]: https://img.cloudposse.com/150x150/https://github.com/velmoga.png
   [pearson-lucas-dev_homepage]: https://github.com/pearson-lucas-dev
-  [pearson-lucas-dev_avatar]: https://github.com/pearson-lucas-dev.png?size=150
+  [pearson-lucas-dev_avatar]: https://img.cloudposse.com/150x150/https://github.com/pearson-lucas-dev.png
   [DirectRoot_homepage]: https://github.com/DirectRoot
-  [DirectRoot_avatar]: https://github.com/DirectRoot.png?size=150
+  [DirectRoot_avatar]: https://img.cloudposse.com/150x150/https://github.com/DirectRoot.png
 
 
 
