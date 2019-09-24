@@ -5,6 +5,14 @@ provider "aws" {
 data "aws_availability_zones" "available" {
 }
 
+module "domain" {
+  source    = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-zone.git?ref=master"
+  namespace = var.namespace
+  stage     = var.stage
+  name      = var.name
+  zone_name = "$${name}.$${stage}.example.com"
+}
+
 module "vpc" {
   source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=master"
   namespace  = var.namespace
@@ -44,7 +52,7 @@ module "elastic_beanstalk_environment" {
   namespace = var.namespace
   stage     = var.stage
   name      = var.name
-  zone_id   = var.zone_id
+  zone_id   = module.domain.zone_id
   app       = module.elastic_beanstalk_application.app_name
 
   instance_type           = "t2.small"

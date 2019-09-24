@@ -17,8 +17,3 @@ variable "stage" {
 variable "max_availability_zones" {
   default = "2"
 }
-
-variable "zone_id" {
-  type        = string
-  description = "Route53 Zone ID"
-}
