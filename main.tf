@@ -330,6 +330,137 @@ resource "aws_security_group" "default" {
 }
 
 #
+# local variables to add the settings for the elb if Webserver Tier
+#
+locals {
+  my_elb_settings = [
+    {
+      namespace = "aws:elb:loadbalancer"
+      name      = "CrossZone"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elb:loadbalancer"
+      name      = "SecurityGroups"
+      value     = join(",", var.loadbalancer_security_groups)
+    },
+    {
+      namespace = "aws:elb:loadbalancer"
+      name      = "ManagedSecurityGroup"
+      value     = "${var.loadbalancer_managed_security_group}"
+    },
+    {
+      namespace = "aws:elb:listener"
+      name      = "ListenerProtocol"
+      value     = "HTTP"
+    },
+    {
+      namespace = "aws:elb:listener"
+      name      = "InstancePort"
+      value     = "${var.application_port}"
+    },
+    {
+      namespace = "aws:elb:listener"
+      name      = "ListenerEnabled"
+      value     = "${var.http_listener_enabled  == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "ListenerProtocol"
+      value     = "HTTPS"
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "InstancePort"
+      value     = "${var.application_port}"
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "SSLCertificateId"
+      value     = "${var.loadbalancer_certificate_arn}"
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "ListenerEnabled"
+      value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
+    },
+    {
+      namespace = "aws:elb:listener:${var.ssh_listener_port}"
+      name      = "ListenerProtocol"
+      value     = "TCP"
+    },
+    {
+      namespace = "aws:elb:listener:${var.ssh_listener_port}"
+      name      = "InstancePort"
+      value     = "22"
+    },
+    {
+      namespace = "aws:elb:listener:${var.ssh_listener_port}"
+      name      = "ListenerEnabled"
+      value     = "${var.ssh_listener_enabled}"
+    },
+    {
+      namespace = "aws:elb:policies"
+      name      = "ConnectionSettingIdleTimeout"
+      value     = "${var.ssh_listener_enabled == "true" ? "3600" : "60"}"
+    },
+    {
+      namespace = "aws:elb:policies"
+      name      = "ConnectionDrainingEnabled"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Bucket"
+      value     = "${aws_s3_bucket.elb_logs.id}"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Enabled"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SecurityGroups"
+      value     = "${join(",", var.loadbalancer_security_groups)}"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "ManagedSecurityGroup"
+      value     = "${var.loadbalancer_managed_security_group}"
+    },
+    {
+      namespace = "aws:elbv2:listener:default"
+      name      = "ListenerEnabled"
+      value     = "${var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"}"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "ListenerEnabled"
+      value     = "${var.loadbalancer_certificate_arn == "" ? "false" : "true"}"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "Protocol"
+      value     = "HTTPS"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "SSLCertificateArns"
+      value     = "${var.loadbalancer_certificate_arn}"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "SSLPolicy"
+      value     = "${var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""}"
+    }
+  ]
+
+  # if the tier is "WebServer" add the elb_settings, otherwise exclude them
+  my_settings_final = (var.tier == "WebServer" ? local.my_elb_settings : [] )
+}
+
+#
 # Full list of options:
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
 #
@@ -352,54 +483,54 @@ resource "aws_elastic_beanstalk_environment" "default" {
     ignore_changes = [tags]
   }
 
+  dynamic "setting" {
+    for_each = local.my_settings_final
+    content {
+      namespace = setting.value["namespace"]
+      name = setting.value["name"]
+      value = setting.value["value"]
+    }
+  }
   setting {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.vpc_id
   }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "AssociatePublicIpAddress"
     value     = var.associate_public_ip_address
   }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
     value     = join(",", var.private_subnets)
   }
-
   setting {
     namespace = "aws:ec2:vpc"
     name      = "ELBSubnets"
     value     = join(",", var.public_subnets)
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateEnabled"
     value     = "true"
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateType"
     value     = var.rolling_update_type
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MinInstancesInService"
     value     = var.updating_min_in_service
   }
-
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
     value     = var.rolling_update_type == "Immutable" ? "Immutable" : "Rolling"
   }
-
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MaxBatchSize"
@@ -534,130 +665,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "MaxSize"
     value     = var.autoscale_max
   }
-  setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "CrossZone"
-    value     = "true"
-  }
-  setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "SecurityGroups"
-    value     = join(",", var.loadbalancer_security_groups)
-  }
-  setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "ManagedSecurityGroup"
-    value     = var.loadbalancer_managed_security_group
-  }
+
   setting {
     namespace = "aws:ec2:vpc"
     name      = "ELBScheme"
     value     = var.environment_type == "LoadBalanced" ? var.elb_scheme : ""
-  }
-  setting {
-    namespace = "aws:elb:listener"
-    name      = "ListenerProtocol"
-    value     = "HTTP"
-  }
-  setting {
-    namespace = "aws:elb:listener"
-    name      = "InstancePort"
-    value     = var.application_port
-  }
-  setting {
-    namespace = "aws:elb:listener"
-    name      = "ListenerEnabled"
-    value     = var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"
-  }
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "ListenerProtocol"
-    value     = "HTTPS"
-  }
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "InstancePort"
-    value     = var.application_port
-  }
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "SSLCertificateId"
-    value     = var.loadbalancer_certificate_arn
-  }
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "ListenerEnabled"
-    value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
-  }
-  setting {
-    namespace = "aws:elb:listener:${var.ssh_listener_port}"
-    name      = "ListenerProtocol"
-    value     = "TCP"
-  }
-  setting {
-    namespace = "aws:elb:listener:${var.ssh_listener_port}"
-    name      = "InstancePort"
-    value     = "22"
-  }
-  setting {
-    namespace = "aws:elb:listener:${var.ssh_listener_port}"
-    name      = "ListenerEnabled"
-    value     = var.ssh_listener_enabled
-  }
-  setting {
-    namespace = "aws:elb:policies"
-    name      = "ConnectionSettingIdleTimeout"
-    value     = var.ssh_listener_enabled == "true" ? "3600" : "60"
-  }
-  setting {
-    namespace = "aws:elb:policies"
-    name      = "ConnectionDrainingEnabled"
-    value     = "true"
-  }
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "AccessLogsS3Bucket"
-    value     = aws_s3_bucket.elb_logs.id
-  }
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "AccessLogsS3Enabled"
-    value     = "true"
-  }
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "SecurityGroups"
-    value     = join(",", var.loadbalancer_security_groups)
-  }
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "ManagedSecurityGroup"
-    value     = var.loadbalancer_managed_security_group
-  }
-  setting {
-    namespace = "aws:elbv2:listener:default"
-    name      = "ListenerEnabled"
-    value     = var.http_listener_enabled == "true" || var.loadbalancer_certificate_arn == "" ? "true" : "false"
-  }
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "ListenerEnabled"
-    value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
-  }
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "Protocol"
-    value     = "HTTPS"
-  }
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLCertificateArns"
-    value     = var.loadbalancer_certificate_arn
-  }
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLPolicy"
-    value     = var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""
   }
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
