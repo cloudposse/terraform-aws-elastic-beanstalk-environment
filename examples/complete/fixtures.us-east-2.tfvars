@@ -4,4 +4,4 @@ namespace = "eg"
 
 stage = "test"
 
-name = "elastic-beanstalk-app-test"
+name = "elastic-beanstalk-env"

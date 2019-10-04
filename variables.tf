@@ -1,11 +1,23 @@
+variable "region" {
+  type        = string
+  description = "AWS region"
+}
+
 variable "namespace" {
   type        = string
   description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
+  default     = ""
 }
 
 variable "stage" {
   type        = string
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
+  default     = ""
+}
+
+variable "name" {
+  type        = string
+  description = "Solution name, e.g. 'app' or 'cluster'"
 }
 
 variable "delimiter" {
@@ -20,9 +32,10 @@ variable "attributes" {
   description = "Additional attributes (e.g. `1`)"
 }
 
-variable "name" {
-  default     = "app"
-  description = "Solution name, e.g. 'app' or 'jenkins'"
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
 }
 
 variable "description" {
@@ -345,12 +358,6 @@ variable "alb_zone_id" {
   description = "ALB zone id"
 }
 
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-}
-
 variable "env_default_key" {
   default     = "DEFAULT_ENV_%d"
   description = "Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting"
@@ -391,4 +398,3 @@ variable "elb_scheme" {
   default     = "public"
   description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
 }
-

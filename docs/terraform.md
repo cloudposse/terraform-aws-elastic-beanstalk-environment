@@ -46,8 +46,8 @@
 | loadbalancer_type | Load Balancer type, e.g. 'application' or 'classic' | string | `classic` | no |
 | logs_delete_on_terminate | Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days. | string | `false` | no |
 | logs_retention_in_days | The number of days to keep log events before they expire. | string | `7` | no |
-| name | Solution name, e.g. 'app' or 'jenkins' | string | `app` | no |
-| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | - | yes |
+| name | Solution name, e.g. 'app' or 'cluster' | string | - | yes |
+| namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
 | nodejs_version | Elastic Beanstalk NodeJS version to deploy | string | `` | no |
 | notification_endpoint | Notification endpoint | string | `` | no |
 | notification_protocol | Notification protocol | string | `email` | no |
@@ -56,6 +56,7 @@
 | preferred_start_time | Configure a maintenance window for managed actions in UTC | string | `Sun:10:00` | no |
 | private_subnets | List of private subnets to place EC2 instances | list(string) | - | yes |
 | public_subnets | List of public subnets to place Elastic Load Balancer | list(string) | - | yes |
+| region | AWS region | string | - | yes |
 | rolling_update_type | Set it to Immutable to apply the configuration change to a fresh group of instances | string | `Health` | no |
 | root_volume_size | The size of the EBS root volume | string | `8` | no |
 | root_volume_type | The type of the EBS root volume | string | `gp2` | no |
@@ -64,7 +65,7 @@
 | ssh_listener_enabled | Enable ssh port | string | `false` | no |
 | ssh_listener_port | SSH port | string | `22` | no |
 | ssh_source_restriction | Used to lock down SSH access to the EC2 instances. | string | `0.0.0.0/0` | no |
-| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | - | yes |
+| stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `` | no |
 | stickiness_enabled | Set to true to enable sticky sessions | string | `false` | no |
 | stickiness_lb_cookie_duration | Lifetime, in seconds, of the sticky session cookie | string | `86400` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map(string) | `<map>` | no |

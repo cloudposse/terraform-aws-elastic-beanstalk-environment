@@ -16,7 +16,7 @@ func TestExamplesComplete(t *testing.T) {
 		TerraformDir: "../../examples/complete",
 		Upgrade:      true,
 		// Variables to pass to our Terraform code using -var-file options
-		VarFiles: []string{"fixtures.us-west-1.tfvars"},
+		VarFiles: []string{"fixtures.us-east-2.tfvars"},
 	}
 
 	// At the end of the test, run `terraform destroy` to clean up any resources that were created
@@ -26,9 +26,7 @@ func TestExamplesComplete(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the value of an output variable
-	repositoryName := terraform.Output(t, terraformOptions, "app_name")
-
-	expectedRepositoryName := "eg-test-elastic-beanstalk-app-test"
+	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, expectedRepositoryName, repositoryName)
+	assert.Equal(t, "eg-test-elastic-beanstalk-app", elasticBeanstalkApplicationName)
 }

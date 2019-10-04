@@ -1,4 +1,3 @@
-# Define composite variables for resources
 module "label" {
   source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=tags/0.15.0"
   namespace  = var.namespace
@@ -7,9 +6,6 @@ module "label" {
   delimiter  = var.delimiter
   attributes = var.attributes
   tags       = var.tags
-}
-
-data "aws_region" "default" {
 }
 
 #
@@ -329,6 +325,13 @@ resource "aws_security_group" "default" {
   tags = module.label.tags
 }
 
+locals {
+  // Remove `Name` tag from the map of tags because Elastic Beanstalk generates the `Name` tag automatically
+  // and if it is provided, terraform tries to recreate the application on each `plan/apply`
+  // https://github.com/terraform-providers/terraform-provider-aws/issues/3963
+  tags = { for t in keys(module.label.tags) : t => module.label.tags[t] if t != "Name" }
+}
+
 #
 # Full list of options:
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
@@ -345,12 +348,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   version_label = var.version_label
 
-  tags = module.label.tags
-
-  # because of https://github.com/terraform-providers/terraform-provider-aws/issues/3963
-  lifecycle {
-    ignore_changes = [tags]
-  }
+  tags = local.tags
 
   setting {
     namespace = "aws:ec2:vpc"
@@ -1554,6 +1552,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "Notification Topic Name"
     value     = var.notification_topic_name
   }
+
   depends_on = [aws_security_group.default]
 }
 
@@ -1593,6 +1592,5 @@ module "tld" {
   name    = var.name
   zone_id = var.zone_id
   records = [aws_elastic_beanstalk_environment.default.cname]
-  enabled = length(var.zone_id) > 0 ? "true" : "false"
+  enabled = length(var.zone_id) > 0 ? true : false
 }
-

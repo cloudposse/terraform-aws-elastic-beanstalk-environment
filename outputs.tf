@@ -24,7 +24,7 @@ output "elb_dns_name" {
 }
 
 output "elb_zone_id" {
-  value       = var.alb_zone_id[data.aws_region.default.name]
+  value       = var.alb_zone_id[var.region]
   description = "ELB zone id"
 }
 
