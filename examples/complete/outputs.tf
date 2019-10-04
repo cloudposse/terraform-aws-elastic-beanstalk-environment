@@ -1,4 +1,4 @@
 output "elastic_beanstalk_application_name" {
-  value       = aws_elastic_beanstalk_application.default.name
+  value       = module.elastic_beanstalk_application.elastic_beanstalk_application_name
   description = "Elastic Beanstalk Application name"
 }

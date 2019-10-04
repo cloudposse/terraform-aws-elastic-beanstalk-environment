@@ -1,13 +1,16 @@
+variable "region" {
+  type        = string
+  description = "AWS region"
+}
+
 variable "namespace" {
   type        = string
   description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-  default     = ""
 }
 
 variable "stage" {
   type        = string
   description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default     = ""
 }
 
 variable "name" {
@@ -35,6 +38,5 @@ variable "tags" {
 
 variable "description" {
   type        = string
-  default     = ""
   description = "Elastic Beanstalk Application description"
 }
