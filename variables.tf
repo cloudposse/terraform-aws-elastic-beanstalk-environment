@@ -39,98 +39,209 @@ variable "tags" {
 }
 
 variable "description" {
+  type        = string
   default     = ""
   description = "Short description of the Environment"
 }
 
-variable "config_document" {
-  default     = "{ \"CloudWatchMetrics\": {}, \"Version\": 1}"
-  description = "A JSON document describing the environment and instance metrics to publish to CloudWatch."
+variable "elastic_beanstalk_application_name" {
+  type        = string
+  description = "Elastic Beanstalk application name"
+}
+
+variable "environment_type" {
+  type        = string
+  default     = "LoadBalanced"
+  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `loadbalancer_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments)"
+}
+
+variable "loadbalancer_type" {
+  type        = string
+  default     = "classic"
+  description = "Load Balancer type, e.g. 'application' or 'classic'"
+}
+
+variable "dns_zone_id" {
+  type        = string
+  default     = ""
+  description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
+}
+
+variable "allowed_security_groups" {
+  type        = list(string)
+  description = "List of security groups to be allowed to connect to the EC2 instances"
+  default     = []
+}
+
+variable "vpc_id" {
+  type        = string
+  description = "ID of the VPC in which to provision the AWS resources"
+}
+
+variable "loadbalancer_subnets" {
+  type        = list(string)
+  description = "List of subnets to place Elastic Load Balancer"
+  default     = []
+}
+
+variable "application_subnets" {
+  type        = list(string)
+  description = "List of subnets to place EC2 instances"
+}
+
+variable "availability_zone_selector" {
+  type        = string
+  default     = "Any 2"
+  description = "Availability Zone selector"
+}
+
+variable "instance_type" {
+  type        = string
+  default     = "t2.micro"
+  description = "Instances type"
 }
 
 variable "enhanced_reporting_enabled" {
+  type        = bool
   default     = true
   description = "Whether to enable \"enhanced\" health reporting for this environment.  If false, \"basic\" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false"
 }
 
+variable "managed_actions_enabled" {
+  type        = bool
+  default     = true
+  description = "Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel`"
+}
+
+variable "autoscale_min" {
+  type        = number
+  default     = 2
+  description = "Minumum instances to launch"
+}
+
+variable "autoscale_max" {
+  type        = number
+  default     = 3
+  description = "Maximum instances to launch"
+}
+
+variable "solution_stack_name" {
+  type        = string
+  description = "Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html"
+}
+
+variable "wait_for_ready_timeout" {
+  type        = string
+  default     = "20m"
+  description = "The maximum duration to wait for the Elastic Beanstalk Environment to be in a ready state before timing out"
+}
+
+variable "associate_public_ip_address" {
+  type        = bool
+  default     = false
+  description = "Whether to associate public IP addresses to the instances"
+}
+
+variable "tier" {
+  type        = string
+  default     = "WebServer"
+  description = "Elastic Beanstalk Environment tier, e.g. 'WebServer' or 'Worker'"
+}
+
+variable "version_label" {
+  type        = string
+  default     = ""
+  description = "Elastic Beanstalk Application version to deploy"
+}
+
+variable "force_destroy" {
+  type        = bool
+  default     = false
+  description = "Force destroy the S3 bucket for load balancer logs"
+}
+
+variable "rolling_update_enabled" {
+  type        = bool
+  default     = true
+  description = "Whether to enable rolling update"
+}
+
+variable "rolling_update_type" {
+  type        = string
+  default     = "Health"
+  description = "`Health` or `Immutable`. Set it to `Immutable` to apply the configuration change to a fresh group of instances"
+}
+
+variable "updating_min_in_service" {
+  type        = number
+  default     = 1
+  description = "Minimum number of instances in service during update"
+}
+
+variable "updating_max_batch" {
+  type        = number
+  default     = 1
+  description = "Maximum number of instances to update at once"
+}
+
 variable "health_streaming_enabled" {
+  type        = bool
   default     = false
   description = "For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system."
 }
 
 variable "health_streaming_delete_on_terminate" {
+  type        = bool
   default     = false
   description = "Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days."
 }
 
 variable "health_streaming_retention_in_days" {
-  default     = "7"
+  type        = number
+  default     = 7
   description = "The number of days to keep the archived health data before it expires."
 }
 
 variable "healthcheck_url" {
+  type        = string
   default     = "/healthcheck"
   description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
 }
 
-variable "notification_protocol" {
-  default     = "email"
-  description = "Notification protocol"
-}
-
-variable "notification_endpoint" {
-  default     = ""
-  description = "Notification endpoint"
-}
-
-variable "notification_topic_arn" {
-  default     = ""
-  description = "Notification topic arn"
-}
-
-variable "notification_topic_name" {
-  default     = ""
-  description = "Notification topic name"
-}
-
 variable "enable_log_publication_control" {
+  type        = bool
   default     = false
-  description = "Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application."
+  description = "Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application"
 }
 
 variable "enable_stream_logs" {
+  type        = bool
   default     = false
-  description = "Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment."
+  description = "Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment"
 }
 
 variable "logs_delete_on_terminate" {
+  type        = bool
   default     = false
-  description = "Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days."
+  description = "Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days"
 }
 
 variable "logs_retention_in_days" {
-  default     = "7"
+  type        = number
+  default     = 7
   description = "The number of days to keep log events before they expire."
 }
 
-variable "environment_type" {
-  default     = "LoadBalanced"
-  description = "Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `public_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments)"
-}
-
-variable "loadbalancer_type" {
-  default     = "classic"
-  description = "Load Balancer type, e.g. 'application' or 'classic'"
-}
-
 variable "loadbalancer_certificate_arn" {
+  type        = string
   default     = ""
   description = "Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager"
 }
 
 variable "loadbalancer_ssl_policy" {
+  type        = string
   default     = ""
-  description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer."
+  description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer"
 }
 
 variable "loadbalancer_security_groups" {
@@ -146,190 +257,110 @@ variable "loadbalancer_managed_security_group" {
 }
 
 variable "http_listener_enabled" {
-  default     = "false"
+  type        = bool
+  default     = true
   description = "Enable port 80 (http)"
 }
 
 variable "application_port" {
-  default     = "80"
+  type        = number
+  default     = 80
   description = "Port application is listening on"
 }
 
-variable "stickiness_enabled" {
-  default     = "false"
-  description = "Set to true to enable sticky sessions"
-}
-
-variable "stickiness_lb_cookie_duration" {
-  default     = "86400"
-  description = "Lifetime, in seconds, of the sticky session cookie"
-}
-
-variable "ssh_listener_enabled" {
-  default     = "false"
-  description = "Enable ssh port"
-}
-
-variable "ssh_listener_port" {
-  default     = "22"
-  description = "SSH port"
-}
-
-variable "zone_id" {
-  default     = ""
-  description = "Route53 parent zone ID. The module will create sub-domain DNS records in the parent zone for the EB environment"
-}
-
-variable "config_source" {
-  default     = ""
-  description = "S3 source for config"
-}
-
-variable "enable_managed_actions" {
-  default     = true
-  description = "Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel`"
-}
-
 variable "preferred_start_time" {
+  type        = string
   default     = "Sun:10:00"
   description = "Configure a maintenance window for managed actions in UTC"
 }
 
 variable "update_level" {
+  type        = string
   default     = "minor"
   description = "The highest level of update to apply with managed platform updates"
 }
 
 variable "instance_refresh_enabled" {
-  default     = "true"
+  type        = bool
+  default     = true
   description = "Enable weekly instance replacement."
 }
 
-variable "security_groups" {
-  type        = list(string)
-  description = "List of security groups to be allowed to connect to the EC2 instances"
-}
-
-variable "app" {
-  description = "EBS application name"
-}
-
-variable "vpc_id" {
-  description = "ID of the VPC in which to provision the AWS resources"
-}
-
-variable "public_subnets" {
-  type        = list(string)
-  description = "List of public subnets to place Elastic Load Balancer"
-}
-
-variable "private_subnets" {
-  type        = list(string)
-  description = "List of private subnets to place EC2 instances"
-}
-
 variable "keypair" {
+  type        = string
   description = "Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS"
+  default     = ""
 }
 
 variable "root_volume_size" {
-  default     = "8"
+  type        = number
+  default     = 8
   description = "The size of the EBS root volume"
 }
 
 variable "root_volume_type" {
+  type        = string
   default     = "gp2"
   description = "The type of the EBS root volume"
 }
 
-variable "availability_zones" {
-  default     = "Any 2"
-  description = "Choose the number of AZs for your instances"
-}
-
-variable "rolling_update_type" {
-  default     = "Health"
-  description = "Set it to Immutable to apply the configuration change to a fresh group of instances"
-}
-
-variable "updating_min_in_service" {
-  default     = "1"
-  description = "Minimum count of instances up during update"
-}
-
-variable "updating_max_batch" {
-  default     = "1"
-  description = "Maximum count of instances up during update"
-}
-
-variable "ssh_source_restriction" {
-  default     = "0.0.0.0/0"
-  description = "Used to lock down SSH access to the EC2 instances."
-}
-
-variable "instance_type" {
-  default     = "t2.micro"
-  description = "Instances type"
-}
-
-variable "associate_public_ip_address" {
-  default     = "false"
-  description = "Specifies whether to launch instances in your VPC with public IP addresses."
-}
-
 variable "autoscale_measure_name" {
+  type        = string
   default     = "CPUUtilization"
   description = "Metric used for your Auto Scaling trigger"
 }
 
 variable "autoscale_statistic" {
+  type        = string
   default     = "Average"
   description = "Statistic the trigger should use, such as Average"
 }
 
 variable "autoscale_unit" {
+  type        = string
   default     = "Percent"
   description = "Unit for the trigger measurement, such as Bytes"
 }
 
 variable "autoscale_lower_bound" {
-  default     = "20"
+  type        = number
+  default     = 20
   description = "Minimum level of autoscale metric to remove an instance"
 }
 
 variable "autoscale_lower_increment" {
-  default     = "-1"
+  type        = number
+  default     = -1
   description = "How many Amazon EC2 instances to remove when performing a scaling activity."
 }
 
 variable "autoscale_upper_bound" {
-  default     = "80"
+  type        = number
+  default     = 80
   description = "Maximum level of autoscale metric to add an instance"
 }
 
 variable "autoscale_upper_increment" {
-  default     = "1"
+  type        = number
+  default     = 1
   description = "How many Amazon EC2 instances to add when performing a scaling activity"
 }
 
-variable "autoscale_min" {
-  default     = "2"
-  description = "Minumum instances in charge"
+variable "elb_scheme" {
+  type        = string
+  default     = "public"
+  description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
 }
 
-variable "autoscale_max" {
-  default     = "3"
-  description = "Maximum instances in charge"
-}
+variable "additional_settings" {
+  type = list(object({
+    namespace = string
+    name      = string
+    value     = string
+  }))
 
-variable "solution_stack_name" {
-  default     = ""
-  description = "Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. [Read more](http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/concepts.platforms.html)"
-}
-
-variable "wait_for_ready_timeout" {
-  default     = "20m"
-  description = "The maximum duration that Terraform should wait for an Elastic Beanstalk Environment to be in a ready state before timing out."
+  default     = []
+  description = "Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html"
 }
 
 # From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
@@ -356,45 +387,4 @@ variable "alb_zone_id" {
   }
 
   description = "ALB zone id"
-}
-
-variable "env_default_key" {
-  default     = "DEFAULT_ENV_%d"
-  description = "Default ENV variable key for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting"
-}
-
-variable "env_default_value" {
-  default     = "UNSET"
-  description = "Default ENV variable value for Elastic Beanstalk `aws:elasticbeanstalk:application:environment` setting"
-}
-
-variable "env_vars" {
-  default     = {}
-  type        = map(string)
-  description = "Map of custom ENV variables to be provided to the Jenkins application running on Elastic Beanstalk, e.g. `env_vars = { JENKINS_USER = 'admin' JENKINS_PASS = 'xxxxxx' }`"
-}
-
-variable "tier" {
-  default     = "WebServer"
-  description = "Elastic Beanstalk Environment tier, e.g. ('WebServer', 'Worker')"
-}
-
-variable "version_label" {
-  default     = ""
-  description = "Elastic Beanstalk Application version to deploy"
-}
-
-variable "nodejs_version" {
-  default     = ""
-  description = "Elastic Beanstalk NodeJS version to deploy"
-}
-
-variable "force_destroy" {
-  default     = false
-  description = "Destroy S3 bucket for load balancer logs"
-}
-
-variable "elb_scheme" {
-  default     = "public"
-  description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
 }

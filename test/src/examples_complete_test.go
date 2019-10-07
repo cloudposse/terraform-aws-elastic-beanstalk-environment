@@ -26,6 +26,21 @@ func TestExamplesComplete(t *testing.T) {
 	terraform.InitAndApply(t, terraformOptions)
 
 	// Run `terraform output` to get the value of an output variable
+	vpcCidr := terraform.Output(t, terraformOptions, "vpc_cidr")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "172.16.0.0/16", vpcCidr)
+
+	// Run `terraform output` to get the value of an output variable
+	privateSubnetCidrs := terraform.OutputList(t, terraformOptions, "private_subnet_cidrs")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, []string{"172.16.0.0/19", "172.16.32.0/19"}, privateSubnetCidrs)
+
+	// Run `terraform output` to get the value of an output variable
+	publicSubnetCidrs := terraform.OutputList(t, terraformOptions, "public_subnet_cidrs")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, []string{"172.16.96.0/19", "172.16.128.0/19"}, publicSubnetCidrs)
+
+	// Run `terraform output` to get the value of an output variable
 	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "eg-test-elastic-beanstalk-app", elasticBeanstalkApplicationName)
