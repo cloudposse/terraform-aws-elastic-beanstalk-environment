@@ -55,9 +55,12 @@
 | root_volume_size | The size of the EBS root volume | number | `8` | no |
 | root_volume_type | The type of the EBS root volume | string | `gp2` | no |
 | solution_stack_name | Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html | string | - | yes |
+| ssh_listener_enabled | Enable SSH port | bool | `false` | no |
+| ssh_listener_port | SSH port | number | `22` | no |
+| ssh_source_restriction | Used to lock down SSH access to the EC2 instances | string | `0.0.0.0/0` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `` | no |
 | tags | Additional tags (e.g. `map('BusinessUnit`,`XYZ`) | map(string) | `<map>` | no |
-| tier | Elastic Beanstalk Environment tier, e.g. 'WebServer' or 'Worker' | string | `WebServer` | no |
+| tier | Elastic Beanstalk Environment tier, 'WebServer' or 'Worker' | string | `WebServer` | no |
 | update_level | The highest level of update to apply with managed platform updates | string | `minor` | no |
 | updating_max_batch | Maximum number of instances to update at once | number | `1` | no |
 | updating_min_in_service | Minimum number of instances in service during update | number | `1` | no |

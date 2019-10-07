@@ -326,6 +326,167 @@ locals {
   // and if it is provided, terraform tries to recreate the application on each `plan/apply`
   // https://github.com/terraform-providers/terraform-provider-aws/issues/3963
   tags = { for t in keys(module.label.tags) : t => module.label.tags[t] if t != "Name" }
+
+  elb_settings = [
+    {
+      namespace = "aws:elb:loadbalancer"
+      name      = "CrossZone"
+      value     = "true"
+    },
+    {
+      namespace = "aws:ec2:vpc"
+      name      = "ELBSubnets"
+      value     = join(",", var.loadbalancer_subnets)
+    },
+    {
+      namespace = "aws:elb:loadbalancer"
+      name      = "SecurityGroups"
+      value     = join(",", var.loadbalancer_security_groups)
+    },
+    {
+      namespace = "aws:elb:loadbalancer"
+      name      = "ManagedSecurityGroup"
+      value     = var.loadbalancer_managed_security_group
+    },
+    {
+      namespace = "aws:elb:listener"
+      name      = "ListenerProtocol"
+      value     = "HTTP"
+    },
+    {
+      namespace = "aws:elb:listener"
+      name      = "InstancePort"
+      value     = var.application_port
+    },
+    {
+      namespace = "aws:elb:listener"
+      name      = "ListenerEnabled"
+      value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "ListenerProtocol"
+      value     = "HTTPS"
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "InstancePort"
+      value     = var.application_port
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "SSLCertificateId"
+      value     = var.loadbalancer_certificate_arn
+    },
+    {
+      namespace = "aws:elb:listener:443"
+      name      = "ListenerEnabled"
+      value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
+    },
+    {
+      namespace = "aws:elb:listener:${var.ssh_listener_port}"
+      name      = "ListenerProtocol"
+      value     = "TCP"
+    },
+    {
+      namespace = "aws:elb:listener:${var.ssh_listener_port}"
+      name      = "InstancePort"
+      value     = "22"
+    },
+    {
+      namespace = "aws:elb:listener:${var.ssh_listener_port}"
+      name      = "ListenerEnabled"
+      value     = var.ssh_listener_enabled
+    },
+    {
+      namespace = "aws:elb:policies"
+      name      = "ConnectionSettingIdleTimeout"
+      value     = var.ssh_listener_enabled ? "3600" : "60"
+    },
+    {
+      namespace = "aws:elb:policies"
+      name      = "ConnectionDrainingEnabled"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Bucket"
+      value     = join("", aws_s3_bucket.elb_logs.*.id)
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Enabled"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SecurityGroups"
+      value     = join(",", var.loadbalancer_security_groups)
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "ManagedSecurityGroup"
+      value     = var.loadbalancer_managed_security_group
+    },
+    {
+      namespace = "aws:elbv2:listener:default"
+      name      = "ListenerEnabled"
+      value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "ListenerEnabled"
+      value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "Protocol"
+      value     = "HTTPS"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "SSLCertificateArns"
+      value     = var.loadbalancer_certificate_arn
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "SSLPolicy"
+      value     = var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""
+    },
+    {
+      namespace = "aws:ec2:vpc"
+      name      = "ELBScheme"
+      value     = var.environment_type == "LoadBalanced" ? var.elb_scheme : ""
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment"
+      name      = "LoadBalancerType"
+      value     = var.loadbalancer_type
+    },
+
+    ###===================== Application Load Balancer Health check settings =====================================================###
+    # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
+    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
+    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckPath"
+      value     = var.healthcheck_url
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "Port"
+      value     = var.application_port
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "Protocol"
+      value     = "HTTP"
+    }
+  ]
+
+  # If the tier is "WebServer" add the elb_settings, otherwise exclude them
+  elb_settings_final = var.tier == "WebServer" ? local.elb_settings : []
 }
 
 #
@@ -341,6 +502,15 @@ resource "aws_elastic_beanstalk_environment" "default" {
   wait_for_ready_timeout = var.wait_for_ready_timeout
   version_label          = var.version_label
   tags                   = local.tags
+
+  dynamic "setting" {
+    for_each = local.elb_settings_final
+    content {
+      namespace = setting.value["namespace"]
+      name      = setting.value["name"]
+      value     = setting.value["value"]
+    }
+  }
 
   setting {
     namespace = "aws:ec2:vpc"
@@ -358,12 +528,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
     value     = join(",", var.application_subnets)
-  }
-
-  setting {
-    namespace = "aws:ec2:vpc"
-    name      = "ELBSubnets"
-    value     = join(",", var.loadbalancer_subnets)
   }
 
   setting {
@@ -385,39 +549,9 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
-    namespace = "aws:elb:listener"
-    name      = "ListenerProtocol"
-    value     = "HTTP"
-  }
-
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "ListenerProtocol"
-    value     = "HTTPS"
-  }
-
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "AccessLogsS3Bucket"
-    value     = aws_s3_bucket.elb_logs.id
-  }
-
-  setting {
-    namespace = "aws:elbv2:loadbalancer"
-    name      = "AccessLogsS3Enabled"
-    value     = "true"
-  }
-
-  setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "EnvironmentType"
     value     = var.environment_type
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:environment"
-    name      = "LoadBalancerType"
-    value     = var.loadbalancer_type
   }
 
   setting {
@@ -508,96 +642,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "RootVolumeType"
     value     = var.root_volume_type
-  }
-
-  setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "CrossZone"
-    value     = "true"
-  }
-
-  setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "SecurityGroups"
-    value     = join(",", var.loadbalancer_security_groups)
-  }
-
-  setting {
-    namespace = "aws:elb:loadbalancer"
-    name      = "ManagedSecurityGroup"
-    value     = var.loadbalancer_managed_security_group
-  }
-
-  setting {
-    namespace = "aws:ec2:vpc"
-    name      = "ELBScheme"
-    value     = var.environment_type == "LoadBalanced" ? var.elb_scheme : ""
-  }
-
-  setting {
-    namespace = "aws:elb:listener"
-    name      = "InstancePort"
-    value     = var.application_port
-  }
-
-  setting {
-    namespace = "aws:elb:listener"
-    name      = "ListenerEnabled"
-    value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
-  }
-
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "InstancePort"
-    value     = var.application_port
-  }
-
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "SSLCertificateId"
-    value     = var.loadbalancer_certificate_arn
-  }
-
-  setting {
-    namespace = "aws:elb:listener:443"
-    name      = "ListenerEnabled"
-    value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
-  }
-
-  setting {
-    namespace = "aws:elb:policies"
-    name      = "ConnectionDrainingEnabled"
-    value     = "true"
-  }
-
-  setting {
-    namespace = "aws:elbv2:listener:default"
-    name      = "ListenerEnabled"
-    value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
-  }
-
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "ListenerEnabled"
-    value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
-  }
-
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "Protocol"
-    value     = "HTTPS"
-  }
-
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLCertificateArns"
-    value     = var.loadbalancer_certificate_arn
-  }
-
-  setting {
-    namespace = "aws:elbv2:listener:443"
-    name      = "SSLPolicy"
-    value     = var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""
   }
 
   setting {
@@ -718,28 +762,6 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = var.health_streaming_retention_in_days
   }
 
-  ###===================== Application Load Balancer Health check settings =====================================================###
-  # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
-  # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
-  # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
-  setting {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "HealthCheckPath"
-    value     = var.healthcheck_url
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "Port"
-    value     = var.application_port
-  }
-
-  setting {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "Protocol"
-    value     = "HTTP"
-  }
-
   // Add additional Elastic Beanstalk settings
   // For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
   dynamic "setting" {
@@ -753,9 +775,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
 }
 
 data "aws_elb_service_account" "main" {
+  count = var.tier == "WebServer" ? 1 : 0
 }
 
 data "aws_iam_policy_document" "elb_logs" {
+  count = var.tier == "WebServer" ? 1 : 0
+
   statement {
     sid = ""
 
@@ -769,7 +794,7 @@ data "aws_iam_policy_document" "elb_logs" {
 
     principals {
       type        = "AWS"
-      identifiers = [data.aws_elb_service_account.main.arn]
+      identifiers = [join("", data.aws_elb_service_account.main.*.arn)]
     }
 
     effect = "Allow"
@@ -777,16 +802,17 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
+  count         = var.tier == "WebServer" ? 1 : 0
   bucket        = "${module.label.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
-  policy        = data.aws_iam_policy_document.elb_logs.json
+  policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
 }
 
-module "tld" {
+module "dns_hostname" {
   source  = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.3.0"
+  enabled = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
   name    = var.name
   zone_id = var.dns_zone_id
   records = [aws_elastic_beanstalk_environment.default.cname]
-  enabled = var.dns_zone_id != "" ? true : false
 }

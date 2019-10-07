@@ -1,5 +1,5 @@
 output "hostname" {
-  value       = module.tld.hostname
+  value       = module.dns_hostname.hostname
   description = "DNS hostname"
 }
 

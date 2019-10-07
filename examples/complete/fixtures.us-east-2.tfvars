@@ -10,6 +10,8 @@ name = "elastic-beanstalk-env"
 
 description = "Test elastic-beanstalk-environment"
 
+tier = "WebServer"
+
 environment_type = "LoadBalanced"
 
 loadbalancer_type = "application"
@@ -24,7 +26,6 @@ autoscale_max = 2
 
 wait_for_ready_timeout = "20m"
 
-tier = "WebServer"
 
 force_destroy = true
 

@@ -145,7 +145,7 @@ variable "associate_public_ip_address" {
 variable "tier" {
   type        = string
   default     = "WebServer"
-  description = "Elastic Beanstalk Environment tier, e.g. 'WebServer' or 'Worker'"
+  description = "Elastic Beanstalk Environment tier, 'WebServer' or 'Worker'"
 }
 
 variable "version_label" {
@@ -350,6 +350,24 @@ variable "elb_scheme" {
   type        = string
   default     = "public"
   description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
+}
+
+variable "ssh_source_restriction" {
+  type        = string
+  default     = "0.0.0.0/0"
+  description = "Used to lock down SSH access to the EC2 instances"
+}
+
+variable "ssh_listener_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable SSH port"
+}
+
+variable "ssh_listener_port" {
+  type        = number
+  default     = 22
+  description = "SSH port"
 }
 
 variable "additional_settings" {
