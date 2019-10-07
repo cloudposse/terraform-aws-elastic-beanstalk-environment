@@ -40,7 +40,7 @@ healthcheck_url = "/"
 
 application_port = 80
 
-root_volume_size = 5
+root_volume_size = 8
 
 root_volume_type = "gp2"
 
