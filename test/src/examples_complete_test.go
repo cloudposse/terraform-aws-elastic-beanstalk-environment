@@ -43,5 +43,15 @@ func TestExamplesComplete(t *testing.T) {
 	// Run `terraform output` to get the value of an output variable
 	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "eg-test-elastic-beanstalk-app", elasticBeanstalkApplicationName)
+	assert.Equal(t, "eg-test-elastic-beanstalk-env", elasticBeanstalkApplicationName)
+
+	// Run `terraform output` to get the value of an output variable
+	elasticBeanstalkEnvironmentName := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_name")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "eg-test-elastic-beanstalk-env", elasticBeanstalkEnvironmentName)
+
+	// Run `terraform output` to get the value of an output variable
+	elasticBeanstalkEnvironmentHostname := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_hostname")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, "elastic-beanstalk-env.testing.cloudposse.co", elasticBeanstalkEnvironmentHostname)
 }
