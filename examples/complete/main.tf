@@ -94,4 +94,5 @@ module "elastic_beanstalk_environment" {
   solution_stack_name = var.solution_stack_name
 
   additional_settings = var.additional_settings
+  env_vars            = var.env_vars
 }
