@@ -196,3 +196,9 @@ variable "additional_settings" {
   description = "Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html"
   default     = []
 }
+
+variable "env_vars" {
+  type        = map(string)
+  default     = {}
+  description = "Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env_vars = { DB_USER = 'admin' DB_PASS = 'xxxxxx' }"
+}

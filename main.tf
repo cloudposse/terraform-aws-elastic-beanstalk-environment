@@ -772,6 +772,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
       value     = setting.value.value
     }
   }
+
+  // Add environment variables if provided
+  dynamic "setting" {
+    for_each = var.env_vars
+    content {
+      namespace = "aws:elasticbeanstalk:application:environment"
+      name      = setting.key
+      value     = setting.value
+    }
+  }
 }
 
 data "aws_elb_service_account" "main" {

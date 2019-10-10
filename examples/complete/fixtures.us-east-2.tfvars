@@ -80,26 +80,12 @@ additional_settings = [
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
     value     = "false"
-  },
-  // Environment variables
-  {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_HOST"
-    value     = "xxxxxxxxxxxxxx"
-  },
-  {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_USERNAME"
-    value     = "yyyyyyyyyyyyy"
-  },
-  {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "DB_PASSWORD"
-    value     = "zzzzzzzzzzzzzzzzzzz"
-  },
-  {
-    namespace = "aws:elasticbeanstalk:application:environment"
-    name      = "ANOTHER_ENV_VAR"
-    value     = "123456789"
   }
 ]
+
+env_vars = {
+  "DB_HOST"         = "xxxxxxxxxxxxxx"
+  "DB_USERNAME"     = "yyyyyyyyyyyyy"
+  "DB_PASSWORD"     = "zzzzzzzzzzzzzzzzzzz"
+  "ANOTHER_ENV_VAR" = "123456789"
+}
