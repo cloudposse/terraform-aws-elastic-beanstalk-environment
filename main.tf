@@ -324,8 +324,9 @@ resource "aws_security_group" "default" {
 locals {
   // Remove `Name` tag from the map of tags because Elastic Beanstalk generates the `Name` tag automatically
   // and if it is provided, terraform tries to recreate the application on each `plan/apply`
+  // `Namespace` should be removed as well since any string that contains `Name` forces recreation
   // https://github.com/terraform-providers/terraform-provider-aws/issues/3963
-  tags = { for t in keys(module.label.tags) : t => module.label.tags[t] if t != "Name" }
+  tags = { for t in keys(module.label.tags) : t => module.label.tags[t] if t != "Name" && t != "Namespace" }
 
   elb_settings = [
     {
