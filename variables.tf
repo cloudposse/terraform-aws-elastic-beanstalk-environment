@@ -67,6 +67,12 @@ variable "dns_zone_id" {
   description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
 }
 
+variable "dns_subdomain" {
+  type        = string
+  default     = ""
+  description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
+}
+
 variable "allowed_security_groups" {
   type        = list(string)
   description = "List of security groups to be allowed to connect to the EC2 instances"

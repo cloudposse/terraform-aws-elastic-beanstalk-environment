@@ -177,6 +177,7 @@ Available targets:
 | availability_zone_selector | Availability Zone selector | string | `Any 2` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | description | Short description of the Environment | string | `` | no |
+| dns_subdomain | The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well | string | `` | no |
 | dns_zone_id | Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment | string | `` | no |
 | elastic_beanstalk_application_name | Elastic Beanstalk application name | string | - | yes |
 | elb_scheme | Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC | string | `public` | no |
