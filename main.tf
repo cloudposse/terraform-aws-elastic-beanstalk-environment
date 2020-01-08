@@ -417,7 +417,7 @@ locals {
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Enabled"
-      value     = "true"
+      value     = var.loadbalancer_type == "network" ? "false" : "true"
     },
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -442,12 +442,7 @@ locals {
     {
       namespace = "aws:elbv2:listener:443"
       name      = "Protocol"
-      value     = "HTTPS"
-    },
-    {
-      namespace = "aws:elbv2:listener:443"
-      name      = "SSLCertificateArns"
-      value     = var.loadbalancer_certificate_arn
+      value     = var.loadbalancer_type == "network" ? "TCP" : "HTTPS"
     },
     {
       namespace = "aws:elbv2:listener:443"
@@ -463,16 +458,13 @@ locals {
       namespace = "aws:elasticbeanstalk:environment"
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
-    }
-
-    ###===================== Application Load Balancer Health check settings =====================================================###
-    # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
-    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
-    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
-    
-    
+    }    
   ]
 
+  ###===================== Application Load Balancer Health check settings =====================================================###
+  # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
+  # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
+  # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
   application_settings = (var.loadbalancer_type == "network") ? null : [
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
@@ -488,6 +480,11 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Protocol"
       value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
+    },
+    {
+      namespace = "aws:elbv2:listener:443"
+      name      = "SSLCertificateArns"
+      value     = var.loadbalancer_certificate_arn
     }
   ]
 
