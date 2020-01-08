@@ -469,6 +469,8 @@ locals {
     # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
     # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
     # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
+    
+    %{ if var.loadbalancer_type == "application" }
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "HealthCheckPath"
@@ -484,6 +486,7 @@ locals {
       name      = "Protocol"
       value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
     }
+    %{ endif }
   ]
 
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
