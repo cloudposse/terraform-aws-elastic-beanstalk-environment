@@ -411,18 +411,8 @@ locals {
     },
     {
       namespace = "aws:elbv2:loadbalancer"
-      name      = "AccessLogsS3Bucket"
-      value     = join("", aws_s3_bucket.elb_logs.*.id)
-    },
-    {
-      namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Enabled"
       value     = var.loadbalancer_type == "network" ? "false" : "true"
-    },
-    {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "SecurityGroups"
-      value     = join(",", var.loadbalancer_security_groups)
     },
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -477,6 +467,11 @@ locals {
       value     = var.application_port
     },
     {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Bucket"
+      value     = join("", aws_s3_bucket.elb_logs.*.id)
+    },
+    {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Protocol"
       value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
@@ -485,6 +480,11 @@ locals {
       namespace = "aws:elbv2:listener:443"
       name      = "SSLCertificateArns"
       value     = var.loadbalancer_certificate_arn
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SecurityGroups"
+      value     = join(",", var.loadbalancer_security_groups)
     }
   ]
 
