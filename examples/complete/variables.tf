@@ -58,6 +58,7 @@ variable "loadbalancer_type" {
 
 variable "dns_zone_id" {
   type        = string
+  default     = ""
   description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
 }
 
