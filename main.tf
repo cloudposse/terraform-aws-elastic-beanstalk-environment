@@ -390,6 +390,11 @@ locals {
       value     = "TCP"
     },
     {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "Protocol"
+      value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
+    },
+    {
       namespace = "aws:elb:listener:${var.ssh_listener_port}"
       name      = "InstancePort"
       value     = "22"
@@ -448,7 +453,12 @@ locals {
       namespace = "aws:elasticbeanstalk:environment"
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
-    }    
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "Port"
+      value     = var.application_port
+    }
   ]
 
   ###===================== Application Load Balancer Health check settings =====================================================###
@@ -462,19 +472,9 @@ locals {
       value     = var.healthcheck_url
     },
     {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "Port"
-      value     = var.application_port
-    },
-    {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
       value     = join("", aws_s3_bucket.elb_logs.*.id)
-    },
-    {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "Protocol"
-      value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
     },
     {
       namespace = "aws:elbv2:listener:443"
