@@ -328,7 +328,7 @@ locals {
   // https://github.com/terraform-providers/terraform-provider-aws/issues/3963
   tags = { for t in keys(module.label.tags) : t => module.label.tags[t] if t != "Name" && t != "Namespace" }
 
-  elb_settings = [
+  initial_elb_settings = [
     {
       namespace = "aws:elb:loadbalancer"
       name      = "CrossZone"
@@ -463,14 +463,17 @@ locals {
       namespace = "aws:elasticbeanstalk:environment"
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
-    },
+    }
 
     ###===================== Application Load Balancer Health check settings =====================================================###
     # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
     # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
     # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
     
-    %{ if var.loadbalancer_type == "application" }
+    
+  ]
+
+  application_settings = (var.loadbalancer_type == "network") ? null : [
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "HealthCheckPath"
@@ -486,8 +489,12 @@ locals {
       name      = "Protocol"
       value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
     }
-    %{ endif }
   ]
+
+  elb_settings = local.application_settings == null ? local.initial_elb_settings : "${merge(
+    local.initial_elb_settings,
+    local.application_settings
+  )}"
 
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
   elb_settings_final = var.tier == "WebServer" ? local.elb_settings : []
