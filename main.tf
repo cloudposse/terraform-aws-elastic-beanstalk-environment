@@ -352,7 +352,7 @@ locals {
     {
       namespace = "aws:elb:listener"
       name      = "ListenerProtocol"
-      value     = "HTTP"
+      value     = var.loadbalancer_listener_protocol
     },
     {
       namespace = "aws:elb:listener"
@@ -453,11 +453,6 @@ locals {
       namespace = "aws:elasticbeanstalk:environment"
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
-    },
-    {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "Port"
-      value     = var.application_port
     }
   ]
 
@@ -485,13 +480,15 @@ locals {
       namespace = "aws:elbv2:loadbalancer"
       name      = "SecurityGroups"
       value     = join(",", var.loadbalancer_security_groups)
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "Port"
+      value     = var.application_port
     }
   ]
 
-  elb_settings = local.application_settings == null ? local.initial_elb_settings : "${merge(
-    local.initial_elb_settings,
-    local.application_settings
-  )}"
+  elb_settings = merge(local.initial_elb_settings, local.application_settings)
 
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
   elb_settings_final = var.tier == "WebServer" ? local.elb_settings : []

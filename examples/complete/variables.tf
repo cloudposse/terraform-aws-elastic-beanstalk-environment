@@ -56,6 +56,12 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
+variable "loadbalancer_listener_protocol" {
+  type        = string
+  default     = "HTTP"
+  description = "Protocol to use for listener, defaults to HTTP (Can be TCP etc)"
+}
+
 variable "dns_zone_id" {
   type        = string
   default     = ""
