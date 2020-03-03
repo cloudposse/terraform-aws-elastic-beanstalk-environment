@@ -78,33 +78,39 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
-  role       = aws_iam_role.ec2.name
+  count      = var.instance_role_name == "" ? 1 : 0
+  role       = aws_iam_role.ec2[0].name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
 resource "aws_iam_role" "ec2" {
+  count              = var.instance_role_name == "" ? 1 : 0
   name               = "${module.label.id}-eb-ec2"
   assume_role_policy = data.aws_iam_policy_document.ec2.json
 }
 
 resource "aws_iam_role_policy" "default" {
+  count  = var.instance_role_name == "" ? 1 : 0
   name   = "${module.label.id}-eb-default"
-  role   = aws_iam_role.ec2.id
+  role   = aws_iam_role.ec2[0].id
   policy = data.aws_iam_policy_document.default.json
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
-  role       = aws_iam_role.ec2.name
+  count      = var.instance_role_name == "" ? 1 : 0
+  role       = aws_iam_role.ec2[0].name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
-  role       = aws_iam_role.ec2.name
+  count      = var.instance_role_name == "" ? 1 : 0
+  role       = aws_iam_role.ec2[0].name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
-  role       = aws_iam_role.ec2.name
+  count      = var.instance_role_name == "" ? 1 : 0
+  role       = aws_iam_role.ec2[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 
   lifecycle {
@@ -113,7 +119,8 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
-  role       = aws_iam_role.ec2.name
+  count      = var.instance_role_name == "" ? 1 : 0
+  role       = aws_iam_role.ec2[0].name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
@@ -124,13 +131,15 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
-  role       = aws_iam_role.ec2.name
+  count      = var.instance_role_name == "" ? 1 : 0
+  role       = aws_iam_role.ec2[0].name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ssm_activation" "ec2" {
+  count              = var.instance_role_name == "" ? 1 : 0
   name               = module.label.id
-  iam_role           = aws_iam_role.ec2.id
+  iam_role           = aws_iam_role.ec2[0].id
   registration_limit = var.autoscale_max
 }
 
@@ -295,7 +304,7 @@ data "aws_iam_policy_document" "default" {
 
 resource "aws_iam_instance_profile" "ec2" {
   name = "${module.label.id}-eb-ec2"
-  role = aws_iam_role.ec2.name
+  role =  var.instance_role_name == "" ? aws_iam_role.ec2[0].name : var.instance_role_name
 }
 
 resource "aws_security_group" "default" {

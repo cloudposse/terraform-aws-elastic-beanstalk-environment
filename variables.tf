@@ -424,3 +424,9 @@ variable "alb_zone_id" {
 
   description = "ALB zone id"
 }
+
+variable "instance_role_name" {
+  type        = string
+  default     = ""
+  description = "I"
+}
