@@ -646,6 +646,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "ImageId"
+    value     = "${var.ami_id}"
+  }
+
+  setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSizeType"
     value     = "Fixed"
