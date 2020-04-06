@@ -26,6 +26,12 @@ variable "delimiter" {
   description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
 }
 
+variable "environment" {
+  type        = string
+  default     = ""
+  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
+}
+
 variable "attributes" {
   type        = list(string)
   default     = []
