@@ -107,6 +107,7 @@ Available targets:
 | attributes | Additional attributes (e.g. `1`) | list(string) | `<list>` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | description | Elastic Beanstalk Application description | string | `` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | name | Solution name, e.g. 'app' or 'cluster' | string | - | yes |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | string | `` | no |
 | stage | Stage, e.g. 'prod', 'staging', 'dev', or 'test' | string | `` | no |
