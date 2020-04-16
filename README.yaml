@@ -4,6 +4,8 @@
 # Run `make readme` to rebuild the `README.md`
 #
 
+# DELETE ME: triage readme updater
+
 # Name of this project
 name: terraform-aws-elastic-beanstalk-environment
 
