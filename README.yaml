@@ -123,6 +123,7 @@ usage: |-
       loadbalancer_subnets    = module.subnets.public_subnet_ids
       application_subnets     = module.subnets.private_subnet_ids
       allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+      instance_role_name      = aws_iam.role.ec2_instance_role.name
 
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
