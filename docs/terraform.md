@@ -39,7 +39,7 @@
 | healthcheck_url | Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances | string | `/healthcheck` | no |
 | http_listener_enabled | Enable port 80 (http) | bool | `true` | no |
 | instance_refresh_enabled | Enable weekly instance replacement. | bool | `true` | no |
-| instance_role_name | I | string | `` | no |
+| instance_role_name | Instance role name of existing IAM role to attach to Beanstalk deployment | string | `` | no |
 | instance_type | Instances type | string | `t2.micro` | no |
 | keypair | Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS | string | `` | no |
 | loadbalancer_certificate_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | string | `` | no |
