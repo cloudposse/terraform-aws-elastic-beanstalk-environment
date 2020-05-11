@@ -329,16 +329,11 @@ locals {
   // https://github.com/terraform-providers/terraform-provider-aws/issues/3963
   tags = { for t in keys(module.label.tags) : t => module.label.tags[t] if t != "Name" && t != "Namespace" }
 
-  elb_settings = [
+  classic_elb_settings = [
     {
       namespace = "aws:elb:loadbalancer"
       name      = "CrossZone"
       value     = "true"
-    },
-    {
-      namespace = "aws:ec2:vpc"
-      name      = "ELBSubnets"
-      value     = join(",", sort(var.loadbalancer_subnets))
     },
     {
       namespace = "aws:elb:loadbalancer"
@@ -350,6 +345,7 @@ locals {
       name      = "ManagedSecurityGroup"
       value     = var.loadbalancer_managed_security_group
     },
+
     {
       namespace = "aws:elb:listener"
       name      = "ListenerProtocol"
@@ -410,6 +406,8 @@ locals {
       name      = "ConnectionDrainingEnabled"
       value     = "true"
     },
+  ]
+  alb_settings = [
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
@@ -454,7 +452,16 @@ locals {
       namespace = "aws:elbv2:listener:443"
       name      = "SSLPolicy"
       value     = var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""
+    }
+  ]
+
+  generic_elb_settings = [
+    {
+      namespace = "aws:ec2:vpc"
+      name      = "ELBSubnets"
+      value     = join(",", sort(var.loadbalancer_subnets))
     },
+
     {
       namespace = "aws:ec2:vpc"
       name      = "ELBScheme"
@@ -488,7 +495,7 @@ locals {
   ]
 
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
-  elb_settings_final = var.tier == "WebServer" ? local.elb_settings : []
+  elb_settings_final = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) :  concat(local.classic_elb_settings, local.generic_elb_settings)  : []
 }
 
 #
