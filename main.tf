@@ -338,12 +338,12 @@ locals {
     {
       namespace = "aws:ec2:vpc"
       name      = "ELBSubnets"
-      value     = join(",", var.loadbalancer_subnets)
+      value     = join(",", sort(var.loadbalancer_subnets))
     },
     {
       namespace = "aws:elb:loadbalancer"
       name      = "SecurityGroups"
-      value     = join(",", var.loadbalancer_security_groups)
+      value     = join(",", sort(var.loadbalancer_security_groups))
     },
     {
       namespace = "aws:elb:loadbalancer"
@@ -413,7 +413,7 @@ locals {
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
-      value     = join("", aws_s3_bucket.elb_logs.*.id)
+      value     = join("", sort(aws_s3_bucket.elb_logs.*.id))
     },
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -423,7 +423,7 @@ locals {
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "SecurityGroups"
-      value     = join(",", var.loadbalancer_security_groups)
+      value     = join(",", sort(var.loadbalancer_security_groups))
     },
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -529,13 +529,13 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
-    value     = join(",", var.application_subnets)
+    value     = join(",", sort(var.application_subnets))
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = join(",", compact(concat([aws_security_group.default.id], var.additional_security_groups)))
+    value     = join(",", compact(concat([aws_security_group.default.id], sort(var.additional_security_groups))))
   }
 
   setting {
