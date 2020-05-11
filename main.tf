@@ -511,6 +511,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
       namespace = setting.value["namespace"]
       name      = setting.value["name"]
       value     = setting.value["value"]
+      resource  = ""
     }
   }
 
@@ -518,162 +519,189 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:ec2:vpc"
     name      = "VPCId"
     value     = var.vpc_id
+    resource  = ""
   }
 
   setting {
     namespace = "aws:ec2:vpc"
     name      = "AssociatePublicIpAddress"
     value     = var.associate_public_ip_address
+    resource  = ""
   }
 
   setting {
     namespace = "aws:ec2:vpc"
     name      = "Subnets"
     value     = join(",", sort(var.application_subnets))
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
     value     = join(",", compact(concat([aws_security_group.default.id], sort(var.additional_security_groups))))
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
     value     = aws_iam_instance_profile.ec2.name
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "Availability Zones"
     value     = var.availability_zone_selector
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "EnvironmentType"
     value     = var.environment_type
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
     value     = aws_iam_role.service.name
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:application:environment"
     name      = "BASE_HOST"
     value     = var.name
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:healthreporting:system"
     name      = "SystemType"
     value     = var.enhanced_reporting_enabled ? "enhanced" : "basic"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"
     value     = var.managed_actions_enabled ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MinSize"
     value     = var.autoscale_min
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:asg"
     name      = "MaxSize"
     value     = var.autoscale_max
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateEnabled"
     value     = var.rolling_update_enabled
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateType"
     value     = var.rolling_update_type
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MinInstancesInService"
     value     = var.updating_min_in_service
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
     value     = var.rolling_update_type == "Immutable" ? "Immutable" : "Rolling"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "MaxBatchSize"
     value     = var.updating_max_batch
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "InstanceType"
     value     = var.instance_type
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "EC2KeyName"
     value     = var.keypair
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "RootVolumeSize"
     value     = var.root_volume_size
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "RootVolumeType"
     value     = var.root_volume_type
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSizeType"
     value     = "Fixed"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSize"
     value     = "1"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "PreferredStartTime"
     value     = var.preferred_start_time
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "UpdateLevel"
     value     = var.update_level
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:managedactions:platformupdate"
     name      = "InstanceRefreshEnabled"
     value     = var.instance_refresh_enabled
+    resource  = ""
   }
 
   ###=========================== Autoscale trigger ========================== ###
@@ -682,42 +710,49 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:autoscaling:trigger"
     name      = "MeasureName"
     value     = var.autoscale_measure_name
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Statistic"
     value     = var.autoscale_statistic
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "Unit"
     value     = var.autoscale_unit
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "LowerThreshold"
     value     = var.autoscale_lower_bound
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "LowerBreachScaleIncrement"
     value     = var.autoscale_lower_increment
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "UpperThreshold"
     value     = var.autoscale_upper_bound
+    resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:trigger"
     name      = "UpperBreachScaleIncrement"
     value     = var.autoscale_upper_increment
+    resource  = ""
   }
 
   ###=========================== Logging ========================== ###
@@ -726,42 +761,49 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:elasticbeanstalk:hostmanager"
     name      = "LogPublicationControl"
     value     = var.enable_log_publication_control ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
     name      = "StreamLogs"
     value     = var.enable_stream_logs ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
     name      = "DeleteOnTerminate"
     value     = var.logs_delete_on_terminate ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs"
     name      = "RetentionInDays"
     value     = var.logs_retention_in_days
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
     name      = "HealthStreamingEnabled"
     value     = var.health_streaming_enabled ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
     name      = "DeleteOnTerminate"
     value     = var.health_streaming_delete_on_terminate ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:cloudwatch:logs:health"
     name      = "RetentionInDays"
     value     = var.health_streaming_retention_in_days
+    resource  = ""
   }
 
   // Add additional Elastic Beanstalk settings
@@ -772,6 +814,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
       namespace = setting.value.namespace
       name      = setting.value.name
       value     = setting.value.value
+      resource  = ""
     }
   }
 
@@ -782,6 +825,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
       namespace = "aws:elasticbeanstalk:application:environment"
       name      = setting.key
       value     = setting.value
+      resource  = ""
     }
   }
 }
