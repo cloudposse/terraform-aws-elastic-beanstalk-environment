@@ -51,7 +51,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, []string{"172.16.96.0/19", "172.16.128.0/19"}, publicSubnetCidrs)
 
 	// Run `terraform output` to get the value of an output variable
-	expectedName := fmt.Sprintf("eg-test-elastic-beanstalk-env-%s", attribute)
+	expectedName := fmt.Sprintf("eg-test-elastic-beanstalk-env-%s", attribute[:0])
 	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedName, elasticBeanstalkApplicationName)
