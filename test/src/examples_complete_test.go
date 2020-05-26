@@ -16,7 +16,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	// Give this S3 Bucket a unique ID for a name tag so we can distinguish it from any other Buckets provisioned
 	// in your AWS account
-	attribute := []string{strings.ToLower(random.UniqueId())}
+	attributes := []string{strings.ToLower(random.UniqueId())}
 
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
@@ -25,7 +25,7 @@ func TestExamplesComplete(t *testing.T) {
 		// Variables to pass to our Terraform code using -var-file options
 		VarFiles: []string{"fixtures.us-east-2.tfvars"},
 		Vars: map[string]interface{}{
-			"attributes": attribute,
+			"attributes": attributes,
 		},
 	}
 
@@ -51,7 +51,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, []string{"172.16.96.0/19", "172.16.128.0/19"}, publicSubnetCidrs)
 
 	// Run `terraform output` to get the value of an output variable
-	expectedName := fmt.Sprintf("eg-test-elastic-beanstalk-env-%s", attribute[:0])
+	expectedName := fmt.Sprintf("eg-test-elastic-beanstalk-env-%s", attributes[0])
 	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedName, elasticBeanstalkApplicationName)
