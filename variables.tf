@@ -457,6 +457,6 @@ variable "alb_zone_id" {
 
 variable "ami_id" {
   type        = string
-  default     = ""
+  default     = null
   description = "The id of the AMI to associate with the Amazon EC2 instances"
 }
