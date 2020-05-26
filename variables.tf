@@ -119,6 +119,30 @@ variable "instance_type" {
   description = "Instances type"
 }
 
+variable "enable_spot_instances" {
+  type        = bool
+  default     = false
+  description = "Enable Spot Instance requests for your environment"
+}
+
+variable "spot_fleet_on_demand_base" {
+  type        = number
+  default     = 0
+  description = "The minimum number of On-Demand Instances that your Auto Scaling group provisions before considering Spot Instances as your environment scales up. This option is relevant only when enable_spot_instances is true."
+}
+
+variable "spot_fleet_on_demand_above_base_percentage" {
+  type        = number
+  default     = -1
+  description = "The percentage of On-Demand Instances as part of additional capacity that your Auto Scaling group provisions beyond the SpotOnDemandBase instances. This option is relevant only when enable_spot_instances is true."
+}
+
+variable "spot_max_price" {
+  type        = number
+  default     = -1
+  description = "The maximum price per unit hour, in US$, that you're willing to pay for a Spot Instance. This option is relevant only when enable_spot_instances is true. Valid values are between 0.001 and 20.0"
+}
+
 variable "enhanced_reporting_enabled" {
   type        = bool
   default     = true
