@@ -454,3 +454,15 @@ variable "alb_zone_id" {
 
   description = "ALB zone id"
 }
+
+variable "instance_role_name" {
+  type        = string
+  default     = ""
+  description = "Instance role name of existing IAM role to attach to Beanstalk deployment"
+}
+
+variable "service_role_name" {
+  type        = string
+  default     = ""
+  description = "Service role name of existing IAM role to attach to Beanstalk deployment"
+}
