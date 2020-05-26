@@ -700,6 +700,15 @@ resource "aws_elastic_beanstalk_environment" "default" {
     resource  = ""
   }
 
+  dynamic "setting" {
+    for_each = var.ami_id == null ? [] : [var.ami_id]
+    content {
+      namespace = "aws:autoscaling:launchconfiguration"
+      name      = "ImageId"
+      value     = setting.value
+    }
+  }
+
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSizeType"
