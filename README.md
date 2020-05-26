@@ -222,9 +222,11 @@ Available targets:
 | elastic_beanstalk_application_name | Elastic Beanstalk application name | string | - | yes |
 | elb_scheme | Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC | string | `public` | no |
 | enable_log_publication_control | Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application | bool | `false` | no |
+| enable_spot_instances | Enable Spot Instance requests for your environment | bool | `false` | no |
 | enable_stream_logs | Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment | bool | `false` | no |
 | enhanced_reporting_enabled | Whether to enable "enhanced" health reporting for this environment.  If false, "basic" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false | bool | `true` | no |
 | env_vars | Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env_vars = { DB_USER = 'admin' DB_PASS = 'xxxxxx' } | map(string) | `<map>` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | environment_type | Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `loadbalancer_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments) | string | `LoadBalanced` | no |
 | force_destroy | Force destroy the S3 bucket for load balancer logs | bool | `false` | no |
 | health_streaming_delete_on_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | bool | `false` | no |
@@ -253,6 +255,9 @@ Available targets:
 | root_volume_size | The size of the EBS root volume | number | `8` | no |
 | root_volume_type | The type of the EBS root volume | string | `gp2` | no |
 | solution_stack_name | Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html | string | - | yes |
+| spot_fleet_on_demand_above_base_percentage | The percentage of On-Demand Instances as part of additional capacity that your Auto Scaling group provisions beyond the SpotOnDemandBase instances. This option is relevant only when enable_spot_instances is true. | number | `-1` | no |
+| spot_fleet_on_demand_base | The minimum number of On-Demand Instances that your Auto Scaling group provisions before considering Spot Instances as your environment scales up. This option is relevant only when enable_spot_instances is true. | number | `0` | no |
+| spot_max_price | The maximum price per unit hour, in US$, that you're willing to pay for a Spot Instance. This option is relevant only when enable_spot_instances is true. Valid values are between 0.001 and 20.0 | number | `-1` | no |
 | ssh_listener_enabled | Enable SSH port | bool | `false` | no |
 | ssh_listener_port | SSH port | number | `22` | no |
 | ssh_source_restriction | Used to lock down SSH access to the EC2 instances | string | `0.0.0.0/0` | no |
@@ -342,6 +347,10 @@ We deliver 10x the value for a fraction of the cost of a full-time engineer. Our
 ## Slack Community
 
 Join our [Open Source Community][slack] on Slack. It's **FREE** for everyone! Our "SweetOps" community is where you get to talk with others who share a similar vision for how to rollout and manage infrastructure. This is the best place to talk shop, ask questions, solicit feedback, and work together as a community to build totally *sweet* infrastructure.
+
+## Discourse Forums
+
+Participate in our [Discourse Forums][discourse]. Here you'll find answers to commonly asked questions. Most questions will be related to the enormous number of projects we support on our GitHub. Come here to collaborate on answers, find solutions, and get ideas about the products and services we value. It only takes a minute to get started! Just sign in with SSO using your GitHub account.
 
 ## Newsletter
 
@@ -470,6 +479,7 @@ Check out [our other projects][github], [follow us on twitter][twitter], [apply 
   [testimonial]: https://cpco.io/leave-testimonial?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=testimonial
   [office_hours]: https://cloudposse.com/office-hours?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=office_hours
   [newsletter]: https://cpco.io/newsletter?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=newsletter
+  [discourse]: https://ask.sweetops.com/?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=discourse
   [email]: https://cpco.io/email?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=email
   [commercial_support]: https://cpco.io/commercial-support?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=commercial_support
   [we_love_open_source]: https://cpco.io/we-love-open-source?utm_source=github&utm_medium=readme&utm_campaign=cloudposse/terraform-aws-elastic-beanstalk-environment&utm_content=we_love_open_source
