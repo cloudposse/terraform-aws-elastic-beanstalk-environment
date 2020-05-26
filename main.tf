@@ -649,10 +649,34 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
-    namespace = "aws:autoscaling:launchconfiguration"
-    name      = "InstanceType"
+    namespace = "aws:ec2:instances"
+    name      = "InstanceTypes"
     value     = var.instance_type
     resource  = ""
+  }
+
+  setting {
+    namespace = "aws:ec2:instances"
+    name      = "EnableSpot"
+    value     = var.enable_spot_instances ? "true" : "false"
+  }
+
+  setting {
+    namespace = "aws:ec2:instances"
+    name      = "SpotFleetOnDemandBase"
+    value     = var.spot_fleet_on_demand_base
+  }
+
+  setting {
+    namespace = "aws:ec2:instances"
+    name      = "SpotFleetOnDemandAboveBasePercentage"
+    value     = var.spot_fleet_on_demand_above_base_percentage == -1 ? (var.environment_type == "LoadBalanced" ? 70 : 0) : var.spot_fleet_on_demand_above_base_percentage
+  }
+
+  setting {
+    namespace = "aws:ec2:instances"
+    name      = "SpotMaxPrice"
+    value     = var.spot_max_price == -1 ? "null" : var.spot_max_price
   }
 
   setting {
