@@ -6,6 +6,7 @@
 | additional_settings | Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html | object | `<list>` | no |
 | alb_zone_id | ALB zone id | map(string) | `<map>` | no |
 | allowed_security_groups | List of security groups to add to the EC2 instances | list(string) | `<list>` | no |
+| ami_id | The id of the AMI to associate with the Amazon EC2 instances | string | `null` | no |
 | application_port | Port application is listening on | number | `80` | no |
 | application_subnets | List of subnets to place EC2 instances | list(string) | - | yes |
 | associate_public_ip_address | Whether to associate public IP addresses to the instances | bool | `false` | no |
@@ -27,9 +28,11 @@
 | elastic_beanstalk_application_name | Elastic Beanstalk application name | string | - | yes |
 | elb_scheme | Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC | string | `public` | no |
 | enable_log_publication_control | Copy the log files for your application's Amazon EC2 instances to the Amazon S3 bucket associated with your application | bool | `false` | no |
+| enable_spot_instances | Enable Spot Instance requests for your environment | bool | `false` | no |
 | enable_stream_logs | Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment | bool | `false` | no |
 | enhanced_reporting_enabled | Whether to enable "enhanced" health reporting for this environment.  If false, "basic" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false | bool | `true` | no |
 | env_vars | Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env_vars = { DB_USER = 'admin' DB_PASS = 'xxxxxx' } | map(string) | `<map>` | no |
+| environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | string | `` | no |
 | environment_type | Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `loadbalancer_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments) | string | `LoadBalanced` | no |
 | force_destroy | Force destroy the S3 bucket for load balancer logs | bool | `false` | no |
 | health_streaming_delete_on_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | bool | `false` | no |
@@ -59,6 +62,9 @@
 | root_volume_size | The size of the EBS root volume | number | `8` | no |
 | root_volume_type | The type of the EBS root volume | string | `gp2` | no |
 | solution_stack_name | Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html | string | - | yes |
+| spot_fleet_on_demand_above_base_percentage | The percentage of On-Demand Instances as part of additional capacity that your Auto Scaling group provisions beyond the SpotOnDemandBase instances. This option is relevant only when enable_spot_instances is true. | number | `-1` | no |
+| spot_fleet_on_demand_base | The minimum number of On-Demand Instances that your Auto Scaling group provisions before considering Spot Instances as your environment scales up. This option is relevant only when enable_spot_instances is true. | number | `0` | no |
+| spot_max_price | The maximum price per unit hour, in US$, that you're willing to pay for a Spot Instance. This option is relevant only when enable_spot_instances is true. Valid values are between 0.001 and 20.0 | number | `-1` | no |
 | ssh_listener_enabled | Enable SSH port | bool | `false` | no |
 | ssh_listener_port | SSH port | number | `22` | no |
 | ssh_source_restriction | Used to lock down SSH access to the EC2 instances | string | `0.0.0.0/0` | no |
