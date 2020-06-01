@@ -450,6 +450,8 @@ variable "alb_zone_id" {
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
     eu-west-3      = "ZCMLWB8V5SYIT"
+    us-gov-west-1  = "Z4KAURWC4UUUG"
+    us-gov-east-1  = "Z35TSARG0EJ4VU"
   }
 
   description = "ALB zone id"
