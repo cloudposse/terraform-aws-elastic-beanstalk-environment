@@ -712,14 +712,28 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSizeType"
-    value     = "Fixed"
+    value     = var.deployment_batch_size_type
     resource  = ""
   }
 
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "BatchSize"
-    value     = "1"
+    value     = var.deployment_batch_size
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:command"
+    name      = "IgnoreHealthCheck"
+    value     = var.deployment_ignore_health_check
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:elasticbeanstalk:command"
+    name      = "Timeout"
+    value     = var.deployment_timeout
     resource  = ""
   }
 
