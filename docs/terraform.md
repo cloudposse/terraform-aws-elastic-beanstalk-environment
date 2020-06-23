@@ -23,8 +23,8 @@
 | availability_zone_selector | Availability Zone selector | string | `Any 2` | no |
 | delimiter | Delimiter to be used between `name`, `namespace`, `stage`, etc. | string | `-` | no |
 | description | Short description of the Environment | string | `` | no |
-| deployment_batch_size | Percentage or fixed number of Amazon EC2 instances in the Auto Scaling group on which to simultaneously perform deployments. Valid values vary per `deployment_batch_size_type setting | number | `1` | no |
-| deployment_batch_size_type | The type of number that is specified in `deployment_batch_size_type` | string | `Fixed` | no |
+| deployment_batch_size | Percentage or fixed number of Amazon EC2 instances in the Auto Scaling group on which to simultaneously perform deployments. Valid values vary per `deployment_batch_size_type` setting | number | `1` | no |
+| deployment_batch_size_type | The type of number that is specified in `deployment_batch_size` | string | `Fixed` | no |
 | deployment_ignore_health_check | Do not cancel a deployment due to failed health checks | bool | `false` | no |
 | deployment_timeout | Number of seconds to wait for an instance to complete executing commands | number | `600` | no |
 | dns_subdomain | The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well | string | `` | no |
