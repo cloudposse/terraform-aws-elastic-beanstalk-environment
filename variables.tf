@@ -460,3 +460,27 @@ variable "ami_id" {
   default     = null
   description = "The id of the AMI to associate with the Amazon EC2 instances"
 }
+
+variable "deployment_batch_size_type" {
+  type        = string
+  default     = "Fixed"
+  description = "The type of number that is specified in deployment_batch_size_type"
+}
+
+variable "deployment_batch_size" {
+  type        = number
+  default     = 1
+  description = "Percentage or fixed number of Amazon EC2 instances in the Auto Scaling group on which to simultaneously perform deployments. Valid values vary per deployment_batch_size_type setting"
+}
+
+variable "deployment_ignore_health_check" {
+  type        = bool
+  default     = false
+  description = "Do not cancel a deployment due to failed health checks"
+}
+
+variable "deployment_timeout" {
+  type        = number
+  default     = 600
+  description = "Number of seconds to wait for an instance to complete executing commands"
+}
