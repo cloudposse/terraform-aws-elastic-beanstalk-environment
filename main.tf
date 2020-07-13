@@ -546,7 +546,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value = join(",", compact(sort(concat([aws_security_group.default.id], var.additional_security_groups))))    
+    value     = join(",", compact(sort(concat([aws_security_group.default.id], var.additional_security_groups))))
     resource  = ""
   }
 
@@ -874,12 +874,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
 
   // dynamic needed as "spot max price" should only have a value if it is defined.
   dynamic "setting" {
-    for_each = var.spot_max_price == -1 ? [] : [var.spot_max_price] 
+    for_each = var.spot_max_price == -1 ? [] : [var.spot_max_price]
     content {
-        namespace = "aws:ec2:instances"
-        name      = "SpotMaxPrice"
-        value     = var.spot_max_price
-        resource  = ""
+      namespace = "aws:ec2:instances"
+      name      = "SpotMaxPrice"
+      value     = var.spot_max_price
+      resource  = ""
     }
   }
 
