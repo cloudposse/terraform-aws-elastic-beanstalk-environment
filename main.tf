@@ -676,12 +676,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     resource  = ""
   }
 
-  setting {
-    namespace = "aws:ec2:instances"
-    name      = "SpotMaxPrice"
-    value     = var.spot_max_price == -1 ? "null" : var.spot_max_price
-    resource  = ""
-  }
+
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -874,6 +869,17 @@ resource "aws_elastic_beanstalk_environment" "default" {
       name      = setting.value.name
       value     = setting.value.value
       resource  = ""
+    }
+  }
+
+  // dynamic needed as "spot max price" should only have a value if it is defined.
+  dynamic "setting" {
+    for_each = var.spot_max_price == -1 ? [] : [var.spot_max_price] 
+    content {
+        namespace = "aws:ec2:instances"
+        name      = "SpotMaxPrice"
+        value     = var.spot_max_price
+        resource  = ""
     }
   }
 
