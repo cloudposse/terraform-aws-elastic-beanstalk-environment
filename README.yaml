@@ -1,4 +1,3 @@
----
 #
 # This is the canonical configuration for the `README.md`
 # Run `make readme` to rebuild the `README.md`
@@ -6,7 +5,6 @@
 
 # Name of this project
 name: terraform-aws-elastic-beanstalk-application
-
 # Tags of this project
 tags:
   - aws
@@ -16,32 +14,24 @@ tags:
   - elastic-beanstalk
   - elasticbeanstalk
   - application
-
 # Categories of this project
 categories:
   - terraform-modules/platform
-
 # Logo for this project
 #logo: docs/logo.png
 
 # License of this project
 license: "APACHE2"
-
 # Canonical GitHub repo
 github_repo: cloudposse/terraform-aws-elastic-beanstalk-application
-
 # Badges to display
 badges:
-  - name: "Codefresh Status"
-    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-elastic-beanstalk-application?type=cf-1"
-    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d88ca3e31f6cfe6ae6bb98e"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-application.svg"
     url: "https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application/releases/latest"
   - name: "Slack Community"
     image: "https://slack.cloudposse.com/badge.svg"
     url: "https://slack.cloudposse.com"
-
 related:
   - name: "terraform-aws-elastic-beanstalk-environment"
     description: "Terraform module to provision an AWS Elastic Beanstalk Environment"
@@ -64,21 +54,16 @@ related:
   - name: "terraform-aws-vpc-peering"
     description: "Terraform module to create a peering connection between two VPCs"
     url: "https://github.com/cloudposse/terraform-aws-vpc-peering"
-
-
 references:
   - name: "terraform-aws-jenkins"
     description: "Terraform module to provision a complete Jenkins stack on Elastic Beanstalk by deploying Jenkins as a docker container using CodeBuild and CodePipeline with an ECR registry and EFS filesystem."
     url: "https://github.com/cloudposse/terraform-aws-jenkins"
-
 # Short description of this project
 description: |-
   Terraform module to provision AWS Elastic Beanstalk application
-
 include:
   - "docs/targets.md"
   - "docs/terraform.md"
-
 # Contributors to this project
 contributors:
   - name: "Erik Osterman"
