@@ -14,7 +14,7 @@ output "name" {
 }
 
 output "security_group_id" {
-  value       = aws_security_group.default.id
+  value       = concat(aws_security_group.default.*.id,[""])[0]
   description = "Security group id"
 }
 
@@ -24,7 +24,7 @@ output "elb_zone_id" {
 }
 
 output "ec2_instance_profile_role_name" {
-  value       = aws_iam_role.ec2.name
+  value       = coalesce(var.iam_instance_profile, concat(aws_iam_role.ec2.*.name, [""])[0])
   description = "Instance IAM role name"
 }
 
