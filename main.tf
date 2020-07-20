@@ -13,6 +13,8 @@ module "label" {
 # Service
 #
 data "aws_iam_policy_document" "service" {
+  count = var.iam_service_role == "" ? 1 : 0
+
   statement {
     actions = [
       "sts:AssumeRole"
@@ -28,18 +30,22 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
+  count = var.iam_service_role == "" ? 1 : 0
+
   name               = "${module.label.id}-eb-service"
-  assume_role_policy = data.aws_iam_policy_document.service.json
+  assume_role_policy = data.aws_iam_policy_document.service[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
-  count      = var.enhanced_reporting_enabled ? 1 : 0
-  role       = aws_iam_role.service.name
+  count      = var.enhanced_reporting_enabled && var.iam_service_role == "" ? 1 : 0
+  role       = concat(aws_iam_role.service.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
-  role       = aws_iam_role.service.name
+  count = var.iam_service_role == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.service.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
 }
 
@@ -47,6 +53,8 @@ resource "aws_iam_role_policy_attachment" "service" {
 # EC2
 #
 data "aws_iam_policy_document" "ec2" {
+  count = var.iam_instance_profile == "" ? 1 : 0
+
   statement {
     sid = ""
 
@@ -79,33 +87,45 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
-  role       = aws_iam_role.ec2.name
+  count = var.iam_instance_profile == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
 resource "aws_iam_role" "ec2" {
+  count = var.iam_instance_profile == "" ? 1 : 0
+
   name               = "${module.label.id}-eb-ec2"
-  assume_role_policy = data.aws_iam_policy_document.ec2.json
+  assume_role_policy = data.aws_iam_policy_document.ec2[0].json
 }
 
 resource "aws_iam_role_policy" "default" {
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
   name   = "${module.label.id}-eb-default"
-  role   = aws_iam_role.ec2.id
-  policy = data.aws_iam_policy_document.default.json
+  role   = aws_iam_role.ec2[0].id
+  policy = data.aws_iam_policy_document.default[0].json
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
-  role       = aws_iam_role.ec2.name
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
-  role       = aws_iam_role.ec2.name
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
-  role       = aws_iam_role.ec2.name
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
 
   lifecycle {
@@ -114,7 +134,9 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
-  role       = aws_iam_role.ec2.name
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
@@ -125,17 +147,23 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
-  role       = aws_iam_role.ec2.name
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
+  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ssm_activation" "ec2" {
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
   name               = module.label.id
-  iam_role           = aws_iam_role.ec2.id
+  iam_role           = aws_iam_role.ec2[0].id
   registration_limit = var.autoscale_max
 }
 
 data "aws_iam_policy_document" "default" {
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
   statement {
     actions = [
       "elasticloadbalancing:DescribeInstanceHealth",
@@ -295,11 +323,15 @@ data "aws_iam_policy_document" "default" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
+  count  = var.iam_instance_profile == "" ? 1 : 0
+
   name = "${module.label.id}-eb-ec2"
-  role = aws_iam_role.ec2.name
+  role = concat(aws_iam_role.ec2.*.name, [""])[0]
 }
 
 resource "aws_security_group" "default" {
+  count = length(var.allowed_security_groups) > 0 ? 1 : 0
+
   name        = module.label.id
   description = "Allow inbound traffic from provided Security Groups"
 
@@ -546,14 +578,14 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = join(",", compact(concat([aws_security_group.default.id], sort(var.additional_security_groups))))
+    value     = join(",", compact(concat(concat(aws_security_group.default.*.id,[""]), sort(var.additional_security_groups))))
     resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = aws_iam_instance_profile.ec2.name
+    value     = coalesce(var.iam_instance_profile, concat(aws_iam_instance_profile.ec2.*.name, [""])[0])
     resource  = ""
   }
 
@@ -574,7 +606,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
-    value     = aws_iam_role.service.name
+    value     = coalesce(var.iam_service_role, concat(aws_iam_role.service.*.name, [""])[0])
     resource  = ""
   }
 

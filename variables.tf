@@ -282,7 +282,7 @@ variable "loadbalancer_certificate_arn" {
 
 variable "loadbalancer_ssl_policy" {
   type        = string
-  default     = ""
+  default     = "ELBSecurityPolicy-2016-08"
   description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer"
 }
 
@@ -483,4 +483,16 @@ variable "deployment_timeout" {
   type        = number
   default     = 600
   description = "Number of seconds to wait for an instance to complete executing commands"
+}
+
+variable "iam_instance_profile" {
+  description = "The IAM Instance Profile name used for EC2"
+  type        = string
+  default     = "" 
+}
+
+variable "iam_service_role" { 
+  description = "The IAM Service Role used for Elastic Beanstalk"
+  type        = string
+  default     = "" 
 }
