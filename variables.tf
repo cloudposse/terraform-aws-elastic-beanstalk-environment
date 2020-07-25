@@ -419,11 +419,7 @@ variable "ssh_listener_port" {
 }
 
 variable "additional_settings" {
-  type = list(object({
-    namespace = string
-    name      = string
-    value     = string
-  }))
+  type = list(map(string))
 
   default     = []
   description = "Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html"
