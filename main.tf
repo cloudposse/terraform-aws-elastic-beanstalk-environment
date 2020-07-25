@@ -669,7 +669,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
-    value     = var.rolling_update_type == "Immutable" ? "Immutable" : "Rolling"
+    value     = var.rolling_update_type == "Immutable" ? "Immutable" : var.deploy_policy
     resource  = ""
   }
 

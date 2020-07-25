@@ -208,6 +208,12 @@ variable "rolling_update_enabled" {
   description = "Whether to enable rolling update"
 }
 
+variable "deploy_policy" {
+  type        = string
+  default     = "Rolling"
+  description = "Deployment Policy: `AllAtOnce`, `Immutable`, `Rolling`"
+}
+
 variable "rolling_update_type" {
   type        = string
   default     = "Health"
