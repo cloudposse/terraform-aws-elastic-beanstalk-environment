@@ -498,3 +498,9 @@ variable "iam_service_role" {
   type        = string
   default     = "" 
 }
+
+variable "connection_idle_timeout" {
+  type        = number
+  default     = 60
+  description = "Number of seconds that the load balancer waits for any data to be sent or received over the connection. If no data has been sent or received after this time period elapses, the load balancer closes the connection."
+}
