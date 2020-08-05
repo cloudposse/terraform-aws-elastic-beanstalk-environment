@@ -333,7 +333,7 @@ locals {
     {
       namespace = "aws:elb:loadbalancer"
       name      = "CrossZone"
-      value     = "true"
+      value     = var.loadbalancer_crosszone
     },
     {
       namespace = "aws:elb:loadbalancer"

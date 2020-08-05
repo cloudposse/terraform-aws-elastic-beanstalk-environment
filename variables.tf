@@ -67,6 +67,12 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
+variable "loadbalancer_crosszone" {
+  type        = bool
+  default     = true
+  description = "Configure the classic load balancer to route traffic evenly across all instances in all Availability Zones rather than only within each zone."
+}
+
 variable "dns_zone_id" {
   type        = string
   default     = ""
