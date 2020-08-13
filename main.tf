@@ -679,7 +679,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:ec2:instances"
     name      = "SpotMaxPrice"
-    value     = var.spot_max_price == -1 ? "null" : var.spot_max_price
+    value     = var.spot_max_price == -1 ? "" : var.spot_max_price
     resource  = ""
   }
 
