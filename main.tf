@@ -28,7 +28,7 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
-  name               = "${module.label.id}-eb-service"
+  name               = var.iam_service_role
   assume_role_policy = data.aws_iam_policy_document.service.json
 }
 
@@ -294,8 +294,9 @@ data "aws_iam_policy_document" "default" {
   }
 }
 
+
 resource "aws_iam_instance_profile" "ec2" {
-  name = "${module.label.id}-eb-ec2"
+  name = var.iam_instance_profile
   role = aws_iam_role.ec2.name
 }
 
