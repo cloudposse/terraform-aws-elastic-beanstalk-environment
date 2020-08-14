@@ -235,6 +235,8 @@ Available targets:
 | health\_streaming\_retention\_in\_days | The number of days to keep the archived health data before it expires. | `number` | `7` | no |
 | healthcheck\_url | Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances | `string` | `"/healthcheck"` | no |
 | http\_listener\_enabled | Enable port 80 (http) | `bool` | `true` | no |
+| iam\_instance\_profile | EC2 profile role name | `string` | `"${module.label.id}-eb-ec2"` | no |
+| iam\_service\_role| EB service role name | `string` | `"${module.label.id}-eb-service"` | no |
 | instance\_refresh\_enabled | Enable weekly instance replacement. | `bool` | `true` | no |
 | instance\_type | Instances type | `string` | `"t2.micro"` | no |
 | keypair | Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS | `string` | `""` | no |
