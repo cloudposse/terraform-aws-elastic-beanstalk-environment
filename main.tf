@@ -546,7 +546,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = join(",", compact(concat([aws_security_group.default.id], sort(var.additional_security_groups))))
+    value     = join(",", compact(sort(concat([aws_security_group.default.id], var.additional_security_groups))))
     resource  = ""
   }
 
@@ -659,25 +659,24 @@ resource "aws_elastic_beanstalk_environment" "default" {
     namespace = "aws:ec2:instances"
     name      = "EnableSpot"
     value     = var.enable_spot_instances ? "true" : "false"
+    resource  = ""
   }
 
   setting {
     namespace = "aws:ec2:instances"
     name      = "SpotFleetOnDemandBase"
     value     = var.spot_fleet_on_demand_base
+    resource  = ""
   }
 
   setting {
     namespace = "aws:ec2:instances"
     name      = "SpotFleetOnDemandAboveBasePercentage"
     value     = var.spot_fleet_on_demand_above_base_percentage == -1 ? (var.environment_type == "LoadBalanced" ? 70 : 0) : var.spot_fleet_on_demand_above_base_percentage
+    resource  = ""
   }
 
-  setting {
-    namespace = "aws:ec2:instances"
-    name      = "SpotMaxPrice"
-    value     = var.spot_max_price == -1 ? "null" : var.spot_max_price
-  }
+
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
@@ -706,6 +705,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
       namespace = "aws:autoscaling:launchconfiguration"
       name      = "ImageId"
       value     = setting.value
+      resource  = ""
     }
   }
 
@@ -868,6 +868,17 @@ resource "aws_elastic_beanstalk_environment" "default" {
       namespace = setting.value.namespace
       name      = setting.value.name
       value     = setting.value.value
+      resource  = ""
+    }
+  }
+
+  // dynamic needed as "spot max price" should only have a value if it is defined.
+  dynamic "setting" {
+    for_each = var.spot_max_price == -1 ? [] : [var.spot_max_price]
+    content {
+      namespace = "aws:ec2:instances"
+      name      = "SpotMaxPrice"
+      value     = var.spot_max_price
       resource  = ""
     }
   }
