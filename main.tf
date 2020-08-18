@@ -896,11 +896,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
 }
 
 data "aws_elb_service_account" "main" {
-  count = var.tier == "WebServer" ? 1 : 0
+  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
 }
 
 data "aws_iam_policy_document" "elb_logs" {
-  count = var.tier == "WebServer" ? 1 : 0
+  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
 
   statement {
     sid = ""
@@ -923,7 +923,7 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
-  count         = var.tier == "WebServer" ? 1 : 0
+  count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
   bucket        = "${module.label.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
