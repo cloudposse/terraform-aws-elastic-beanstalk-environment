@@ -35,13 +35,19 @@ variable "loadbalancer_crosszone" {
 variable "dns_zone_id" {
   type        = string
   default     = ""
-  description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
+  description = "Route53 parent zone ID. The module will create sub-domain DNS ALIAS record in the parent zone for the EB environment"
 }
 
 variable "dns_subdomain" {
   type        = string
   default     = ""
-  description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
+  description = "The subdomain to create on Route53 for the EB environment. For the subdomain ALIAS record to be created, the `dns_zone_id` variable must be set as well"
+}
+
+variable "ipv6_enabled" {
+  type        = bool
+  default     = false
+  description = "Set to true to enable an AAAA DNS record to be set as well as the A record"
 }
 
 variable "allowed_security_groups" {

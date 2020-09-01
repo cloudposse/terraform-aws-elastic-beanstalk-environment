@@ -1,5 +1,5 @@
 output "hostname" {
-  value       = module.dns_hostname.hostname
+  value       = module.dns_hostname.hostnames[0]
   description = "DNS hostname"
 }
 
