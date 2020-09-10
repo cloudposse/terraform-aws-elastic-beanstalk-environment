@@ -91,7 +91,7 @@ resource "aws_iam_role" "ec2" {
 resource "aws_iam_role_policy" "default" {
   name   = "${module.label.id}-eb-default"
   role   = aws_iam_role.ec2.id
-  policy = data.aws_iam_policy_document.default.json
+  policy = data.aws_iam_policy_document.extended.json
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
@@ -292,6 +292,11 @@ data "aws_iam_policy_document" "default" {
 
     effect = "Allow"
   }
+}
+
+data "aws_iam_policy_document" "extended" {
+  source_json   = data.aws_iam_policy_document.default.json
+  override_json = var.extended_ec2_policy_document
 }
 
 resource "aws_iam_instance_profile" "ec2" {
