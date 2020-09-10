@@ -106,7 +106,7 @@ resource "aws_iam_role_policy_attachment" "worker_tier" {
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+  policy_arn = var.prefer_legacy_ssm_policy ? "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
   lifecycle {
     create_before_destroy = true
