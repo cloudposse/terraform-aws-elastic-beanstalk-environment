@@ -492,13 +492,13 @@ variable "deployment_timeout" {
 }
 
 variable "extended_ec2_policy_document" {
-  type = string
-  default = "{}"
+  type        = string
+  default     = "{}"
   description = "Extensions or overrides for for IAM role assigned to EC2 instances"
 }
 
 variable "prefer_legacy_ssm_policy" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
 }
