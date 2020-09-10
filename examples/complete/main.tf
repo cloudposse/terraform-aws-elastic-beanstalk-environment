@@ -95,4 +95,13 @@ module "elastic_beanstalk_environment" {
 
   additional_settings = var.additional_settings
   env_vars            = var.env_vars
+
+  extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
+  prefer_legacy_ssm_policy = false
+}
+
+data "aws_iam_policy_document" "minimal_s3_permissions" {
+  statement {
+    sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+  }
 }
