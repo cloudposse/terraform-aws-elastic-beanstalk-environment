@@ -931,7 +931,7 @@ data "aws_iam_policy_document" "elb_logs" {
     ]
 
     resources = [
-      "arn:aws:s3:::${module.label.id}-eb-loadbalancer-logs/*"
+      "arn:aws:s3:::${module.label.id}-${var.elb_logs_name}/*"
     ]
 
     principals {
