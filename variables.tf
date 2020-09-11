@@ -504,3 +504,9 @@ variable "connection_idle_timeout" {
   default     = 60
   description = "Number of seconds that the load balancer waits for any data to be sent or received over the connection. If no data has been sent or received after this time period elapses, the load balancer closes the connection."
 }
+
+variable "elb_logs_name" {
+  description = "The suffix name of s3 bucket to storage eb load balancer logs"
+  type        = string
+  default     = "eb-loadbalancer-logs"
+}

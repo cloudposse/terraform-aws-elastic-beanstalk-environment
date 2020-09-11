@@ -945,7 +945,7 @@ data "aws_iam_policy_document" "elb_logs" {
 
 resource "aws_s3_bucket" "elb_logs" {
   count         = var.tier == "WebServer" ? 1 : 0
-  bucket        = "${module.label.id}-eb-loadbalancer-logs"
+  bucket        = "${module.label.id}-${var.elb_logs_name}"
   acl           = "private"
   force_destroy = var.force_destroy
   policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
