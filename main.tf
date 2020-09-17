@@ -933,6 +933,14 @@ resource "aws_s3_bucket" "elb_logs" {
   acl           = "private"
   force_destroy = var.force_destroy
   policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
+  server_side_encryption_configuration {
+    rule {
+      apply_server_side_encryption_by_default {
+        sse_algorithm = var.sse_algorithm
+        kms_master_key_id = var.kms_master_key_arn
+      }
+    }
+  }
 }
 
 module "dns_hostname" {

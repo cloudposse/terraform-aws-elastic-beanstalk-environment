@@ -238,6 +238,7 @@ Available targets:
 | instance\_refresh\_enabled | Enable weekly instance replacement. | `bool` | `true` | no |
 | instance\_type | Instances type | `string` | `"t2.micro"` | no |
 | keypair | Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS | `string` | `""` | no |
+| kms\_master\_key\_arn | The AWS KMS master key ARN used for the `SSE-KMS` encryption. This can only be used when you set the value of `sse_algorithm` as `aws:kms`. The default aws/s3 AWS KMS master key is used if this element is absent while the `sse_algorithm` is `aws:kms` | `string` | `""` | no |
 | loadbalancer\_certificate\_arn | Load Balancer SSL certificate ARN. The certificate must be present in AWS Certificate Manager | `string` | `""` | no |
 | loadbalancer\_crosszone | Configure the classic load balancer to route traffic evenly across all instances in all Availability Zones rather than only within each zone. | `bool` | `true` | no |
 | loadbalancer\_managed\_security\_group | Load balancer managed security group | `string` | `""` | no |
@@ -260,6 +261,7 @@ Available targets:
 | spot\_fleet\_on\_demand\_above\_base\_percentage | The percentage of On-Demand Instances as part of additional capacity that your Auto Scaling group provisions beyond the SpotOnDemandBase instances. This option is relevant only when enable\_spot\_instances is true. | `number` | `-1` | no |
 | spot\_fleet\_on\_demand\_base | The minimum number of On-Demand Instances that your Auto Scaling group provisions before considering Spot Instances as your environment scales up. This option is relevant only when enable\_spot\_instances is true. | `number` | `0` | no |
 | spot\_max\_price | The maximum price per unit hour, in US$, that you're willing to pay for a Spot Instance. This option is relevant only when enable\_spot\_instances is true. Valid values are between 0.001 and 20.0 | `number` | `-1` | no |
+| sse\_algorithm | The server-side encryption algorithm to use. Valid values are `AES256` and `aws:kms` | `string` | `"AES256"` | no |
 | ssh\_listener\_enabled | Enable SSH port | `bool` | `false` | no |
 | ssh\_listener\_port | SSH port | `number` | `22` | no |
 | ssh\_source\_restriction | Used to lock down SSH access to the EC2 instances | `string` | `"0.0.0.0/0"` | no |
