@@ -490,3 +490,15 @@ variable "deployment_timeout" {
   default     = 600
   description = "Number of seconds to wait for an instance to complete executing commands"
 }
+
+variable "extended_ec2_policy_document" {
+  type        = string
+  default     = "{}"
+  description = "Extensions or overrides for the IAM role assigned to EC2 instances"
+}
+
+variable "prefer_legacy_ssm_policy" {
+  type        = bool
+  default     = true
+  description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
+}
