@@ -83,3 +83,7 @@ output "triggers" {
   value       = aws_elastic_beanstalk_environment.default.triggers
 }
 
+output "environment_id" {
+  description = "Environment id"
+  value       = aws_elastic_beanstalk_environment.default.id
+}
