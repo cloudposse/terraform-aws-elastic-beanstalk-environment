@@ -462,7 +462,9 @@ variable "alb_zone_id" {
     eu-south-1     = "Z10VDYYOA2JFKM"
     eu-north-1     = "Z23GO28BZ5AETM"
     me-south-1     = "Z2BBTEKR2I36N2"
-    sa-east-1	     = "Z10X7K2B4QSOFV"
+    sa-east-1      = "Z10X7K2B4QSOFV"
+    us-gov-west-1  = "Z31GFT0UA1I2HV"
+    us-gov-east-1  = "Z2NIFVYYW2VKV1"
   }
 
   description = "ALB zone id"
