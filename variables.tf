@@ -421,6 +421,7 @@ variable "ssh_listener_port" {
 variable "additional_settings" {
   type = list(object({
     namespace = string
+    resource  = string
     name      = string
     value     = string
   }))

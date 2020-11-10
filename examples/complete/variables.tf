@@ -191,6 +191,7 @@ variable "additional_settings" {
     namespace = string
     name      = string
     value     = string
+    resource  = string
   }))
 
   description = "Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html"
