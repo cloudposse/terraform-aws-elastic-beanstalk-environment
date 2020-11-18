@@ -455,7 +455,7 @@ variable "alb_zone_id" {
     us-east-2      = "Z14LCN19Q5QHIC"
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
-    eu-west-3      = "ZCMLWB8V5SYIT"
+    eu-west-3      = "Z3Q77PNBQS71R4"
     af-south-1     = "Z1EI3BVKMKK4AM"
     ap-east-1      = "ZPWYUBWRU171A"
     eu-central-1   = "Z1FRNW7UH4DEZJ"
