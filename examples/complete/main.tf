@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.0"
+  source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.16.1"
   namespace  = var.namespace
   stage      = var.stage
   name       = var.name
@@ -14,7 +14,7 @@ module "vpc" {
 }
 
 module "subnets" {
-  source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.0"
+  source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.26.0"
   availability_zones   = var.availability_zones
   namespace            = var.namespace
   stage                = var.stage
@@ -30,7 +30,7 @@ module "subnets" {
 }
 
 module "elastic_beanstalk_application" {
-  source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.3.0"
+  source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.7.1"
   namespace   = var.namespace
   stage       = var.stage
   name        = var.name
@@ -95,4 +95,18 @@ module "elastic_beanstalk_environment" {
 
   additional_settings = var.additional_settings
   env_vars            = var.env_vars
+
+  extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
+  prefer_legacy_ssm_policy     = false
+}
+
+data "aws_iam_policy_document" "minimal_s3_permissions" {
+  statement {
+    sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+    actions = [
+      "s3:ListAllMyBuckets",
+      "s3:GetBucketLocation"
+    ]
+    resources = ["*"]
+  }
 }
