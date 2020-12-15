@@ -175,6 +175,7 @@ Available targets:
 
 ```
 <!-- markdownlint-restore -->
+<!-- markdownlint-disable -->
 ## Requirements
 
 | Name | Version |
@@ -229,6 +230,7 @@ Available targets:
 | env\_vars | Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env\_vars = { DB\_USER = 'admin' DB\_PASS = 'xxxxxx' } | `map(string)` | `{}` | no |
 | environment | Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT' | `string` | `""` | no |
 | environment\_type | Environment type, e.g. 'LoadBalanced' or 'SingleInstance'.  If setting to 'SingleInstance', `rolling_update_type` must be set to 'Time', `updating_min_in_service` must be set to 0, and `loadbalancer_subnets` will be unused (it applies to the ELB, which does not exist in SingleInstance environments) | `string` | `"LoadBalanced"` | no |
+| extended\_ec2\_policy\_document | Extensions or overrides for the IAM role assigned to EC2 instances | `string` | `"{}"` | no |
 | force\_destroy | Force destroy the S3 bucket for load balancer logs | `bool` | `false` | no |
 | health\_streaming\_delete\_on\_terminate | Whether to delete the log group when the environment is terminated. If false, the health data is kept RetentionInDays days. | `bool` | `false` | no |
 | health\_streaming\_enabled | For environments with enhanced health reporting enabled, whether to create a group in CloudWatch Logs for environment health and archive Elastic Beanstalk environment health data. For information about enabling enhanced health, see aws:elasticbeanstalk:healthreporting:system. | `bool` | `false` | no |
@@ -250,6 +252,7 @@ Available targets:
 | managed\_actions\_enabled | Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel` | `bool` | `true` | no |
 | name | Solution name, e.g. 'app' or 'cluster' | `string` | n/a | yes |
 | namespace | Namespace, which could be your organization name, e.g. 'eg' or 'cp' | `string` | `""` | no |
+| prefer\_legacy\_ssm\_policy | Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy | `bool` | `true` | no |
 | preferred\_start\_time | Configure a maintenance window for managed actions in UTC | `string` | `"Sun:10:00"` | no |
 | region | AWS region | `string` | n/a | yes |
 | rolling\_update\_enabled | Whether to enable rolling update | `bool` | `true` | no |
@@ -295,6 +298,7 @@ Available targets:
 | tier | The environment tier |
 | triggers | Autoscaling triggers in use by this environment |
 
+<!-- markdownlint-restore -->
 
 
 
