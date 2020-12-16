@@ -67,12 +67,6 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
-variable "loadbalancer_crosszone" {
-  type        = bool
-  default     = true
-  description = "Configure the classic load balancer to route traffic evenly across all instances in all Availability Zones rather than only within each zone."
-}
-
 variable "dns_zone_id" {
   type        = string
   default     = ""
@@ -467,38 +461,9 @@ variable "ami_id" {
   description = "The id of the AMI to associate with the Amazon EC2 instances"
 }
 
-variable "deployment_batch_size_type" {
+variable "instance_role_name" {
   type        = string
-  default     = "Fixed"
-  description = "The type of number that is specified in deployment_batch_size_type"
+  default     = ""
+  description = "I"
 }
 
-variable "deployment_batch_size" {
-  type        = number
-  default     = 1
-  description = "Percentage or fixed number of Amazon EC2 instances in the Auto Scaling group on which to simultaneously perform deployments. Valid values vary per deployment_batch_size_type setting"
-}
-
-variable "deployment_ignore_health_check" {
-  type        = bool
-  default     = false
-  description = "Do not cancel a deployment due to failed health checks"
-}
-
-variable "deployment_timeout" {
-  type        = number
-  default     = 600
-  description = "Number of seconds to wait for an instance to complete executing commands"
-}
-
-variable "extended_ec2_policy_document" {
-  type        = string
-  default     = "{}"
-  description = "Extensions or overrides for the IAM role assigned to EC2 instances"
-}
-
-variable "prefer_legacy_ssm_policy" {
-  type        = bool
-  default     = true
-  description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
-}

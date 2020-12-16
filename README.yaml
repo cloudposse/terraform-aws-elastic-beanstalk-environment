@@ -34,6 +34,9 @@ github_repo: cloudposse/terraform-aws-elastic-beanstalk-environment
 
 # Badges to display
 badges:
+  - name: "Codefresh Status"
+    image: "https://g.codefresh.io/api/badges/pipeline/cloudposse/terraform-modules%2Fterraform-aws-elastic-beanstalk-environment?type=cf-1"
+    url: "https://g.codefresh.io/public/accounts/cloudposse/pipelines/5d182cb1ac440444a6c0082b"
   - name: "Latest Release"
     image: "https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-environment.svg"
     url: "https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/releases/latest"
