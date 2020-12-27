@@ -3,51 +3,36 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.16.1"
-  namespace  = var.namespace
-  stage      = var.stage
-  name       = var.name
-  attributes = var.attributes
-  tags       = var.tags
-  delimiter  = var.delimiter
+  source     = "cloudposse/vpc/aws"
+  version    = "0.18.1"
   cidr_block = "172.16.0.0/16"
+
+  context = module.this.context
 }
 
 module "subnets" {
-  source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.26.0"
+  source               = "cloudposse/dynamic-subnets/aws"
+  version              = "0.33.0"
   availability_zones   = var.availability_zones
-  namespace            = var.namespace
-  stage                = var.stage
-  name                 = var.name
-  attributes           = var.attributes
-  tags                 = var.tags
-  delimiter            = var.delimiter
   vpc_id               = module.vpc.vpc_id
   igw_id               = module.vpc.igw_id
   cidr_block           = module.vpc.vpc_cidr_block
   nat_gateway_enabled  = true
   nat_instance_enabled = false
+
+  context = module.this.context
 }
 
 module "elastic_beanstalk_application" {
-  source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.7.1"
-  namespace   = var.namespace
-  stage       = var.stage
-  name        = var.name
-  attributes  = var.attributes
-  tags        = var.tags
-  delimiter   = var.delimiter
+  source      = "cloudposse/elastic-beanstalk-application/aws"
+  version     = "0.8.0"
   description = "Test elastic_beanstalk_application"
+
+  context = module.this.context
 }
 
 module "elastic_beanstalk_environment" {
   source                     = "../../"
-  namespace                  = var.namespace
-  stage                      = var.stage
-  name                       = var.name
-  attributes                 = var.attributes
-  tags                       = var.tags
-  delimiter                  = var.delimiter
   description                = var.description
   region                     = var.region
   availability_zone_selector = var.availability_zone_selector
@@ -98,6 +83,8 @@ module "elastic_beanstalk_environment" {
 
   extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
   prefer_legacy_ssm_policy     = false
+
+  context = module.this.context
 }
 
 data "aws_iam_policy_document" "minimal_s3_permissions" {
