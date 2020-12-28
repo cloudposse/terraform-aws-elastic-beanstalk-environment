@@ -86,4 +86,7 @@ output "triggers" {
 output "environment_id" {
   description = "Environment id"
   value       = aws_elastic_beanstalk_environment.default.id
+output "elastic_beanstalk_application_name" {
+  value       = aws_elastic_beanstalk_application.default.name
+  description = "Elastic Beanstalk Application name"
 }

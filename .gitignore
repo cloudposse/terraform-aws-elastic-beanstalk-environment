@@ -1,12 +1,12 @@
-#  Local .terraform directories
-**/.terraform/*
-
-# .tfstate files
+# Compiled files
 *.tfstate
-*.tfstate.*
+*.tfstate.backup
 
-**/.idea
-**/*.iml
+# Module directory
+.terraform/
 
-**/.build-harness
-**/build-harness
+.idea
+*.iml
+
+.build-harness
+build-harness
