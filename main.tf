@@ -921,3 +921,18 @@ module "dns_hostname" {
   zone_id = var.dns_zone_id
   records = [aws_elastic_beanstalk_environment.default.cname]
 }
+
+resource "aws_elastic_beanstalk_application" "default" {
+  name        = module.label.id
+  description = var.description
+  tags        = local.tags
+
+  dynamic "appversion_lifecycle" {
+    for_each = var.appversion_lifecycle_service_role_arn != "" ? ["true"] : []
+    content {
+      service_role          = var.appversion_lifecycle_service_role_arn
+      max_count             = var.appversion_lifecycle_max_count
+      delete_source_from_s3 = var.appversion_lifecycle_delete_source_from_s3
+    }
+  }
+}
