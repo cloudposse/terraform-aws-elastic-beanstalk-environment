@@ -1,16 +1,12 @@
-# https://docs.mergify.io/conditions.html
-# https://docs.mergify.io/actions.html
 pull_request_rules:
 - name: "approve automated PRs that have passed checks"
   conditions:
-  - "author~=^(cloudpossebot|renovate\\[bot\\])$"
+  - "check-success~=test/bats"
+  - "check-success~=test/readme"
+  - "check-success~=test/terratest"
   - "base=master"
-  - "-closed"
-  - "head~=^(auto-update|renovate)/.*"
-  - "check-success=test/bats"
-  - "check-success=test/readme"
-  - "check-success=test/terratest"
-  - "check-success=validate-codeowners"
+  - "author=cloudpossebot"
+  - "head~=auto-update/.*"
   actions:
     review:
       type: "APPROVE"
@@ -19,17 +15,16 @@ pull_request_rules:
 
 - name: "merge automated PRs when approved and tests pass"
   conditions:
-  - "author~=^(cloudpossebot|renovate\\[bot\\])$"
+  - "check-success~=test/bats"
+  - "check-success~=test/readme"
+  - "check-success~=test/terratest"
   - "base=master"
-  - "-closed"
-  - "head~=^(auto-update|renovate)/.*"
-  - "check-success=test/bats"
-  - "check-success=test/readme"
-  - "check-success=test/terratest"
-  - "check-success=validate-codeowners"
+  - "head~=auto-update/.*"
   - "#approved-reviews-by>=1"
   - "#changes-requested-reviews-by=0"
   - "#commented-reviews-by=0"
+  - "base=master"
+  - "author=cloudpossebot"
   actions:
     merge:
       method: "squash"
@@ -43,7 +38,6 @@ pull_request_rules:
 - name: "ask to resolve conflict"
   conditions:
   - "conflict"
-  - "-closed"
   actions:
     comment:
       message: "This pull request is now in conflict. Could you fix it @{{author}}? 🙏"
