@@ -922,11 +922,38 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
+  #bridgecrew:skip=BC_AWS_S3_13:Skipping `Enable S3 Bucket Logging` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
+  #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
   policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
+
+  dynamic "server_side_encryption_configuration" {
+    for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
+
+    content {
+      rule {
+        apply_server_side_encryption_by_default {
+          sse_algorithm = "AES256"
+        }
+      }
+    }
+  }
+
+  versioning {
+    enabled    = var.s3_bucket_versioning_enabled
+    mfa_delete = var.s3_bucket_mfa_delete
+  }
+
+  dynamic "logging" {
+    for_each = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
+    content {
+      target_bucket = var.s3_bucket_access_log_bucket_name
+      target_prefix = "logs/${module.this.id}/"
+    }
+  }
 }
 
 module "dns_hostname" {

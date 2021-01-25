@@ -461,3 +461,27 @@ variable "prefer_legacy_ssm_policy" {
   default     = true
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
 }
+
+variable "s3_bucket_access_log_bucket_name" {
+  type        = string
+  default     = ""
+  description = "Name of the S3 bucket where s3 access log will be sent to"
+}
+
+variable "s3_bucket_mfa_delete" {
+  type        = bool
+  description = "A boolean that indicates that versions of S3 objects can only be deleted with MFA. ( Terraform cannot apply changes of this value; https://github.com/terraform-providers/terraform-provider-aws/issues/629 )"
+  default     = true
+}
+
+variable "s3_bucket_versioning_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the s3 origin bucket will have versioning enabled"
+}
+
+variable "s3_bucket_encryption_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the resource will have aes256 encryption enabled by default"
+}
