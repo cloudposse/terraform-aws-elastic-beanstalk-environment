@@ -19,6 +19,7 @@ data "aws_iam_policy_document" "service" {
 resource "aws_iam_role" "service" {
   name               = "${module.this.id}-eb-service"
   assume_role_policy = data.aws_iam_policy_document.service.json
+  tags               = module.this.tags
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
@@ -75,6 +76,7 @@ resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_doc
 resource "aws_iam_role" "ec2" {
   name               = "${module.this.id}-eb-ec2"
   assume_role_policy = data.aws_iam_policy_document.ec2.json
+  tags               = module.this.tags
 }
 
 resource "aws_iam_role_policy" "default" {
@@ -122,6 +124,7 @@ resource "aws_ssm_activation" "ec2" {
   name               = module.this.id
   iam_role           = aws_iam_role.ec2.id
   registration_limit = var.autoscale_max
+  tags               = module.this.tags
 }
 
 data "aws_iam_policy_document" "default" {
@@ -929,6 +932,7 @@ resource "aws_s3_bucket" "elb_logs" {
   acl           = "private"
   force_destroy = var.force_destroy
   policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
+  tags          = module.this.tags
 
   dynamic "server_side_encryption_configuration" {
     for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
