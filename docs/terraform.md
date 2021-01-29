@@ -89,7 +89,6 @@
 | root\_volume\_type | The type of the EBS root volume | `string` | `"gp2"` | no |
 | s3\_bucket\_access\_log\_bucket\_name | Name of the S3 bucket where s3 access log will be sent to | `string` | `""` | no |
 | s3\_bucket\_encryption\_enabled | When set to 'true' the resource will have aes256 encryption enabled by default | `bool` | `true` | no |
-| s3\_bucket\_mfa\_delete | A boolean that indicates that versions of S3 objects can only be deleted with MFA. ( Terraform cannot apply changes of this value; https://github.com/terraform-providers/terraform-provider-aws/issues/629 ) | `bool` | `true` | no |
 | s3\_bucket\_versioning\_enabled | When set to 'true' the s3 origin bucket will have versioning enabled | `bool` | `true` | no |
 | solution\_stack\_name | Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html | `string` | n/a | yes |
 | spot\_fleet\_on\_demand\_above\_base\_percentage | The percentage of On-Demand Instances as part of additional capacity that your Auto Scaling group provisions beyond the SpotOnDemandBase instances. This option is relevant only when enable\_spot\_instances is true. | `number` | `-1` | no |
