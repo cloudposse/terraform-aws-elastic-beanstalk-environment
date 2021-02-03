@@ -320,10 +320,10 @@ resource "aws_security_group" "default" {
 }
 
 locals {
-  // Remove `Name` tag from the map of tags because Elastic Beanstalk generates the `Name` tag automatically
-  // and if it is provided, terraform tries to recreate the application on each `plan/apply`
-  // `Namespace` should be removed as well since any string that contains `Name` forces recreation
-  // https://github.com/terraform-providers/terraform-provider-aws/issues/3963
+  # Remove `Name` tag from the map of tags because Elastic Beanstalk generates the `Name` tag automatically
+  # and if it is provided, terraform tries to recreate the application on each `plan/apply`
+  # `Namespace` should be removed as well since any string that contains `Name` forces recreation
+  # https://github.com/terraform-providers/terraform-provider-aws/issues/3963
   tags = { for t in keys(module.this.tags) : t => module.this.tags[t] if t != "Name" && t != "Namespace" }
 
   classic_elb_settings = [
@@ -862,8 +862,8 @@ resource "aws_elastic_beanstalk_environment" "default" {
     resource  = ""
   }
 
-  // Add additional Elastic Beanstalk settings
-  // For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
+  # Add additional Elastic Beanstalk settings
+  # For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
   dynamic "setting" {
     for_each = var.additional_settings
     content {
@@ -874,7 +874,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     }
   }
 
-  // dynamic needed as "spot max price" should only have a value if it is defined.
+  # dynamic needed as "spot max price" should only have a value if it is defined.
   dynamic "setting" {
     for_each = var.spot_max_price == -1 ? [] : [var.spot_max_price]
     content {
@@ -885,7 +885,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     }
   }
 
-  // Add environment variables if provided
+  # Add environment variables if provided
   dynamic "setting" {
     for_each = var.env_vars
     content {

@@ -74,8 +74,8 @@ module "elastic_beanstalk_environment" {
   healthcheck_url  = var.healthcheck_url
   application_port = var.application_port
 
-  // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
-  // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
+  # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
+  # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
   solution_stack_name = var.solution_stack_name
 
   additional_settings = var.additional_settings
