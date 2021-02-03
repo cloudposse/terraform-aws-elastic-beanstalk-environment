@@ -962,7 +962,7 @@ resource "aws_s3_bucket" "elb_logs" {
 
 module "dns_hostname" {
   source   = "cloudposse/route53-cluster-hostname/aws"
-  version  = "0.10.0"
+  version  = "0.10.1"
   enabled  = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
   zone_id  = var.dns_zone_id
