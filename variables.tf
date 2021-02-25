@@ -32,6 +32,12 @@ variable "loadbalancer_crosszone" {
   description = "Configure the classic load balancer to route traffic evenly across all instances in all Availability Zones rather than only within each zone."
 }
 
+variable "loadbalancer_classic_connection_idle_timeout" {
+  type        = number
+  default     = 60
+  description = "Classic load balancer only: Number of seconds that the load balancer waits for any data to be sent or received over the connection. If no data has been sent or received after this time period elapses, the load balancer closes the connection."
+}
+
 variable "dns_zone_id" {
   type        = string
   default     = ""
