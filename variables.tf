@@ -3,47 +3,6 @@ variable "region" {
   description = "AWS region"
 }
 
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-  default     = ""
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default     = ""
-}
-
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'cluster'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
-}
-
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-}
-
 variable "description" {
   type        = string
   default     = ""
@@ -510,4 +469,22 @@ variable "prefer_legacy_ssm_policy" {
   type        = bool
   default     = true
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
+}
+
+variable "s3_bucket_access_log_bucket_name" {
+  type        = string
+  default     = ""
+  description = "Name of the S3 bucket where s3 access log will be sent to"
+}
+
+variable "s3_bucket_versioning_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the s3 origin bucket will have versioning enabled"
+}
+
+variable "s3_bucket_encryption_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the resource will have aes256 encryption enabled by default"
 }
