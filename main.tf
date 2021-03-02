@@ -302,11 +302,14 @@ resource "aws_security_group" "default" {
 
   vpc_id = var.vpc_id
 
-  ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = -1
-    security_groups = var.allowed_security_groups
+  dynamic "ingress" {
+    for_each = length(var.allowed_security_groups) == 0 ? [] : [1]
+    content {
+      from_port       = 0
+      to_port         = 0
+      protocol        = -1
+      security_groups = var.allowed_security_groups
+    }
   }
 
   egress {
