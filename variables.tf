@@ -420,7 +420,16 @@ variable "alb_zone_id" {
     us-east-2      = "Z14LCN19Q5QHIC"
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
-    eu-west-3      = "ZCMLWB8V5SYIT"
+    eu-west-3      = "Z3Q77PNBQS71R4"
+    af-south-1     = "Z1EI3BVKMKK4AM"
+    ap-east-1      = "ZPWYUBWRU171A"
+    eu-central-1   = "Z1FRNW7UH4DEZJ"
+    eu-south-1     = "Z10VDYYOA2JFKM"
+    eu-north-1     = "Z23GO28BZ5AETM"
+    me-south-1     = "Z2BBTEKR2I36N2"
+    sa-east-1      = "Z10X7K2B4QSOFV"
+    us-gov-west-1  = "Z31GFT0UA1I2HV"
+    us-gov-east-1  = "Z2NIFVYYW2VKV1"
   }
 
   description = "ALB zone id"
