@@ -158,6 +158,8 @@ For a complete example, see [examples/complete](examples/complete)
     application_subnets     = module.subnets.private_subnet_ids
     allowed_security_groups = [module.vpc.vpc_default_security_group_id]
 
+    prefer_legacy_service_policy = false
+
     // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
     // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
     solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.1-ce"
