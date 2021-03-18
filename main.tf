@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "enhanced_health" {
 
 resource "aws_iam_role_policy_attachment" "service" {
   role       = aws_iam_role.service.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
+  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
 #
