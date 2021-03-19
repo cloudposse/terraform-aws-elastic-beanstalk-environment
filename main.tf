@@ -495,7 +495,7 @@ locals {
 
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
   elb_settings_iterim = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) : concat(local.classic_elb_settings, local.generic_elb_settings) : []
-  
+
   # If the loadbalancer type is "network" skip the HealthCheckPath, otherwise include it
   elb_settings_final = var.loadbalancer_type == "network" ? local.elb_settings_iterim : concat(local.elb_settings_iterim, local.alb_elb_settings)
 }
