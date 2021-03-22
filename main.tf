@@ -463,7 +463,7 @@ locals {
     }
   ]
 
-  nlb_settings = [ ]
+  nlb_settings = []
 
   generic_elb_settings = [
     {
