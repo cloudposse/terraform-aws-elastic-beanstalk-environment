@@ -471,6 +471,12 @@ variable "prefer_legacy_ssm_policy" {
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
 }
 
+variable "prefer_legacy_service_policy" {
+  type        = bool
+  default     = true
+  description = "Whether to use AWSElasticBeanstalkService (deprecated) or AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy policy"
+}
+
 variable "s3_bucket_access_log_bucket_name" {
   type        = string
   default     = ""
