@@ -811,6 +811,73 @@ resource "aws_elastic_beanstalk_environment" "default" {
     resource  = ""
   }
 
+  ###=========================== Scheduled Actions ========================== ###
+
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "MinSize"
+      value     = setting.value.minsize
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "MaxSize"
+      value     = setting.value.maxsize
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "DesiredCapacity"
+      value     = setting.value.desiredcapacity
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "Recurrence"
+      value     = setting.value.recurrence
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "StartTime"
+      value     = setting.value.starttime
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions == null ? [] : var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "EndTime"
+      value     = setting.value.endtime
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "Suspend"
+      value     = setting.value.suspend ? "true" : "false"
+      resource  = setting.value.name
+    }
+  }
+
+
   ###=========================== Logging ========================== ###
 
   setting {
