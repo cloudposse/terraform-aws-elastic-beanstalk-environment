@@ -506,6 +506,6 @@ variable "scheduled_actions" {
     recurrence      = string
     suspend         = bool
   }))
-  default     = null
+  default     = []
   description = "Define a list of scheduled actions"
 }
