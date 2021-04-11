@@ -494,3 +494,18 @@ variable "s3_bucket_encryption_enabled" {
   default     = true
   description = "When set to 'true' the resource will have aes256 encryption enabled by default"
 }
+
+variable "scheduled_actions" {
+  type = list(object({
+    name            = string
+    minsize         = string
+    maxsize         = string
+    desiredcapacity = string
+    starttime       = string
+    endtime         = string
+    recurrence      = string
+    suspend         = bool
+  }))
+  default     = []
+  description = "Define a list of scheduled actions"
+}
