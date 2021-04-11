@@ -859,7 +859,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     }
   }
   dynamic "setting" {
-    for_each = var.scheduled_actions == null ? [] : var.scheduled_actions
+    for_each = var.scheduled_actions
     content {
       namespace = "aws:autoscaling:scheduledaction"
       name      = "EndTime"
