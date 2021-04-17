@@ -404,6 +404,7 @@ locals {
       value     = "true"
     },
   ]
+  
   alb_defaul_settings = [
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -448,13 +449,13 @@ locals {
   ]
 
   # Only declare AccessLogsS3Bucket if enable_elb_logs = true
-  alb_settings = var.enable_elb_logs ? concat(alb_defaul_settings, [
+  alb_settings = var.enable_elb_logs ? concat(local.alb_defaul_settings, [
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
       value     = join("", sort(aws_s3_bucket.elb_logs.*.id))
     }
-  ]) : alb_defaul_settings
+  ]) : local.alb_defaul_settings
 
   generic_elb_settings = [
     {
