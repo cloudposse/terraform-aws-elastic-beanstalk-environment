@@ -227,6 +227,12 @@ variable "enable_stream_logs" {
   description = "Whether to create groups in CloudWatch Logs for proxy and deployment logs, and stream logs from each instance in your environment"
 }
 
+variable "enable_elb_logs" {
+  type        = bool
+  default     = true
+  description = "Whether to enable elb logs or not"
+}
+
 variable "logs_delete_on_terminate" {
   type        = bool
   default     = false
