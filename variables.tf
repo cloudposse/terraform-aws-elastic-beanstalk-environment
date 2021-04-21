@@ -477,6 +477,12 @@ variable "prefer_legacy_ssm_policy" {
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
 }
 
+variable "prefer_legacy_service_policy" {
+  type        = bool
+  default     = true
+  description = "Whether to use AWSElasticBeanstalkService (deprecated) or AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy policy"
+}
+
 variable "s3_bucket_access_log_bucket_name" {
   type        = string
   default     = ""
@@ -493,4 +499,19 @@ variable "s3_bucket_encryption_enabled" {
   type        = bool
   default     = true
   description = "When set to 'true' the resource will have aes256 encryption enabled by default"
+}
+
+variable "scheduled_actions" {
+  type = list(object({
+    name            = string
+    minsize         = string
+    maxsize         = string
+    desiredcapacity = string
+    starttime       = string
+    endtime         = string
+    recurrence      = string
+    suspend         = bool
+  }))
+  default     = []
+  description = "Define a list of scheduled actions"
 }

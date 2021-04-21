@@ -30,7 +30,7 @@ resource "aws_iam_role_policy_attachment" "enhanced_health" {
 
 resource "aws_iam_role_policy_attachment" "service" {
   role       = aws_iam_role.service.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
+  policy_arn = var.prefer_legacy_service_policy ? "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
 #
@@ -810,6 +810,73 @@ resource "aws_elastic_beanstalk_environment" "default" {
     value     = var.autoscale_upper_increment
     resource  = ""
   }
+
+  ###=========================== Scheduled Actions ========================== ###
+
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "MinSize"
+      value     = setting.value.minsize
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "MaxSize"
+      value     = setting.value.maxsize
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "DesiredCapacity"
+      value     = setting.value.desiredcapacity
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "Recurrence"
+      value     = setting.value.recurrence
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "StartTime"
+      value     = setting.value.starttime
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "EndTime"
+      value     = setting.value.endtime
+      resource  = setting.value.name
+    }
+  }
+  dynamic "setting" {
+    for_each = var.scheduled_actions
+    content {
+      namespace = "aws:autoscaling:scheduledaction"
+      name      = "Suspend"
+      value     = setting.value.suspend ? "true" : "false"
+      resource  = setting.value.name
+    }
+  }
+
 
   ###=========================== Logging ========================== ###
 
