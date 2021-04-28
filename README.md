@@ -1,3 +1,4 @@
+
 <!-- markdownlint-disable -->
 # terraform-aws-elastic-beanstalk-environment
 
@@ -39,7 +40,6 @@ The Cloud Posse team no longer utilizes Beanstalk all that much, but this module
 
 If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
 
-
 ---
 
 This project is part of our comprehensive ["SweetOps"](https://cpco.io/sweetops) approach towards DevOps.
@@ -64,7 +64,6 @@ It's 100% Open Source and licensed under the [APACHE2](LICENSE).
 
 
 We literally have [*hundreds of terraform modules*][terraform_modules] that are Open Source and well-maintained. Check them out!
-
 
 
 
