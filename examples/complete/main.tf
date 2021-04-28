@@ -83,6 +83,7 @@ module "elastic_beanstalk_environment" {
 
   extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
   prefer_legacy_ssm_policy     = false
+  prefer_legacy_service_policy = false
 
   context = module.this.context
 }

@@ -59,6 +59,14 @@ related:
 description: |-
   Terraform module to provision AWS Elastic Beanstalk environment
 
+  ## Searching for Maintainer!
+
+  The Cloud Posse team no longer utilizes Beanstalk all that much, but this module is still fairly popular. In an effort to give it the attention it deserves, we're searching for a volunteer maintainer to manage this specific repository's issues and pull requests (of which a number are already stacked up). This is a great opportunity for anyone who is looking to solidify and strengthen their Terraform skillset while also giving back to the SweetOps open source community!
+
+  [You can learn more about being a SweetOps contributor on our docs site here](https://docs.cloudposse.com/community/contributors/).
+
+  If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
+
 # How to use this project
 usage: |-
 
@@ -122,6 +130,8 @@ usage: |-
       loadbalancer_subnets    = module.subnets.public_subnet_ids
       application_subnets     = module.subnets.private_subnet_ids
       allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+
+      prefer_legacy_service_policy = false
 
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
