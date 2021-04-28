@@ -40,7 +40,6 @@ The Cloud Posse team no longer utilizes Beanstalk all that much, but this module
 
 If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
 
-
 ---
 
 This project is part of our comprehensive ["SweetOps"](https://cpco.io/sweetops) approach towards DevOps.
