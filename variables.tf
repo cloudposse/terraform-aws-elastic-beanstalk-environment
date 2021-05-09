@@ -173,12 +173,6 @@ variable "rolling_update_enabled" {
   description = "Whether to enable rolling update"
 }
 
-variable "deploy_policy" {
-  type        = string
-  default     = "Rolling"
-  description = "Deployment Policy: `AllAtOnce`, `Immutable`, `Rolling`"
-}
-
 variable "rolling_update_type" {
   type        = string
   default     = "Health"
@@ -253,7 +247,7 @@ variable "loadbalancer_certificate_arn" {
 
 variable "loadbalancer_ssl_policy" {
   type        = string
-  default     = "ELBSecurityPolicy-2016-08"
+  default     = ""
   description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer"
 }
 
@@ -384,7 +378,11 @@ variable "ssh_listener_port" {
 }
 
 variable "additional_settings" {
-  type = list(map(string))
+  type = list(object({
+    namespace = string
+    name      = string
+    value     = string
+  }))
 
   default     = []
   description = "Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html"
@@ -461,30 +459,6 @@ variable "deployment_timeout" {
   description = "Number of seconds to wait for an instance to complete executing commands"
 }
 
-<<<<<<< HEAD
-variable "iam_instance_profile" {
-  description = "The IAM Instance Profile name used for EC2"
-  type        = string
-  default     = "" 
-}
-
-variable "iam_service_role" { 
-  description = "The IAM Service Role used for Elastic Beanstalk"
-  type        = string
-  default     = "" 
-}
-
-variable "connection_idle_timeout" {
-  type        = number
-  default     = 60
-  description = "Number of seconds that the load balancer waits for any data to be sent or received over the connection. If no data has been sent or received after this time period elapses, the load balancer closes the connection."
-}
-
-variable "elb_logs_name" {
-  description = "The suffix name of s3 bucket to storage eb load balancer logs"
-  type        = string
-  default     = "eb-loadbalancer-logs"
-=======
 variable "extended_ec2_policy_document" {
   type        = string
   default     = "{}"
@@ -534,5 +508,4 @@ variable "scheduled_actions" {
   }))
   default     = []
   description = "Define a list of scheduled actions"
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
 }

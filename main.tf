@@ -2,8 +2,6 @@
 # Service
 #
 data "aws_iam_policy_document" "service" {
-  count = var.iam_service_role == "" ? 1 : 0
-
   statement {
     actions = [
       "sts:AssumeRole"
@@ -19,42 +17,26 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
-<<<<<<< HEAD
-  count = var.iam_service_role == "" ? 1 : 0
-
-  name               = "${module.label.id}-eb-service"
-  assume_role_policy = data.aws_iam_policy_document.service[0].json
-=======
   name               = "${module.this.id}-eb-service"
   assume_role_policy = data.aws_iam_policy_document.service.json
   tags               = module.this.tags
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
-  count      = var.enhanced_reporting_enabled && var.iam_service_role == "" ? 1 : 0
-  role       = concat(aws_iam_role.service.*.name, [""])[0]
+  count      = var.enhanced_reporting_enabled ? 1 : 0
+  role       = aws_iam_role.service.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
-<<<<<<< HEAD
-  count = var.iam_service_role == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.service.*.name, [""])[0]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService"
-=======
   role       = aws_iam_role.service.name
   policy_arn = var.prefer_legacy_service_policy ? "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
 }
 
 #
 # EC2
 #
 data "aws_iam_policy_document" "ec2" {
-  count = var.iam_instance_profile == "" ? 1 : 0
-
   statement {
     sid = ""
 
@@ -87,27 +69,11 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
-  count = var.iam_instance_profile == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
+  role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
 resource "aws_iam_role" "ec2" {
-<<<<<<< HEAD
-  count = var.iam_instance_profile == "" ? 1 : 0
-
-  name               = "${module.label.id}-eb-ec2"
-  assume_role_policy = data.aws_iam_policy_document.ec2[0].json
-}
-
-resource "aws_iam_role_policy" "default" {
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  name   = "${module.label.id}-eb-default"
-  role   = aws_iam_role.ec2[0].id
-  policy = data.aws_iam_policy_document.default[0].json
-=======
   name               = "${module.this.id}-eb-ec2"
   assume_role_policy = data.aws_iam_policy_document.ec2.json
   tags               = module.this.tags
@@ -117,33 +83,21 @@ resource "aws_iam_role_policy" "default" {
   name   = "${module.this.id}-eb-default"
   role   = aws_iam_role.ec2.id
   policy = data.aws_iam_policy_document.extended.json
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
+  role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
+  role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
-<<<<<<< HEAD
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
-=======
   role       = aws_iam_role.ec2.name
   policy_arn = var.prefer_legacy_ssm_policy ? "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
 
   lifecycle {
     create_before_destroy = true
@@ -151,9 +105,7 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
+  role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
@@ -164,29 +116,18 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  role       = concat(aws_iam_role.ec2.*.name, [""])[0]
+  role       = aws_iam_role.ec2.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ssm_activation" "ec2" {
-<<<<<<< HEAD
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  name               = module.label.id
-  iam_role           = aws_iam_role.ec2[0].id
-=======
   name               = module.this.id
   iam_role           = aws_iam_role.ec2.id
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
   registration_limit = var.autoscale_max
   tags               = module.this.tags
 }
 
 data "aws_iam_policy_document" "default" {
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
   statement {
     actions = [
       "elasticloadbalancing:DescribeInstanceHealth",
@@ -351,25 +292,12 @@ data "aws_iam_policy_document" "extended" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-<<<<<<< HEAD
-  count  = var.iam_instance_profile == "" ? 1 : 0
-
-  name = "${module.label.id}-eb-ec2"
-  role = concat(aws_iam_role.ec2.*.name, [""])[0]
-}
-
-resource "aws_security_group" "default" {
-  count = length(var.allowed_security_groups) > 0 ? 1 : 0
-
-  name        = module.label.id
-=======
   name = "${module.this.id}-eb-ec2"
   role = aws_iam_role.ec2.name
 }
 
 resource "aws_security_group" "default" {
   name        = module.this.id
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
   description = "Allow inbound traffic from provided Security Groups"
 
   vpc_id = var.vpc_id
@@ -471,7 +399,7 @@ locals {
     {
       namespace = "aws:elb:policies"
       name      = "ConnectionSettingIdleTimeout"
-      value     = var.ssh_listener_enabled ? "3600" : var.connection_idle_timeout
+      value     = var.ssh_listener_enabled ? "3600" : "60"
     },
     {
       namespace = "aws:elb:policies"
@@ -618,18 +546,14 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-<<<<<<< HEAD
-    value     = join(",", compact(concat(concat(aws_security_group.default.*.id,[""]), sort(var.additional_security_groups))))
-=======
     value     = join(",", compact(sort(concat([aws_security_group.default.id], var.additional_security_groups))))
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
     resource  = ""
   }
 
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = coalesce(var.iam_instance_profile, concat(aws_iam_instance_profile.ec2.*.name, [""])[0])
+    value     = aws_iam_instance_profile.ec2.name
     resource  = ""
   }
 
@@ -650,7 +574,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
-    value     = coalesce(var.iam_service_role, concat(aws_iam_role.service.*.name, [""])[0])
+    value     = aws_iam_role.service.name
     resource  = ""
   }
 
@@ -713,7 +637,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:command"
     name      = "DeploymentPolicy"
-    value     = var.rolling_update_type == "Immutable" ? "Immutable" : var.deploy_policy
+    value     = var.rolling_update_type == "Immutable" ? "Immutable" : "Rolling"
     resource  = ""
   }
 
@@ -1016,7 +940,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
       namespace = setting.value.namespace
       name      = setting.value.name
       value     = setting.value.value
-      resource  = lookup(setting.value, "resource", "")
+      resource  = ""
     }
   }
 
@@ -1058,11 +982,7 @@ data "aws_iam_policy_document" "elb_logs" {
     ]
 
     resources = [
-<<<<<<< HEAD
-      "arn:aws:s3:::${module.label.id}-${var.elb_logs_name}/*"
-=======
       "arn:aws:s3:::${module.this.id}-eb-loadbalancer-logs/*"
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
     ]
 
     principals {
@@ -1075,16 +995,11 @@ data "aws_iam_policy_document" "elb_logs" {
 }
 
 resource "aws_s3_bucket" "elb_logs" {
-<<<<<<< HEAD
-  count         = var.tier == "WebServer" ? 1 : 0
-  bucket        = "${module.label.id}-${var.elb_logs_name}"
-=======
   #bridgecrew:skip=BC_AWS_S3_13:Skipping `Enable S3 Bucket Logging` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=CKV_AWS_52:Skipping `Ensure S3 bucket has MFA delete enabled` due to issue in terraform (https://github.com/hashicorp/terraform-provider-aws/issues/629).
   count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
->>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
   acl           = "private"
   force_destroy = var.force_destroy
   policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
