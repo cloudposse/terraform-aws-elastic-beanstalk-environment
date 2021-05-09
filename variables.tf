@@ -3,47 +3,6 @@ variable "region" {
   description = "AWS region"
 }
 
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-  default     = ""
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default     = ""
-}
-
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'cluster'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
-}
-
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-}
-
 variable "description" {
   type        = string
   default     = ""
@@ -65,6 +24,12 @@ variable "loadbalancer_type" {
   type        = string
   default     = "classic"
   description = "Load Balancer type, e.g. 'application' or 'classic'"
+}
+
+variable "loadbalancer_crosszone" {
+  type        = bool
+  default     = true
+  description = "Configure the classic load balancer to route traffic evenly across all instances in all Availability Zones rather than only within each zone."
 }
 
 variable "dns_zone_id" {
@@ -451,7 +416,16 @@ variable "alb_zone_id" {
     us-east-2      = "Z14LCN19Q5QHIC"
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
-    eu-west-3      = "ZCMLWB8V5SYIT"
+    eu-west-3      = "Z3Q77PNBQS71R4"
+    af-south-1     = "Z1EI3BVKMKK4AM"
+    ap-east-1      = "ZPWYUBWRU171A"
+    eu-central-1   = "Z1FRNW7UH4DEZJ"
+    eu-south-1     = "Z10VDYYOA2JFKM"
+    eu-north-1     = "Z23GO28BZ5AETM"
+    me-south-1     = "Z2BBTEKR2I36N2"
+    sa-east-1      = "Z10X7K2B4QSOFV"
+    us-gov-west-1  = "Z31GFT0UA1I2HV"
+    us-gov-east-1  = "Z2NIFVYYW2VKV1"
   }
 
   description = "ALB zone id"
@@ -487,6 +461,7 @@ variable "deployment_timeout" {
   description = "Number of seconds to wait for an instance to complete executing commands"
 }
 
+<<<<<<< HEAD
 variable "iam_instance_profile" {
   description = "The IAM Instance Profile name used for EC2"
   type        = string
@@ -509,4 +484,55 @@ variable "elb_logs_name" {
   description = "The suffix name of s3 bucket to storage eb load balancer logs"
   type        = string
   default     = "eb-loadbalancer-logs"
+=======
+variable "extended_ec2_policy_document" {
+  type        = string
+  default     = "{}"
+  description = "Extensions or overrides for the IAM role assigned to EC2 instances"
+}
+
+variable "prefer_legacy_ssm_policy" {
+  type        = bool
+  default     = true
+  description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
+}
+
+variable "prefer_legacy_service_policy" {
+  type        = bool
+  default     = true
+  description = "Whether to use AWSElasticBeanstalkService (deprecated) or AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy policy"
+}
+
+variable "s3_bucket_access_log_bucket_name" {
+  type        = string
+  default     = ""
+  description = "Name of the S3 bucket where s3 access log will be sent to"
+}
+
+variable "s3_bucket_versioning_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the s3 origin bucket will have versioning enabled"
+}
+
+variable "s3_bucket_encryption_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the resource will have aes256 encryption enabled by default"
+}
+
+variable "scheduled_actions" {
+  type = list(object({
+    name            = string
+    minsize         = string
+    maxsize         = string
+    desiredcapacity = string
+    starttime       = string
+    endtime         = string
+    recurrence      = string
+    suspend         = bool
+  }))
+  default     = []
+  description = "Define a list of scheduled actions"
+>>>>>>> f5dcc84a306fb3d9873093f682d18b9bf0468498
 }
