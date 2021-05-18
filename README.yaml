@@ -125,12 +125,30 @@ usage: |-
       updating_min_in_service = 0
       updating_max_batch      = 1
 
-      loadbalancer_type       = "application"
-      vpc_id                  = module.vpc.vpc_id
-      loadbalancer_subnets    = module.subnets.public_subnet_ids
-      application_subnets     = module.subnets.private_subnet_ids
-      allowed_security_groups = [module.vpc.vpc_default_security_group_id]
-
+      loadbalancer_type    = "application"
+      vpc_id               = module.vpc.vpc_id
+      loadbalancer_subnets = module.subnets.public_subnet_ids
+      application_subnets  = module.subnets.private_subnet_ids
+      security_group_rules = [
+        {
+          type                     = "egress"
+          from_port                = 0
+          to_port                  = 65535
+          protocol                 = "-1"
+          cidr_blocks              = ["0.0.0.0/0"]
+          source_security_group_id = null
+          description              = "Allow ALL egress traffic"
+        },
+        {
+          type                     = "ingress"
+          from_port                = 0
+          to_port                  = 65535
+          protocol                 = "-1"
+          source_security_group_id = [module.vpc.vpc_default_security_group_id]
+          cidr_blocks              = null
+          description              = "Allow ALL ingress traffic from trusted Security Groups"
+        },
+      ]
       prefer_legacy_service_policy = false
 
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
@@ -160,7 +178,6 @@ usage: |-
         }
       ]
     }
-  }
   ```
 
 include:
@@ -189,3 +206,5 @@ contributors:
     github: "pearson-lucas-dev"
   - name: "Chris Green"
     github: "DirectRoot"
+  - name: "Vladimir Syromyatnikov"
+    github: "SweetOps" 
