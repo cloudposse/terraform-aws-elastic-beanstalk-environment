@@ -296,7 +296,7 @@ resource "aws_iam_instance_profile" "ec2" {
   role = aws_iam_role.ec2.name
 }
 
-module "default_sg" {
+module "security_group" {
   source  = "cloudposse/security-group/aws"
   version = "0.3.1"
 
@@ -535,7 +535,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = join(",", compact(sort(concat([module.default_sg.id], var.security_groups))))
+    value     = join(",", compact(sort(concat([module.security_group.id], var.security_groups))))
     resource  = ""
   }
 
