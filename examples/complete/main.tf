@@ -79,8 +79,8 @@ module "elastic_beanstalk_environment" {
       from_port                = 0
       to_port                  = 65535
       protocol                 = "-1"
-      source_security_group_id = [module.vpc.vpc_default_security_group_id]
-      cidr_blocks              = null
+      cidr_blocks              = []
+      source_security_group_id = module.vpc.vpc_default_security_group_id
       description              = "Allow all inbound traffic from trusted Security Groups"
     },
   ]
