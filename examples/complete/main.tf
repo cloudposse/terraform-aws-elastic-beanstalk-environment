@@ -72,7 +72,7 @@ module "elastic_beanstalk_environment" {
       protocol                 = "-1"
       cidr_blocks              = ["0.0.0.0/0"]
       source_security_group_id = null
-      description              = "Allow ALL egress traffic"
+      description              = "Allow all outbound traffic"
     },
     {
       type                     = "ingress"
@@ -81,7 +81,7 @@ module "elastic_beanstalk_environment" {
       protocol                 = "-1"
       source_security_group_id = [module.vpc.vpc_default_security_group_id]
       cidr_blocks              = null
-      description              = "Allow ALL ingress traffic from trusted Security Groups"
+      description              = "Allow all inbound traffic from trusted Security Groups"
     },
   ]
 
