@@ -44,12 +44,6 @@ variable "dns_subdomain" {
   description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
 }
 
-variable "allowed_security_groups" {
-  type        = list(string)
-  description = "List of security groups to add to the EC2 instances"
-  default     = []
-}
-
 variable "security_group_enabled" {
   type        = bool
   description = "Whether to create Security Group."
@@ -58,7 +52,7 @@ variable "security_group_enabled" {
 
 variable "security_group_description" {
   type        = string
-  default     = "Elastic Beanstalk Environment Security Group"
+  default     = "Elastic Beanstalk environment Security Group"
   description = "The Security Group description."
 }
 
@@ -77,7 +71,7 @@ variable "security_group_rules" {
       to_port     = 65535
       protocol    = "-1"
       cidr_blocks = ["0.0.0.0/0"]
-      description = "Allow ALL egress traffic"
+      description = "Allow all outbound traffic"
     }
   ]
   description = <<-EOT
@@ -87,9 +81,9 @@ variable "security_group_rules" {
   EOT
 }
 
-variable "additional_security_groups" {
+variable "security_groups" {
   type        = list(string)
-  description = "List of security groups to be allowed to connect to the EC2 instances"
+  description = "List of security groups to add to the EC2 instances"
   default     = []
 }
 

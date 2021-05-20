@@ -14,8 +14,18 @@ output "name" {
 }
 
 output "security_group_id" {
-  value       = aws_security_group.default.id
-  description = "Security group id"
+  value       = module.default_sg.id
+  description = "Elastic Beanstalk environment Security Group ID"
+}
+
+output "security_group_arn" {
+  value       = module.default_sg.arn
+  description = "Elastic Beanstalk environment Security Group ARN"
+}
+
+output "security_group_name" {
+  value       = module.default_sg.name
+  description = "Elastic Beanstalk environment Security Group name"
 }
 
 output "elb_zone_id" {

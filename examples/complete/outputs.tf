@@ -35,7 +35,17 @@ output "elastic_beanstalk_environment_name" {
 
 output "elastic_beanstalk_environment_security_group_id" {
   value       = module.elastic_beanstalk_environment.security_group_id
-  description = "Security group id"
+  description = "Elastic Beanstalk environment Security Group ID"
+}
+
+output "elastic_beanstalk_environment_security_group_arn" {
+  value       = module.elastic_beanstalk_environment.security_group_arn
+  description = "Elastic Beanstalk environment Security Group ARN"
+}
+
+output "elastic_beanstalk_environment_security_group_name" {
+  value       = module.elastic_beanstalk_environment.security_group_name
+  description = "Elastic Beanstalk environment Security Group name"
 }
 
 output "elastic_beanstalk_environment_elb_zone_id" {

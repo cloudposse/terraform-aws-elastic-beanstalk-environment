@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -65,4 +65,19 @@ func TestExamplesComplete(t *testing.T) {
 	elasticBeanstalkEnvironmentHostname := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_hostname")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, "elastic-beanstalk-env.testing.cloudposse.co", elasticBeanstalkEnvironmentHostname)
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupName := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_name")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, expectedName, securityGroupName)
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupID := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_id")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, securityGroupID, "sg-", "SG ID should contains substring 'sg-'")
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupARN := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, securityGroupARN, "arn:aws:ec2", "SG ID should contains substring 'arn:aws:ec2'")
 }
