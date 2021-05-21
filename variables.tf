@@ -83,7 +83,7 @@ variable "security_group_rules" {
 
 variable "security_groups" {
   type        = list(string)
-  description = "A list of Security Group IDs to associate with EC2 instances"
+  description = "A list of Security Group IDs to associate with EC2 instances."
   default     = []
 }
 
