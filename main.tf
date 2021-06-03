@@ -174,6 +174,7 @@ data "aws_iam_policy_document" "default" {
       "autoscaling:PutScheduledUpdateGroupAction",
       "autoscaling:ResumeProcesses",
       "autoscaling:SetDesiredCapacity",
+      "autoscaling:SetInstanceProtection",
       "autoscaling:SuspendProcesses",
       "autoscaling:TerminateInstanceInAutoScalingGroup",
       "autoscaling:UpdateAutoScalingGroup",
