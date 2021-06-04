@@ -397,6 +397,13 @@ locals {
       value     = "true"
     },
   ]
+  elbv2_settings = [
+    {
+      namespace = "aws:elbv2:listener:default"
+      name      = "ListenerEnabled"
+      value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
+    }
+  ]
   alb_settings = [
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -419,11 +426,6 @@ locals {
       value     = var.loadbalancer_managed_security_group
     },
     {
-      namespace = "aws:elbv2:listener:default"
-      name      = "ListenerEnabled"
-      value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
-    },
-    {
       namespace = "aws:elbv2:listener:443"
       name      = "ListenerEnabled"
       value     = var.loadbalancer_certificate_arn == "" ? "false" : "true"
@@ -442,8 +444,19 @@ locals {
       namespace = "aws:elbv2:listener:443"
       name      = "SSLPolicy"
       value     = var.loadbalancer_type == "application" ? var.loadbalancer_ssl_policy : ""
+    },
+    ###===================== Application Load Balancer Health check settings =====================================================###
+    # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
+    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
+    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckPath"
+      value     = var.healthcheck_url
     }
   ]
+
+  nlb_settings = []
 
   generic_elb_settings = [
     {
@@ -462,16 +475,6 @@ locals {
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
     },
-
-    ###===================== Application Load Balancer Health check settings =====================================================###
-    # The Application Load Balancer health check does not take into account the Elastic Beanstalk health check path
-    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html
-    # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-applicationloadbalancer.html#alb-default-process.config
-    {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "HealthCheckPath"
-      value     = var.healthcheck_url
-    },
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Port"
@@ -480,12 +483,15 @@ locals {
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Protocol"
-      value     = "HTTP"
+      value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
     }
   ]
 
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
-  elb_settings_final = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) : concat(local.classic_elb_settings, local.generic_elb_settings) : []
+  elb_settings_iterim = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) : concat(local.classic_elb_settings, local.generic_elb_settings) : []
+
+  # If the loadbalancer type is not "application"" skip any ALB specific settings
+  elb_settings_final = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.elb_settings_iterim, local.alb_settings) : concat(local.elb_settings_iterim, local.nlb_settings) : local.elb_settings_iterim
 }
 
 #
