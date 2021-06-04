@@ -393,6 +393,7 @@ Like this project? Please give it a ★ on [our GitHub](https://github.com/cloud
 Are you using this project or any of our other projects? Consider [leaving a testimonial][testimonial]. =)
 
 
+
 ## Related Projects
 
 Check out these related projects.
@@ -401,8 +402,6 @@ Check out these related projects.
 - [terraform-aws-elastic-beanstalk-application](https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application) - Terraform Module to define an ElasticBeanstalk Application
 - [geodesic](https://github.com/cloudposse/geodesic) -  Geodesic is the fastest way to get up and running with a rock solid, production grade cloud platform built on strictly Open Source tools.
 - [terraform-aws-elasticache-cloudwatch-sns-alarms](https://github.com/cloudposse/terraform-aws-elasticache-cloudwatch-sns-alarms) -  Terraform module that configures CloudWatch SNS alerts for ElastiCache
-
-
 
 ## Help
 
