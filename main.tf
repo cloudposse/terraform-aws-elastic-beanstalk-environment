@@ -487,11 +487,12 @@ locals {
     }
   ]
 
+  # Select elb configuration depending on loadbalancer_type
+  elb_settings_nlb    = var.loadbalancer_type == "network" ? concat(local.nlb_settings, local.elbv2_settings, local.generic_elb_settings) : []
+  elb_settings_alb    = var.loadbalancer_type == "application" ? concat(local.alb_settings, local.elbv2_settings, local.generic_elb_settings) : []
+  elb_setting_classic = var.loadbalancer_type == "classic" ? concat(local.classic_elb_settings, local.generic_elb_settings) : []
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
-  elb_settings_iterim = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) : concat(local.classic_elb_settings, local.generic_elb_settings) : []
-
-  # If the loadbalancer type is not "application"" skip any ALB specific settings
-  elb_settings_final = var.tier == "WebServer" ? var.loadbalancer_type == "application" ? concat(local.elb_settings_iterim, local.alb_settings) : concat(local.elb_settings_iterim, local.nlb_settings) : local.elb_settings_iterim
+  elb_settings_final = var.tier == "WebServer" ? concat(local.elb_settings_nlb, local.elb_settings_alb, local.elb_setting_classic) : []
 }
 
 #
@@ -968,7 +969,7 @@ data "aws_elb_service_account" "main" {
 }
 
 data "aws_iam_policy_document" "elb_logs" {
-  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
+  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" ? 1 : 0
 
   statement {
     sid = ""
@@ -994,7 +995,7 @@ resource "aws_s3_bucket" "elb_logs" {
   #bridgecrew:skip=BC_AWS_S3_13:Skipping `Enable S3 Bucket Logging` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=CKV_AWS_52:Skipping `Ensure S3 bucket has MFA delete enabled` due to issue in terraform (https://github.com/hashicorp/terraform-provider-aws/issues/629).
-  count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
+  count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
