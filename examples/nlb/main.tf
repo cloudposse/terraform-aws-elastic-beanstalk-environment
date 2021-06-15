@@ -64,7 +64,26 @@ module "elastic_beanstalk_environment" {
   vpc_id                  = module.vpc.vpc_id
   loadbalancer_subnets    = module.subnets.public_subnet_ids
   application_subnets     = module.subnets.private_subnet_ids
-  allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+  security_group_rules = [
+    {
+      type                     = "egress"
+      from_port                = 0
+      to_port                  = 65535
+      protocol                 = "-1"
+      cidr_blocks              = ["0.0.0.0/0"]
+      source_security_group_id = null
+      description              = "Allow all outbound traffic"
+    },
+    {
+      type                     = "ingress"
+      from_port                = 0
+      to_port                  = 65535
+      protocol                 = "-1"
+      cidr_blocks              = []
+      source_security_group_id = module.vpc.vpc_default_security_group_id
+      description              = "Allow all inbound traffic from trusted Security Groups"
+    },
+  ]
 
   rolling_update_enabled  = var.rolling_update_enabled
   rolling_update_type     = var.rolling_update_type
