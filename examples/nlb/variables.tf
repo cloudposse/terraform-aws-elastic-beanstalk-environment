@@ -93,11 +93,6 @@ variable "updating_max_batch" {
   description = "Maximum number of instances to update at once"
 }
 
-variable "healthcheck_url" {
-  type        = string
-  description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
-}
-
 variable "application_port" {
   type        = number
   description = "Port application is listening on"
