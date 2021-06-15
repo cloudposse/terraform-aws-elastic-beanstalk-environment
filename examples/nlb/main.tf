@@ -71,7 +71,6 @@ module "elastic_beanstalk_environment" {
   updating_min_in_service = var.updating_min_in_service
   updating_max_batch      = var.updating_max_batch
 
-  healthcheck_url  = var.healthcheck_url
   application_port = var.application_port
 
   # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
