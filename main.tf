@@ -474,6 +474,32 @@ locals {
     },
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckInterval"
+      value     = var.healthcheck_interval
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckTimeout"
+      value     = var.healthcheck_timeout
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthyThresholdCount"
+      value     = var.healthcheck_healthy_threshold_count
+    },
+
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "UnhealthyThresholdCount"
+      value     = var.healthcheck_unhealthy_threshold_count
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "MatcherHTTPCode"
+      value     = join(",", sort(var.healthcheck_httpcodes_to_match))
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Port"
       value     = var.application_port
     },
