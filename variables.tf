@@ -274,7 +274,7 @@ variable "healthcheck_unhealthy_threshold_count" {
 variable "healthcheck_httpcodes_to_match" {
   type        = list(string)
   default     = []
-  description =  "A comma-separated list of HTTP code(s) that indicate that an instance is healthy. Note that this option is only applicable to environments with a network or application load balancer"
+  description = "A comma-separated list of HTTP code(s) that indicate that an instance is healthy. Note that this option is only applicable to environments with a network or application load balancer"
 }
 
 variable "enable_log_publication_control" {
