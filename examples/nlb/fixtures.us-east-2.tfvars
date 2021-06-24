@@ -26,7 +26,6 @@ autoscale_max = 2
 
 wait_for_ready_timeout = "20m"
 
-
 force_destroy = true
 
 rolling_update_enabled = true
