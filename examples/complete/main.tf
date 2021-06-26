@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source     = "cloudposse/vpc/aws"
-  version    = "0.25.0"
+  version    = "0.26.1"
   cidr_block = "172.16.0.0/16"
 
   context = module.this.context
