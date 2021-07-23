@@ -174,6 +174,7 @@ data "aws_iam_policy_document" "default" {
       "autoscaling:PutScheduledUpdateGroupAction",
       "autoscaling:ResumeProcesses",
       "autoscaling:SetDesiredCapacity",
+      "autoscaling:SetInstanceProtection",
       "autoscaling:SuspendProcesses",
       "autoscaling:TerminateInstanceInAutoScalingGroup",
       "autoscaling:UpdateAutoScalingGroup",
@@ -296,27 +297,17 @@ resource "aws_iam_instance_profile" "ec2" {
   role = aws_iam_role.ec2.name
 }
 
-resource "aws_security_group" "default" {
-  name        = module.this.id
-  description = "Allow inbound traffic from provided Security Groups"
+module "security_group" {
+  source  = "cloudposse/security-group/aws"
+  version = "0.3.1"
 
-  vpc_id = var.vpc_id
+  use_name_prefix = var.security_group_use_name_prefix
+  rules           = var.security_group_rules
+  vpc_id          = var.vpc_id
+  description     = var.security_group_description
 
-  ingress {
-    from_port       = 0
-    to_port         = 0
-    protocol        = -1
-    security_groups = var.allowed_security_groups
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = module.this.tags
+  enabled = local.security_group_enabled
+  context = module.this.context
 }
 
 locals {
@@ -325,6 +316,8 @@ locals {
   # `Namespace` should be removed as well since any string that contains `Name` forces recreation
   # https://github.com/terraform-providers/terraform-provider-aws/issues/3963
   tags = { for t in keys(module.this.tags) : t => module.this.tags[t] if t != "Name" && t != "Namespace" }
+
+  security_group_enabled = module.this.enabled && var.security_group_enabled
 
   classic_elb_settings = [
     {
@@ -543,7 +536,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = join(",", compact(sort(concat([aws_security_group.default.id], var.additional_security_groups))))
+    value     = join(",", compact(sort(concat([module.security_group.id], var.security_groups))))
     resource  = ""
   }
 
