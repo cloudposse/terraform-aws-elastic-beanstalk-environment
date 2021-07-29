@@ -21,18 +21,27 @@ resource "aws_iam_role" "service" {
   name               = "${module.this.id}-eb-service"
   assume_role_policy = data.aws_iam_policy_document.service.json
   tags               = module.this.tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
   count      = var.enhanced_reporting_enabled && var.service_role_name == "" ? 1 : 0
   role       = var.service_role_name == "" ? join("", aws_iam_role.service.*.name) : var.service_role_name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
   count      = var.service_role_name == "" ? 1 : 0
   role       = var.service_role_name == "" ? join("", aws_iam_role.service.*.name) : var.service_role_name
   policy_arn = var.prefer_legacy_service_policy ? "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 #
@@ -74,6 +83,9 @@ resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_doc
   count      = var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role" "ec2" {
@@ -81,18 +93,27 @@ resource "aws_iam_role" "ec2" {
   name               = "${module.this.id}-eb-ec2"
   assume_role_policy = data.aws_iam_policy_document.ec2.json
   tags               = module.this.tags
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
   count      = var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
   count      = var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
@@ -121,6 +142,9 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly" {
   count      = var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_ssm_activation" "ec2" {
@@ -298,8 +322,11 @@ data "aws_iam_policy_document" "extended" {
 
 resource "aws_iam_instance_profile" "ec2" {
   count = var.instance_role_name == "" ? 1 : 0
-  name = "${module.this.id}-eb-ec2"
+  name  = "${module.this.id}-eb-ec2"
   role  = var.instance_role_name == "" ? join("", aws_iam_role.ec2.*.name) : var.instance_role_name
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 module "security_group" {
