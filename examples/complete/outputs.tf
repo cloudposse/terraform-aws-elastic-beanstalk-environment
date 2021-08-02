@@ -112,4 +112,3 @@ output "elastic_beanstalk_environment_triggers" {
   description = "Autoscaling triggers in use by this environment"
   value       = module.elastic_beanstalk_environment.triggers
 }
-

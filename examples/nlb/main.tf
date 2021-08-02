@@ -104,6 +104,7 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
   context                      = module.this.context
+  instance_role_name           = aws_iam_instance_profile.ec2.name
 }
 
 data "aws_iam_policy_document" "minimal_s3_permissions" {
@@ -115,4 +116,51 @@ data "aws_iam_policy_document" "minimal_s3_permissions" {
     ]
     resources = ["*"]
   }
+}
+
+
+data "aws_iam_policy_document" "ec2" {
+  statement {
+    sid = ""
+
+    actions = [
+      "sts:AssumeRole",
+    ]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ec2.amazonaws.com"]
+    }
+
+    effect = "Allow"
+  }
+}
+
+resource "aws_iam_role" "ec2" {
+  name               = "${module.this.id}-eb-ec2"
+  assume_role_policy = data.aws_iam_policy_document.ec2.json
+  managed_policy_arns = [
+    aws_iam_policy.minimal_s3_permissions.arn,
+    "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
+    "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+    "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker",
+    "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole",
+    "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  ]
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_instance_profile" "ec2" {
+  name = aws_iam_role.ec2.name
+  role = aws_iam_role.ec2.name
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_policy" "minimal_s3_permissions" {
+  name   = "${module.this.id}-eb-s3"
+  policy = data.aws_iam_policy_document.ec2.json
 }
