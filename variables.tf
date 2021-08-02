@@ -540,3 +540,9 @@ variable "scheduled_actions" {
   default     = []
   description = "Define a list of scheduled actions"
 }
+
+variable "accesslogs_s3_enabled" {
+  type        = string
+  default     = "true"
+  description = "Set access logs s3 in case of application load balancer and don't in case of shared load balancer"
+}
