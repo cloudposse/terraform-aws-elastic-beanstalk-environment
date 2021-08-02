@@ -163,7 +163,6 @@ For a complete example, see [examples/complete](examples/complete)
     vpc_id               = module.vpc.vpc_id
     loadbalancer_subnets = module.subnets.public_subnet_ids
     application_subnets  = module.subnets.private_subnet_ids
-    allowed_security_groups = [module.vpc.vpc_default_security_group_id]
     instance_role_name      = aws_iam.role.ec2_instance_role.name      
     security_group_rules = [
       {
