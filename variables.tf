@@ -343,7 +343,7 @@ variable "root_volume_type" {
 }
 
 variable "root_volume_iops" {
-  type        = integer
+  type        = number
   default     = ""
   description = "Default IOPS for the root volume"
 }
