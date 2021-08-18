@@ -164,8 +164,8 @@ variable "autoscale_max" {
 }
 
 variable "enable_capacity_rebalacing" {
-  type = boolean
-  default = true
+  type        = boolean
+  default     = true
   description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
 }
 
