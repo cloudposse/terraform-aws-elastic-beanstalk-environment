@@ -163,6 +163,12 @@ variable "autoscale_max" {
   description = "Maximum instances to launch"
 }
 
+variable "enable_capacity_rebalacing" {
+  type = boolean
+  default = true
+  description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
+}
+
 variable "solution_stack_name" {
   type        = string
   description = "Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html"
