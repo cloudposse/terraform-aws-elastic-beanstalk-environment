@@ -17,7 +17,7 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
-  count              = var.service_role_name == "" ? 1 : 0
+  count              = module.this.enabled && var.service_role_name == "" ? 1 : 0
   name               = "${module.this.id}-eb-service"
   assume_role_policy = data.aws_iam_policy_document.service.json
   tags               = module.this.tags
@@ -27,7 +27,7 @@ resource "aws_iam_role" "service" {
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
-  count      = var.enhanced_reporting_enabled && var.service_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.enhanced_reporting_enabled && var.service_role_name == "" ? 1 : 0
   role       = var.service_role_name == "" ? join("", aws_iam_role.service.*.name) : var.service_role_name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
   lifecycle {
@@ -36,7 +36,7 @@ resource "aws_iam_role_policy_attachment" "enhanced_health" {
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
-  count      = var.service_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.service_role_name == "" ? 1 : 0
   role       = var.service_role_name == "" ? join("", aws_iam_role.service.*.name) : var.service_role_name
   policy_arn = var.prefer_legacy_service_policy ? "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
   lifecycle {
@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
-  count      = var.instance_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
   lifecycle {
@@ -89,7 +89,7 @@ resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_doc
 }
 
 resource "aws_iam_role" "ec2" {
-  count              = var.instance_role_name == "" ? 1 : 0
+  count              = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   name               = "${module.this.id}-eb-ec2"
   assume_role_policy = data.aws_iam_policy_document.ec2.json
   tags               = module.this.tags
@@ -99,7 +99,7 @@ resource "aws_iam_role" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
-  count      = var.instance_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
   lifecycle {
@@ -108,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "web_tier" {
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
-  count      = var.instance_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
   lifecycle {
@@ -117,7 +117,7 @@ resource "aws_iam_role_policy_attachment" "worker_tier" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
-  count      = var.instance_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = var.prefer_legacy_ssm_policy ? "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
@@ -127,7 +127,7 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
-  count      = var.instance_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
@@ -139,7 +139,7 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
-  count      = var.instance_role_name == "" ? 1 : 0
+  count      = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   lifecycle {
@@ -148,7 +148,7 @@ resource "aws_iam_role_policy_attachment" "ecr_readonly" {
 }
 
 resource "aws_ssm_activation" "ec2" {
-  count              = var.instance_role_name == "" ? 1 : 0
+  count              = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   name               = module.this.id
   iam_role           = join("", aws_iam_role.ec2.*.name)
   registration_limit = var.autoscale_max
@@ -321,7 +321,7 @@ data "aws_iam_policy_document" "extended" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  count = var.instance_role_name == "" ? 1 : 0
+  count = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   name  = "${module.this.id}-eb-ec2"
   role  = var.instance_role_name == "" ? join("", aws_iam_role.ec2.*.name) : var.instance_role_name
   lifecycle {
