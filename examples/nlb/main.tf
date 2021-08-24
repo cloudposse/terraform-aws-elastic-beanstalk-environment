@@ -138,7 +138,7 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role" "ec2" {
-  count = module.this.enabled ? 1 : 0
+  count              = module.this.enabled ? 1 : 0
   name               = "${module.this.id}-eb-ec2"
   assume_role_policy = data.aws_iam_policy_document.ec2.json
   managed_policy_arns = [
@@ -156,15 +156,15 @@ resource "aws_iam_role" "ec2" {
 
 resource "aws_iam_instance_profile" "ec2" {
   count = module.this.enabled ? 1 : 0
-  name = aws_iam_role.ec2.name
-  role = aws_iam_role.ec2.name
+  name  = aws_iam_role.ec2.name
+  role  = aws_iam_role.ec2.name
   lifecycle {
     create_before_destroy = true
   }
 }
 
 resource "aws_iam_policy" "minimal_s3_permissions" {
-  count = module.this.enabled ? 1 : 0
+  count  = module.this.enabled ? 1 : 0
   name   = "${module.this.id}-eb-s3"
   policy = data.aws_iam_policy_document.ec2.json
 }
