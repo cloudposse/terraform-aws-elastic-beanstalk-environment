@@ -615,6 +615,14 @@ resource "aws_elastic_beanstalk_environment" "default" {
     resource  = ""
   }
 
+    setting {
+    namespace = "aws:autoscaling:asg"
+    name      = "EnableCapacityRebalancing"
+    value     = var.enable_capacity_rebalancing
+    resource  = ""
+    }
+
+
   setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateEnabled"

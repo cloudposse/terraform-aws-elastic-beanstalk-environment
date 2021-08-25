@@ -348,6 +348,12 @@ variable "autoscale_measure_name" {
   description = "Metric used for your Auto Scaling trigger"
 }
 
+variable "enable_capacity_rebalacing" {
+  type        = boolean
+  default     = true
+  description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
+}
+
 variable "autoscale_statistic" {
   type        = string
   default     = "Average"
