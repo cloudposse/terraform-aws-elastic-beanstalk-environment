@@ -104,7 +104,7 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
   context                      = module.this.context
-  instance_role_name           = aws_iam_instance_profile.ec2.name
+  instance_role_name           = join("", aws_iam_instance_profile.ec2.*.name)
 }
 
 data "aws_iam_policy_document" "minimal_s3_permissions" {
@@ -140,9 +140,9 @@ data "aws_iam_policy_document" "ec2" {
 resource "aws_iam_role" "ec2" {
   count              = module.this.enabled ? 1 : 0
   name               = "${module.this.id}-eb-ec2"
-  assume_role_policy = data.aws_iam_policy_document.ec2.json
+  assume_role_policy = join("",data.aws_iam_policy_document.ec2.*.json)
   managed_policy_arns = [
-    aws_iam_policy.minimal_s3_permissions.arn,
+    join("",aws_iam_policy.minimal_s3_permissions.*.arn),
     "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
     "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
     "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker",
@@ -156,8 +156,8 @@ resource "aws_iam_role" "ec2" {
 
 resource "aws_iam_instance_profile" "ec2" {
   count = module.this.enabled ? 1 : 0
-  name  = aws_iam_role.ec2.name
-  role  = aws_iam_role.ec2.name
+  name  = join("", aws_iam_role.ec2.*.name)
+  role  = join("", aws_iam_role.ec2.*.name)
   lifecycle {
     create_before_destroy = true
   }
@@ -166,5 +166,5 @@ resource "aws_iam_instance_profile" "ec2" {
 resource "aws_iam_policy" "minimal_s3_permissions" {
   count  = module.this.enabled ? 1 : 0
   name   = "${module.this.id}-eb-s3"
-  policy = data.aws_iam_policy_document.ec2.json
+  policy = data.aws_iam_policy_document.minimal_s3_permissions.json
 }
