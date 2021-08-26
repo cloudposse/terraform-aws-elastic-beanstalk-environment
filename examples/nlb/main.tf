@@ -140,9 +140,9 @@ data "aws_iam_policy_document" "ec2" {
 resource "aws_iam_role" "ec2" {
   count              = module.this.enabled ? 1 : 0
   name               = "${module.this.id}-eb-ec2"
-  assume_role_policy = join("",data.aws_iam_policy_document.ec2.*.json)
+  assume_role_policy = join("", data.aws_iam_policy_document.ec2.*.json)
   managed_policy_arns = [
-    join("",aws_iam_policy.minimal_s3_permissions.*.arn),
+    join("", aws_iam_policy.minimal_s3_permissions.*.arn),
     "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier",
     "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
     "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker",
