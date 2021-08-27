@@ -102,7 +102,7 @@ resource "aws_iam_role_policy" "default" {
   count  = module.this.enabled && var.instance_role_name == "" ? 1 : 0
   name   = "${module.this.id}-eb-default"
   role   = join("", aws_iam_role.ec2.*.id)
-  policy = data.aws_iam_policy_document.extended.json  
+  policy = data.aws_iam_policy_document.extended.json
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
