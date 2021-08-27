@@ -1,3 +1,5 @@
+data "aws_partition" "current" {}
+
 #
 # Service
 #
@@ -25,12 +27,12 @@ resource "aws_iam_role" "service" {
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
   count      = var.enhanced_reporting_enabled ? 1 : 0
   role       = aws_iam_role.service.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
   role       = aws_iam_role.service.name
-  policy_arn = var.prefer_legacy_service_policy ? "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
+  policy_arn = var.prefer_legacy_service_policy ? "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
 #
@@ -70,7 +72,7 @@ data "aws_iam_policy_document" "ec2" {
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
 resource "aws_iam_role" "ec2" {
@@ -87,17 +89,17 @@ resource "aws_iam_role_policy" "default" {
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
   role       = aws_iam_role.ec2.name
-  policy_arn = var.prefer_legacy_ssm_policy ? "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  policy_arn = var.prefer_legacy_ssm_policy ? "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
   lifecycle {
     create_before_destroy = true
@@ -106,7 +108,7 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
     create_before_destroy = true
@@ -117,7 +119,7 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ssm_activation" "ec2" {
@@ -251,7 +253,7 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      "arn:aws:s3:::*"
+      "arn:${data.aws_partition.current.partition}:s3:::*"
     ]
 
     effect = "Allow"
@@ -265,7 +267,7 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      "arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*"
+      "arn:${data.aws_partition.current.partition}:logs:*:*:log-group:/aws/elasticbeanstalk*"
     ]
 
     effect = "Allow"
@@ -279,8 +281,8 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      "arn:aws:cloudformation:*:*:stack/awseb-*",
-      "arn:aws:cloudformation:*:*:stack/eb-*"
+      "arn:${data.aws_partition.current.partition}:cloudformation:*:*:stack/awseb-*",
+      "arn:${data.aws_partition.current.partition}:cloudformation:*:*:stack/eb-*"
     ]
 
     effect = "Allow"
@@ -984,7 +986,7 @@ data "aws_iam_policy_document" "elb_logs" {
     ]
 
     resources = [
-      "arn:aws:s3:::${module.this.id}-eb-loadbalancer-logs/*"
+      "arn:${data.aws_partition.current.partition}:s3:::${module.this.id}-eb-loadbalancer-logs/*"
     ]
 
     principals {
