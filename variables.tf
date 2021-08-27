@@ -242,7 +242,7 @@ variable "health_streaming_retention_in_days" {
 
 variable "healthcheck_url" {
   type        = string
-  default     = "/healthcheck"
+  default     = "/"
   description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
 }
 
