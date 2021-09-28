@@ -104,7 +104,7 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
   context                      = module.this.context
-  instance_role_name           = join("", aws_iam_instance_profile.ec2.*.name)
+  existing_instance_role_name  = join("", aws_iam_instance_profile.ec2.*.name)
 }
 
 data "aws_iam_policy_document" "minimal_s3_permissions" {

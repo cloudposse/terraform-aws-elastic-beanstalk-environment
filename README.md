@@ -163,7 +163,7 @@ For a complete example, see [examples/complete](examples/complete)
     vpc_id               = module.vpc.vpc_id
     loadbalancer_subnets = module.subnets.public_subnet_ids
     application_subnets  = module.subnets.private_subnet_ids
-    instance_role_name   = aws_iam.role.ec2_instance_role.name      
+    existing_instance_role_name   = aws_iam.role.ec2_instance_role.name
     security_group_rules = [
       {
         type                     = "egress"
@@ -330,7 +330,7 @@ Available targets:
 | <a name="input_http_listener_enabled"></a> [http\_listener\_enabled](#input\_http\_listener\_enabled) | Enable port 80 (http) | `bool` | `true` | no |
 | <a name="input_id_length_limit"></a> [id\_length\_limit](#input\_id\_length\_limit) | Limit `id` to this many characters (minimum 6).<br>Set to `0` for unlimited length.<br>Set to `null` for default, which is `0`.<br>Does not affect `id_full`. | `number` | `null` | no |
 | <a name="input_instance_refresh_enabled"></a> [instance\_refresh\_enabled](#input\_instance\_refresh\_enabled) | Enable weekly instance replacement. | `bool` | `true` | no |
-| <a name="input_instance_role_name"></a> [instance\_role\_name](#input\_instance\_role\_name) | Instance role name of existing IAM role to attach to Beanstalk deployment | `string` | `""` | no |
+| <a name="input_existing_instance_role_name"></a> [instance\_role\_name](#input\_instance\_role\_name) | Instance role name of existing IAM role to attach to Beanstalk deployment | `string` | `""` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | Instances type | `string` | `"t2.micro"` | no |
 | <a name="input_keypair"></a> [keypair](#input\_keypair) | Name of SSH key that will be deployed on Elastic Beanstalk and DataPipeline instance. The key should be present in AWS | `string` | `""` | no |
 | <a name="input_label_key_case"></a> [label\_key\_case](#input\_label\_key\_case) | The letter case of label keys (`tag` names) (i.e. `name`, `namespace`, `environment`, `stage`, `attributes`) to use in `tags`.<br>Possible values: `lower`, `title`, `upper`.<br>Default value: `title`. | `string` | `null` | no |

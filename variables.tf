@@ -541,13 +541,13 @@ variable "scheduled_actions" {
   description = "Define a list of scheduled actions"
 }
 
-variable "instance_role_name" {
+variable "existing_instance_role_name" {
   type        = string
   default     = ""
   description = "Instance role name of existing IAM role to attach to Beanstalk deployment"
 }
 
-variable "service_role_name" {
+variable "existing_service_role_name" {
   type        = string
   default     = ""
   description = "Service role name of existing IAM role to attach to Beanstalk deployment"
