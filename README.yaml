@@ -59,6 +59,14 @@ related:
 description: |-
   Terraform module to provision AWS Elastic Beanstalk environment
 
+  ## Searching for Maintainer!
+
+  The Cloud Posse team no longer utilizes Beanstalk all that much, but this module is still fairly popular. In an effort to give it the attention it deserves, we're searching for a volunteer maintainer to manage this specific repository's issues and pull requests (of which a number are already stacked up). This is a great opportunity for anyone who is looking to solidify and strengthen their Terraform skillset while also giving back to the SweetOps open source community!
+
+  [You can learn more about being a SweetOps contributor on our docs site here](https://docs.cloudposse.com/community/contributors/).
+
+  If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
+
 # How to use this project
 usage: |-
 
@@ -99,7 +107,9 @@ usage: |-
     }
 
     module "elastic_beanstalk_environment" {
-      source                             = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment.git?ref=master"
+      source = "cloudposse/elastic-beanstalk-environment/aws"
+      # Cloud Posse recommends pinning every module to a specific version
+      # version = "x.x.x"
       namespace                          = var.namespace
       stage                              = var.stage
       name                               = var.name
@@ -115,11 +125,31 @@ usage: |-
       updating_min_in_service = 0
       updating_max_batch      = 1
 
-      loadbalancer_type       = "application"
-      vpc_id                  = module.vpc.vpc_id
-      loadbalancer_subnets    = module.subnets.public_subnet_ids
-      application_subnets     = module.subnets.private_subnet_ids
-      allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+      loadbalancer_type    = "application"
+      vpc_id               = module.vpc.vpc_id
+      loadbalancer_subnets = module.subnets.public_subnet_ids
+      application_subnets  = module.subnets.private_subnet_ids
+      security_group_rules = [
+        {
+          type                     = "egress"
+          from_port                = 0
+          to_port                  = 65535
+          protocol                 = "-1"
+          cidr_blocks              = ["0.0.0.0/0"]
+          source_security_group_id = null
+          description              = "Allow all outbound traffic"
+        },
+        {
+          type                     = "ingress"
+          from_port                = 0
+          to_port                  = 65535
+          protocol                 = "-1"
+          source_security_group_id = [module.vpc.vpc_default_security_group_id]
+          cidr_blocks              = null
+          description              = "Allow all ingress traffic from trusted Security Groups"
+        },
+      ]
+      prefer_legacy_service_policy = false
 
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
@@ -148,7 +178,6 @@ usage: |-
         }
       ]
     }
-  }
   ```
 
 include:
@@ -177,3 +206,5 @@ contributors:
     github: "pearson-lucas-dev"
   - name: "Chris Green"
     github: "DirectRoot"
+  - name: "Vladimir Syromyatnikov"
+    github: "SweetOps"

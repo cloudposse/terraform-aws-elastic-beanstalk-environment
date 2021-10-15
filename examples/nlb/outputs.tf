@@ -35,17 +35,7 @@ output "elastic_beanstalk_environment_name" {
 
 output "elastic_beanstalk_environment_security_group_id" {
   value       = module.elastic_beanstalk_environment.security_group_id
-  description = "Elastic Beanstalk environment Security Group ID"
-}
-
-output "elastic_beanstalk_environment_security_group_arn" {
-  value       = module.elastic_beanstalk_environment.security_group_arn
-  description = "Elastic Beanstalk environment Security Group ARN"
-}
-
-output "elastic_beanstalk_environment_security_group_name" {
-  value       = module.elastic_beanstalk_environment.security_group_name
-  description = "Elastic Beanstalk environment Security Group name"
+  description = "Security group id"
 }
 
 output "elastic_beanstalk_environment_elb_zone_id" {
@@ -112,4 +102,3 @@ output "elastic_beanstalk_environment_triggers" {
   description = "Autoscaling triggers in use by this environment"
   value       = module.elastic_beanstalk_environment.triggers
 }
-

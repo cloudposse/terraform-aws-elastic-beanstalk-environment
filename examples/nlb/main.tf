@@ -90,7 +90,6 @@ module "elastic_beanstalk_environment" {
   updating_min_in_service = var.updating_min_in_service
   updating_max_batch      = var.updating_max_batch
 
-  healthcheck_url  = var.healthcheck_url
   application_port = var.application_port
 
   # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
@@ -103,8 +102,8 @@ module "elastic_beanstalk_environment" {
   extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
   prefer_legacy_ssm_policy     = false
   prefer_legacy_service_policy = false
-
-  context = module.this.context
+  scheduled_actions            = var.scheduled_actions
+  context                      = module.this.context
 }
 
 data "aws_iam_policy_document" "minimal_s3_permissions" {

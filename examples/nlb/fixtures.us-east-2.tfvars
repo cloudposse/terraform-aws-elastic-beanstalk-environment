@@ -14,7 +14,7 @@ tier = "WebServer"
 
 environment_type = "LoadBalanced"
 
-loadbalancer_type = "application"
+loadbalancer_type = "network"
 
 availability_zone_selector = "Any 2"
 
@@ -26,7 +26,6 @@ autoscale_max = 2
 
 wait_for_ready_timeout = "20m"
 
-
 force_destroy = true
 
 rolling_update_enabled = true
@@ -36,8 +35,6 @@ rolling_update_type = "Health"
 updating_min_in_service = 0
 
 updating_max_batch = 1
-
-healthcheck_url = "/"
 
 application_port = 80
 
@@ -71,11 +68,6 @@ dns_zone_id = "Z3SO0TKDDQ0RGG"
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [
-  {
-    namespace = "aws:elasticbeanstalk:environment:process:default"
-    name      = "StickinessEnabled"
-    value     = "false"
-  },
   {
     namespace = "aws:elasticbeanstalk:managedactions"
     name      = "ManagedActionsEnabled"

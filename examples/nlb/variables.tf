@@ -93,11 +93,6 @@ variable "updating_max_batch" {
   description = "Maximum number of instances to update at once"
 }
 
-variable "healthcheck_url" {
-  type        = string
-  description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
-}
-
 variable "application_port" {
   type        = number
   description = "Port application is listening on"
@@ -168,4 +163,19 @@ variable "env_vars" {
   type        = map(string)
   default     = {}
   description = "Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env_vars = { DB_USER = 'admin' DB_PASS = 'xxxxxx' }"
+}
+
+variable "scheduled_actions" {
+  type = list(object({
+    name            = string
+    minsize         = string
+    maxsize         = string
+    desiredcapacity = string
+    starttime       = string
+    endtime         = string
+    recurrence      = string
+    suspend         = bool
+  }))
+  default     = []
+  description = "Define a list of scheduled actions"
 }

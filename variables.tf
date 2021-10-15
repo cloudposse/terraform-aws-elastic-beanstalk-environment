@@ -3,47 +3,6 @@ variable "region" {
   description = "AWS region"
 }
 
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-  default     = ""
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-  default     = ""
-}
-
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'cluster'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
-}
-
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-}
-
 variable "description" {
   type        = string
   default     = ""
@@ -85,15 +44,46 @@ variable "dns_subdomain" {
   description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
 }
 
-variable "allowed_security_groups" {
-  type        = list(string)
-  description = "List of security groups to add to the EC2 instances"
-  default     = []
+variable "security_group_enabled" {
+  type        = bool
+  description = "Whether to create Security Group."
+  default     = true
 }
 
-variable "additional_security_groups" {
+variable "security_group_description" {
+  type        = string
+  default     = "Elastic Beanstalk environment Security Group"
+  description = "The Security Group description."
+}
+
+variable "security_group_use_name_prefix" {
+  type        = bool
+  default     = false
+  description = "Whether to create a default Security Group with unique name beginning with the normalized prefix."
+}
+
+variable "security_group_rules" {
+  type = list(any)
+  default = [
+    {
+      type        = "egress"
+      from_port   = 0
+      to_port     = 65535
+      protocol    = "-1"
+      cidr_blocks = ["0.0.0.0/0"]
+      description = "Allow all outbound traffic"
+    }
+  ]
+  description = <<-EOT
+    A list of maps of Security Group rules.
+    The values of map is fully complated with `aws_security_group_rule` resource.
+    To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule .
+  EOT
+}
+
+variable "security_groups" {
   type        = list(string)
-  description = "List of security groups to be allowed to connect to the EC2 instances"
+  description = "A list of Security Group IDs to associate with EC2 instances."
   default     = []
 }
 
@@ -258,7 +248,7 @@ variable "health_streaming_retention_in_days" {
 
 variable "healthcheck_url" {
   type        = string
-  default     = "/healthcheck"
+  default     = "/"
   description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
 }
 
@@ -461,7 +451,16 @@ variable "alb_zone_id" {
     us-east-2      = "Z14LCN19Q5QHIC"
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
-    eu-west-3      = "ZCMLWB8V5SYIT"
+    eu-west-3      = "Z3Q77PNBQS71R4"
+    af-south-1     = "Z1EI3BVKMKK4AM"
+    ap-east-1      = "ZPWYUBWRU171A"
+    eu-central-1   = "Z1FRNW7UH4DEZJ"
+    eu-south-1     = "Z10VDYYOA2JFKM"
+    eu-north-1     = "Z23GO28BZ5AETM"
+    me-south-1     = "Z2BBTEKR2I36N2"
+    sa-east-1      = "Z10X7K2B4QSOFV"
+    us-gov-west-1  = "Z31GFT0UA1I2HV"
+    us-gov-east-1  = "Z2NIFVYYW2VKV1"
   }
 
   description = "ALB zone id"
@@ -507,4 +506,43 @@ variable "prefer_legacy_ssm_policy" {
   type        = bool
   default     = true
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
+}
+
+variable "prefer_legacy_service_policy" {
+  type        = bool
+  default     = true
+  description = "Whether to use AWSElasticBeanstalkService (deprecated) or AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy policy"
+}
+
+variable "s3_bucket_access_log_bucket_name" {
+  type        = string
+  default     = ""
+  description = "Name of the S3 bucket where s3 access log will be sent to"
+}
+
+variable "s3_bucket_versioning_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the s3 origin bucket will have versioning enabled"
+}
+
+variable "s3_bucket_encryption_enabled" {
+  type        = bool
+  default     = true
+  description = "When set to 'true' the resource will have aes256 encryption enabled by default"
+}
+
+variable "scheduled_actions" {
+  type = list(object({
+    name            = string
+    minsize         = string
+    maxsize         = string
+    desiredcapacity = string
+    starttime       = string
+    endtime         = string
+    recurrence      = string
+    suspend         = bool
+  }))
+  default     = []
+  description = "Define a list of scheduled actions"
 }

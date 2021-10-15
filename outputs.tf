@@ -14,8 +14,18 @@ output "name" {
 }
 
 output "security_group_id" {
-  value       = aws_security_group.default.id
-  description = "Security group id"
+  value       = module.security_group.id
+  description = "Elastic Beanstalk environment Security Group ID"
+}
+
+output "security_group_arn" {
+  value       = module.security_group.arn
+  description = "Elastic Beanstalk environment Security Group ARN"
+}
+
+output "security_group_name" {
+  value       = module.security_group.name
+  description = "Elastic Beanstalk environment Security Group name"
 }
 
 output "elb_zone_id" {
@@ -82,4 +92,3 @@ output "triggers" {
   description = "Autoscaling triggers in use by this environment"
   value       = aws_elastic_beanstalk_environment.default.triggers
 }
-
