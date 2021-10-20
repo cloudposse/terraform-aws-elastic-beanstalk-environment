@@ -706,6 +706,20 @@ resource "aws_elastic_beanstalk_environment" "default" {
     resource  = ""
   }
 
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "RootVolumeThroughput"
+    value     = var.root_volume_throughput
+    resource  = ""
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "RootVolumeIOPS"
+    value     = var.root_volume_iops
+    resource  = ""
+  }
+
   dynamic "setting" {
     for_each = var.ami_id == null ? [] : [var.ami_id]
     content {

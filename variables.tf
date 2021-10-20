@@ -342,6 +342,18 @@ variable "root_volume_type" {
   description = "The type of the EBS root volume"
 }
 
+variable "root_volume_iops" {
+  type        = string
+  default     = ""
+  description = "The IOPS of the EBS root volume (only applies for gp3 and io1 types)"
+}
+
+variable "root_volume_throughput" {
+  type        = string
+  default     = ""
+  description = "The type of the EBS root volume (only applies for gp3 type)"
+}
+
 variable "autoscale_measure_name" {
   type        = string
   default     = "CPUUtilization"
