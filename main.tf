@@ -389,7 +389,7 @@ locals {
     {
       namespace = "aws:elb:policies"
       name      = "ConnectionSettingIdleTimeout"
-      value     = var.loadbalancer_classic_connection_idle_timeout
+      value     = var.loadbalancer_connection_idle_timeout
     },
     {
       namespace = "aws:elb:policies"
