@@ -295,6 +295,7 @@ data "aws_iam_policy_document" "extended" {
 resource "aws_iam_instance_profile" "ec2" {
   name = "${module.this.id}-eb-ec2"
   role = aws_iam_role.ec2.name
+  tags = module.this.tags
 }
 
 module "security_group" {
