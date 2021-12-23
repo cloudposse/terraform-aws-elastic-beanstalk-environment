@@ -26,6 +26,12 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
+variable "shared_loadbalancer_arn" {
+  type        = string
+  default     = ""
+  description = "arn of shared application load balancer. Only when loadbalancer_type = \"application\". https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html"
+}
+
 variable "loadbalancer_crosszone" {
   type        = bool
   default     = true

@@ -399,6 +399,32 @@ locals {
     },
   ]
 
+  generic_alb_settings = [
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SecurityGroups"
+      value     = join(",", sort(var.loadbalancer_security_groups))
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "ManagedSecurityGroup"
+      value     = var.loadbalancer_managed_security_group
+    }    
+  ]
+
+  shared_alb_settings = [
+    {
+      namespace = "aws:elasticbeanstalk:environment"
+      name      = "LoadBalancerIsShared"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SharedLoadBalancer"
+      value     = var.shared_loadbalancer_arn
+    }
+  ]
+
   alb_settings = [
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -409,16 +435,6 @@ locals {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Enabled"
       value     = "true"
-    },
-    {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "SecurityGroups"
-      value     = join(",", sort(var.loadbalancer_security_groups))
-    },
-    {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "ManagedSecurityGroup"
-      value     = var.loadbalancer_managed_security_group
     },
     {
       namespace = "aws:elbv2:listener:default"
@@ -470,7 +486,6 @@ locals {
       name      = "ELBSubnets"
       value     = join(",", sort(var.loadbalancer_subnets))
     },
-
     {
       namespace = "aws:ec2:vpc"
       name      = "ELBScheme"
@@ -495,10 +510,11 @@ locals {
 
   # Select elb configuration depending on loadbalancer_type
   elb_settings_nlb    = var.loadbalancer_type == "network" ? concat(local.nlb_settings, local.generic_elb_settings) : []
-  elb_settings_alb    = var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) : []
+  elb_settings_alb    = var.loadbalancer_type == "application" && var.shared_loadbalancer_arn == "" ? concat(local.alb_settings, local.generic_alb_settings, local.generic_elb_settings) : []
+  elb_settings_shared_alb  = var.loadbalancer_type == "application" && var.shared_loadbalancer_arn != "" ? concat(local.shared_alb_settings, local.generic_alb_settings, local.generic_elb_settings) : []  
   elb_setting_classic = var.loadbalancer_type == "classic" ? concat(local.classic_elb_settings, local.generic_elb_settings) : []
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
-  elb_settings_final = var.tier == "WebServer" ? concat(local.elb_settings_nlb, local.elb_settings_alb, local.elb_setting_classic) : []
+  elb_settings_final = var.tier == "WebServer" ? concat(local.elb_settings_nlb, local.elb_settings_alb, local.elb_settings_shared_alb, local.elb_setting_classic) : []
 }
 
 #
