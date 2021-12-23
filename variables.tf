@@ -26,10 +26,24 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
+# Specifying this var instead of using shared_loadbalancer_arn avoid plan result like 
+#       + setting {
+#         + name      = (known after apply)
+#         + namespace = (known after apply)
+#         + resource  = (known after apply)
+#         + value     = (known after apply)
+#       }
+variable "loadbalancer_is_shared" {
+  type        = bool
+  default     = false
+  description = "Use this configuration to create a shared application loadbalancer. Only when loadbalancer_type = \"application\" https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html"
+}
+
+
 variable "shared_loadbalancer_arn" {
   type        = string
   default     = ""
-  description = "arn of shared application load balancer. Only when loadbalancer_type = \"application\". https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html"
+  description = "arn of shared application load balancer. Only when loadbalancer_type = \"application\"."
 }
 
 variable "loadbalancer_crosszone" {
