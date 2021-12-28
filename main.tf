@@ -404,12 +404,7 @@ locals {
       namespace = "aws:elbv2:loadbalancer"
       name      = "SecurityGroups"
       value     = join(",", sort(var.loadbalancer_security_groups))
-    },
-    {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "ManagedSecurityGroup"
-      value     = var.loadbalancer_managed_security_group
-    }    
+    }
   ]
 
   shared_alb_settings = [
@@ -440,6 +435,11 @@ locals {
       namespace = "aws:elbv2:listener:default"
       name      = "ListenerEnabled"
       value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "ManagedSecurityGroup"
+      value     = var.loadbalancer_managed_security_group
     },
     {
       namespace = "aws:elbv2:listener:443"
