@@ -399,11 +399,32 @@ locals {
     },
   ]
 
+  generic_alb_settings = [
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SecurityGroups"
+      value     = join(",", sort(var.loadbalancer_security_groups))
+    }
+  ]
+
+  shared_alb_settings = [
+    {
+      namespace = "aws:elasticbeanstalk:environment"
+      name      = "LoadBalancerIsShared"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "SharedLoadBalancer"
+      value     = var.shared_loadbalancer_arn
+    }
+  ]
+
   alb_settings = [
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
-      value     = join("", sort(aws_s3_bucket.elb_logs.*.id))
+      value     = ! var.loadbalancer_is_shared ? join("", sort(aws_s3_bucket.elb_logs.*.id)) : ""
     },
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -411,19 +432,14 @@ locals {
       value     = "true"
     },
     {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "SecurityGroups"
-      value     = join(",", sort(var.loadbalancer_security_groups))
+      namespace = "aws:elbv2:listener:default"
+      name      = "ListenerEnabled"
+      value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
     },
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "ManagedSecurityGroup"
       value     = var.loadbalancer_managed_security_group
-    },
-    {
-      namespace = "aws:elbv2:listener:default"
-      name      = "ListenerEnabled"
-      value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
     },
     {
       namespace = "aws:elbv2:listener:443"
@@ -464,22 +480,21 @@ locals {
     }
   ]
 
+  # Settings for all loadbalancer_type possibilities (check for shared alb compatibility before adding a setting in this part)
   generic_elb_settings = [
-    {
-      namespace = "aws:ec2:vpc"
-      name      = "ELBSubnets"
-      value     = join(",", sort(var.loadbalancer_subnets))
-    },
-
-    {
-      namespace = "aws:ec2:vpc"
-      name      = "ELBScheme"
-      value     = var.environment_type == "LoadBalanced" ? var.elb_scheme : ""
-    },
     {
       namespace = "aws:elasticbeanstalk:environment"
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
+    },
+  ]
+
+  # Settings for beanstalk managed elb only (so not for shared ALB)
+  beanstalk_elb_settings = [
+    {
+      namespace = "aws:ec2:vpc"
+      name      = "ELBSubnets"
+      value     = join(",", sort(var.loadbalancer_subnets))
     },
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
@@ -490,15 +505,22 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Protocol"
       value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
+    },
+    {
+      namespace = "aws:ec2:vpc"
+      name      = "ELBScheme"
+      value     = var.environment_type == "LoadBalanced" ? var.elb_scheme : ""
     }
   ]
 
   # Select elb configuration depending on loadbalancer_type
-  elb_settings_nlb    = var.loadbalancer_type == "network" ? concat(local.nlb_settings, local.generic_elb_settings) : []
-  elb_settings_alb    = var.loadbalancer_type == "application" ? concat(local.alb_settings, local.generic_elb_settings) : []
-  elb_setting_classic = var.loadbalancer_type == "classic" ? concat(local.classic_elb_settings, local.generic_elb_settings) : []
+  elb_settings_nlb        = var.loadbalancer_type == "network" ? concat(local.nlb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
+  elb_settings_alb        = var.loadbalancer_type == "application" && ! var.loadbalancer_is_shared ? concat(local.alb_settings, local.generic_alb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
+  elb_settings_shared_alb = var.loadbalancer_type == "application" && var.loadbalancer_is_shared ? concat(local.shared_alb_settings, local.generic_alb_settings, local.generic_elb_settings) : []
+  elb_setting_classic     = var.loadbalancer_type == "classic" ? concat(local.classic_elb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
+
   # If the tier is "WebServer" add the elb_settings, otherwise exclude them
-  elb_settings_final = var.tier == "WebServer" ? concat(local.elb_settings_nlb, local.elb_settings_alb, local.elb_setting_classic) : []
+  elb_settings_final = var.tier == "WebServer" ? concat(local.elb_settings_nlb, local.elb_settings_alb, local.elb_settings_shared_alb, local.elb_setting_classic) : []
 }
 
 #
@@ -975,7 +997,7 @@ data "aws_elb_service_account" "main" {
 }
 
 data "aws_iam_policy_document" "elb_logs" {
-  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" ? 1 : 0
+  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && ! var.loadbalancer_is_shared ? 1 : 0
 
   statement {
     sid = ""
@@ -1002,7 +1024,7 @@ resource "aws_s3_bucket" "elb_logs" {
   #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
   #bridgecrew:skip=CKV_AWS_52:Skipping `Ensure S3 bucket has MFA delete enabled` due to issue in terraform (https://github.com/hashicorp/terraform-provider-aws/issues/629).
   #bridgecrew:skip=BC_AWS_S3_16:Skipping since adding count condition sounds like to trigger an error. (https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/pull/182)
-  count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" ? 1 : 0
+  count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && ! var.loadbalancer_is_shared ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
@@ -1036,7 +1058,7 @@ resource "aws_s3_bucket" "elb_logs" {
 
 module "dns_hostname" {
   source   = "cloudposse/route53-cluster-hostname/aws"
-  version  = "0.12.2"
+  version  = "0.12.0"
   enabled  = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
   zone_id  = var.dns_zone_id
