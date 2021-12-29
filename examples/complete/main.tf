@@ -4,7 +4,7 @@ provider "aws" {
 
 module "vpc" {
   source     = "cloudposse/vpc/aws"
-  version    = "0.18.1"
+  version    = "0.28.1"
   cidr_block = "172.16.0.0/16"
 
   context = module.this.context
@@ -12,7 +12,7 @@ module "vpc" {
 
 module "subnets" {
   source               = "cloudposse/dynamic-subnets/aws"
-  version              = "0.33.0"
+  version              = "0.39.8"
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
   igw_id               = module.vpc.igw_id
@@ -25,7 +25,7 @@ module "subnets" {
 
 module "elastic_beanstalk_application" {
   source      = "cloudposse/elastic-beanstalk-application/aws"
-  version     = "0.8.0"
+  version     = "0.11.1"
   description = "Test elastic_beanstalk_application"
 
   context = module.this.context
@@ -82,7 +82,7 @@ module "elastic_beanstalk_environment" {
       cidr_blocks              = []
       source_security_group_id = module.vpc.vpc_default_security_group_id
       description              = "Allow all inbound traffic from trusted Security Groups"
-    },
+    }
   ]
 
   rolling_update_enabled  = var.rolling_update_enabled
