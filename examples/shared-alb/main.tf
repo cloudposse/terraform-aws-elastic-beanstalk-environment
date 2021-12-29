@@ -23,12 +23,12 @@ module "subnets" {
   context = module.this.context
 }
 
-  module "alb" {
-    source = "cloudposse/alb/aws"
-    version     = "0.36.0"
-    vpc_id                                  = module.vpc.vpc_id
-    subnet_ids                              = module.subnets.public_subnet_ids
-  }
+module "alb" {
+  source     = "cloudposse/alb/aws"
+  version    = "0.36.0"
+  vpc_id     = module.vpc.vpc_id
+  subnet_ids = module.subnets.public_subnet_ids
+}
 
 module "elastic_beanstalk_application" {
   source      = "cloudposse/elastic-beanstalk-application/aws"
@@ -52,9 +52,9 @@ module "elastic_beanstalk_environment" {
   loadbalancer_is_shared             = var.loadbalancer_is_shared
   shared_loadbalancer_arn            = module.alb.alb_arn
 
-  tier                               = var.tier
-  version_label                      = var.version_label
-  force_destroy                      = var.force_destroy
+  tier          = var.tier
+  version_label = var.version_label
+  force_destroy = var.force_destroy
 
   instance_type    = var.instance_type
   root_volume_size = var.root_volume_size
