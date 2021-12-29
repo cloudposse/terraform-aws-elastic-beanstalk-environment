@@ -3,16 +3,18 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "cloudposse/vpc/aws"
-  version    = "0.28.1"
+  source  = "cloudposse/vpc/aws"
+  version = "0.28.1"
+
   cidr_block = "172.16.0.0/16"
 
   context = module.this.context
 }
 
 module "subnets" {
-  source               = "cloudposse/dynamic-subnets/aws"
-  version              = "0.39.8"
+  source  = "cloudposse/dynamic-subnets/aws"
+  version = "0.39.8"
+
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
   igw_id               = module.vpc.igw_id
@@ -24,11 +26,14 @@ module "subnets" {
 }
 
 module "alb" {
-  source              = "cloudposse/alb/aws"
-  version             = "0.36.0"
+  source  = "cloudposse/alb/aws"
+  version = "0.36.0"
+
   vpc_id              = module.vpc.vpc_id
   subnet_ids          = module.subnets.public_subnet_ids
   access_logs_enabled = false
+
+  context = module.this.context
 }
 
 module "elastic_beanstalk_application" {
