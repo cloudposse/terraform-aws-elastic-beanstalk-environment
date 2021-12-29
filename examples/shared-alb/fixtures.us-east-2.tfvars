@@ -88,7 +88,7 @@ scheduled_actions = [
     maxsize         = "2"
     desiredcapacity = "2"
     starttime       = "2015-05-14T07:00:00Z"
-    endtime         = "2016-01-12T07:00:00Z"
+    endtime         = "2025-01-12T07:00:00Z"
     recurrence      = "*/20 * * * *"
     suspend         = false
   }
