@@ -33,6 +33,8 @@ module "alb" {
   subnet_ids          = module.subnets.public_subnet_ids
   access_logs_enabled = false
 
+  # This additional attribute is required since both the `alb` module and `elastic_beanstalk_environment` module
+  # create Security Groups with the names derived from the context (this would conflict without this additional attribute)
   attributes = ["shared"]
 
   context = module.this.context
