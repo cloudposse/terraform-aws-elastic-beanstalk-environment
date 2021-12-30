@@ -6,7 +6,7 @@ namespace = "eg"
 
 stage = "test"
 
-name = "elastic-beanstalk-env"
+name = "eb-env-shared-alb"
 
 description = "Test elastic-beanstalk-environment"
 
@@ -62,7 +62,7 @@ solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.
 
 version_label = ""
 
-dns_zone_id = "Z3SO0TKDDQ0RGG"
+dns_zone_id = ""
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [
