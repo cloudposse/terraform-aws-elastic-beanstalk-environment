@@ -49,11 +49,14 @@ related:
     description: "Terraform Module to define an ElasticBeanstalk Application"
     url: "https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application"
   - name: "geodesic"
-    description: " Geodesic is the fastest way to get up and running with a rock solid, production grade cloud platform built on strictly Open Source tools."
+    description: "Geodesic is the fastest way to get up and running with a rock solid, production grade cloud platform built on strictly Open Source tools."
     url: "https://github.com/cloudposse/geodesic"
   - name: "terraform-aws-elasticache-cloudwatch-sns-alarms"
-    description: " Terraform module that configures CloudWatch SNS alerts for ElastiCache"
+    description: "Terraform module that configures CloudWatch SNS alerts for ElastiCache"
     url: "https://github.com/cloudposse/terraform-aws-elasticache-cloudwatch-sns-alarms"
+  - name: "General options for all Elastic Beanstalk environments"
+    description: "General configuration options for all Elastic Beanstalk environments"
+    url: "https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html"
 
 # Short description of this project
 description: |-
