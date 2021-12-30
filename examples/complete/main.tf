@@ -26,7 +26,7 @@ module "subnets" {
 module "elastic_beanstalk_application" {
   source      = "cloudposse/elastic-beanstalk-application/aws"
   version     = "0.11.1"
-  description = "Test elastic_beanstalk_application"
+  description = "Test Elastic Beanstalk application"
 
   context = module.this.context
 }
@@ -64,6 +64,7 @@ module "elastic_beanstalk_environment" {
   vpc_id               = module.vpc.vpc_id
   loadbalancer_subnets = module.subnets.public_subnet_ids
   application_subnets  = module.subnets.private_subnet_ids
+
   security_group_rules = [
     {
       type                     = "egress"
