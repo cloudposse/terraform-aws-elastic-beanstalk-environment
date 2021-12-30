@@ -105,6 +105,9 @@ module "elastic_beanstalk_environment" {
   healthcheck_healthy_threshold_count   = 3
   healthcheck_unhealthy_threshold_count = 3
 
+  # Health check interval must be either 10 seconds or 30 seconds for Network Load Balancers
+  healthcheck_interval = 30
+
   context = module.this.context
 }
 

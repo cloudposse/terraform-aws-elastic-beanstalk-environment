@@ -512,7 +512,7 @@ variable "scheduled_actions" {
 
 variable "healthcheck_interval" {
   type        = number
-  default     = 15
+  default     = 10
   description = "The interval of time, in seconds, that Elastic Load Balancing checks the health of the Amazon EC2 instances of your application"
 }
 
