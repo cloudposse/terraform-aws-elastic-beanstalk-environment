@@ -263,6 +263,7 @@ data "aws_iam_policy_document" "default" {
     resources = [
       #bridgecrew:skip=BC_AWS_IAM_57:Skipping "Ensure IAM policies does not allow write access without constraint"
       #bridgecrew:skip=BC_AWS_IAM_56:Skipping "Ensure IAM policies do not allow permissions management / resource exposure without constraint"
+      #bridgecrew:skip=BC_AWS_IAM_55:Skipping "Ensure IAM policies do not allow data exfiltration"
       "arn:${local.partition}:s3:::*"
     ]
 
