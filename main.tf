@@ -1,7 +1,10 @@
-data "aws_partition" "current" {}
-
 locals {
-  partition = data.aws_partition.current.partition
+  enabled   = module.this.enabled
+  partition = join("", data.aws_partition.current.*.partition)
+}
+
+data "aws_partition" "current" {
+  count = local.enabled ? 1 : 0
 }
 
 #
@@ -29,7 +32,7 @@ resource "aws_iam_role" "service" {
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
-  count      = var.enhanced_reporting_enabled ? 1 : 0
+  count      = local.enabled && var.enhanced_reporting_enabled ? 1 : 0
   role       = aws_iam_role.service.name
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }

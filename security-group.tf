@@ -2,7 +2,7 @@ module "aws_security_group" {
   source  = "cloudposse/security-group/aws"
   version = "0.4.3"
 
-  enabled = module.this.enabled && var.create_security_group
+  enabled = local.enabled && var.create_security_group
 
   security_group_name        = length(var.security_group_name) > 0 ? var.security_group_name : [module.this.id]
   security_group_description = var.security_group_description

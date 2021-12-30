@@ -112,8 +112,9 @@ For a complete example, see [examples/complete](examples/complete)
   }
   
   module "vpc" {
-    source     = "cloudposse/vpc/aws"
-    version    = "0.28.1"
+    source = "cloudposse/vpc/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    version = "x.x.x"
     
     cidr_block = "172.16.0.0/16"
 
@@ -121,8 +122,9 @@ For a complete example, see [examples/complete](examples/complete)
   }
   
   module "subnets" {
-    source               = "cloudposse/dynamic-subnets/aws"
-    version              = "0.39.8"
+    source = "cloudposse/dynamic-subnets/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    version = "x.x.x"
     
     availability_zones   = var.availability_zones
     vpc_id               = module.vpc.vpc_id
@@ -135,8 +137,9 @@ For a complete example, see [examples/complete](examples/complete)
   }
   
   module "elastic_beanstalk_application" {
-    source      = "cloudposse/elastic-beanstalk-application/aws"
-    version     = "0.11.1"
+    source = "cloudposse/elastic-beanstalk-application/aws"
+    # Cloud Posse recommends pinning every module to a specific version
+    version = "x.x.x"
     
     description = "Test Elastic Beanstalk application"
   
