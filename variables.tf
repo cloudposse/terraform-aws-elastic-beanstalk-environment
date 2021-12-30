@@ -530,7 +530,7 @@ variable "healthcheck_healthy_threshold_count" {
 
 variable "healthcheck_unhealthy_threshold_count" {
   type        = number
-  default     = 5
+  default     = 3
   description = "The number of consecutive unsuccessful requests before Elastic Load Balancing changes the instance health status"
 }
 

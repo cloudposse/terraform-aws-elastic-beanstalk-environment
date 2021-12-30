@@ -101,6 +101,10 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
 
+  # Unhealthy threshold count and healthy threshold count must be the same for Network Load Balancers
+  healthcheck_healthy_threshold_count   = 3
+  healthcheck_unhealthy_threshold_count = 3
+
   context = module.this.context
 }
 
