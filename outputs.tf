@@ -14,17 +14,17 @@ output "name" {
 }
 
 output "security_group_id" {
-  value       = module.security_group.id
+  value       = module.aws_security_group.id
   description = "Elastic Beanstalk environment Security Group ID"
 }
 
 output "security_group_arn" {
-  value       = module.security_group.arn
+  value       = module.aws_security_group.arn
   description = "Elastic Beanstalk environment Security Group ARN"
 }
 
 output "security_group_name" {
-  value       = module.security_group.name
+  value       = module.aws_security_group.name
   description = "Elastic Beanstalk environment Security Group name"
 }
 
