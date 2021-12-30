@@ -1,3 +1,9 @@
+data "aws_partition" "current" {}
+
+locals {
+  partition = data.aws_partition.current.partition
+}
+
 #
 # Service
 #
@@ -25,12 +31,12 @@ resource "aws_iam_role" "service" {
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
   count      = var.enhanced_reporting_enabled ? 1 : 0
   role       = aws_iam_role.service.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
+  policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
   role       = aws_iam_role.service.name
-  policy_arn = var.prefer_legacy_service_policy ? "arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
+  policy_arn = var.prefer_legacy_service_policy ? "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
 #
@@ -70,7 +76,7 @@ data "aws_iam_policy_document" "ec2" {
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
+  policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
 resource "aws_iam_role" "ec2" {
@@ -87,17 +93,17 @@ resource "aws_iam_role_policy" "default" {
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier"
+  policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
+  policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
   role       = aws_iam_role.ec2.name
-  policy_arn = var.prefer_legacy_ssm_policy ? "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+  policy_arn = var.prefer_legacy_ssm_policy ? "arn:${local.partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:${local.partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
   lifecycle {
     create_before_destroy = true
@@ -106,7 +112,7 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole"
+  policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
     create_before_destroy = true
@@ -117,7 +123,7 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
   role       = aws_iam_role.ec2.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+  policy_arn = "arn:${local.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ssm_activation" "ec2" {
@@ -251,7 +257,7 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      "arn:aws:s3:::*"
+      "arn:${local.partition}:s3:::*"
     ]
 
     effect = "Allow"
@@ -265,7 +271,7 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      "arn:aws:logs:*:*:log-group:/aws/elasticbeanstalk*"
+      "arn:${local.partition}:logs:*:*:log-group:/aws/elasticbeanstalk*"
     ]
 
     effect = "Allow"
@@ -279,8 +285,8 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      "arn:aws:cloudformation:*:*:stack/awseb-*",
-      "arn:aws:cloudformation:*:*:stack/eb-*"
+      "arn:${local.partition}:cloudformation:*:*:stack/awseb-*",
+      "arn:${local.partition}:cloudformation:*:*:stack/eb-*"
     ]
 
     effect = "Allow"
@@ -480,13 +486,13 @@ locals {
     }
   ]
 
-  # Settings for all loadbalancer_type possibilities (check for shared alb compatibility before adding a setting in this part)
+  # Settings for all loadbalancer types (including shared ALB)
   generic_elb_settings = [
     {
       namespace = "aws:elasticbeanstalk:environment"
       name      = "LoadBalancerType"
       value     = var.loadbalancer_type
-    },
+    }
   ]
 
   # Settings for beanstalk managed elb only (so not for shared ALB)
@@ -510,6 +516,31 @@ locals {
       namespace = "aws:ec2:vpc"
       name      = "ELBScheme"
       value     = var.environment_type == "LoadBalanced" ? var.elb_scheme : ""
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckInterval"
+      value     = var.healthcheck_interval
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckTimeout"
+      value     = var.healthcheck_timeout
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthyThresholdCount"
+      value     = var.healthcheck_healthy_threshold_count
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "UnhealthyThresholdCount"
+      value     = var.healthcheck_unhealthy_threshold_count
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "MatcherHTTPCode"
+      value     = join(",", sort(var.healthcheck_httpcodes_to_match))
     }
   ]
 
@@ -639,6 +670,13 @@ resource "aws_elastic_beanstalk_environment" "default" {
   }
 
   setting {
+    namespace = "aws:autoscaling:asg"
+    name      = "EnableCapacityRebalancing"
+    value     = var.enable_capacity_rebalancing
+    resource  = ""
+  }
+
+  setting {
     namespace = "aws:autoscaling:updatepolicy:rollingupdate"
     name      = "RollingUpdateEnabled"
     value     = var.rolling_update_enabled
@@ -727,6 +765,26 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "RootVolumeType"
     value     = var.root_volume_type
     resource  = ""
+  }
+
+  dynamic "setting" {
+    for_each = var.root_volume_throughput == null ? [] : [var.root_volume_throughput]
+    content {
+      namespace = "aws:autoscaling:launchconfiguration"
+      name      = "RootVolumeThroughput"
+      value     = setting.value
+      resource  = ""
+    }
+  }
+
+  dynamic "setting" {
+    for_each = var.root_volume_iops == null ? [] : [var.root_volume_iops]
+    content {
+      namespace = "aws:autoscaling:launchconfiguration"
+      name      = "RootVolumeIOPS"
+      value     = setting.value
+      resource  = ""
+    }
   }
 
   dynamic "setting" {
@@ -1007,7 +1065,7 @@ data "aws_iam_policy_document" "elb_logs" {
     ]
 
     resources = [
-      "arn:aws:s3:::${module.this.id}-eb-loadbalancer-logs/*"
+      "arn:${local.partition}:s3:::${module.this.id}-eb-loadbalancer-logs/*"
     ]
 
     principals {
@@ -1060,9 +1118,11 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 
 module "dns_hostname" {
-  source   = "cloudposse/route53-cluster-hostname/aws"
-  version  = "0.12.0"
-  enabled  = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
+  source  = "cloudposse/route53-cluster-hostname/aws"
+  version = "0.12.2"
+
+  enabled = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
+
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
   zone_id  = var.dns_zone_id
   records  = [aws_elastic_beanstalk_environment.default.cname]

@@ -552,3 +552,51 @@ variable "scheduled_actions" {
   default     = []
   description = "Define a list of scheduled actions"
 }
+
+variable "healthcheck_interval" {
+  type        = number
+  default     = 15
+  description = "The interval of time, in seconds, that Elastic Load Balancing checks the health of the Amazon EC2 instances of your application"
+}
+
+variable "healthcheck_timeout" {
+  type        = number
+  default     = 5
+  description = "The amount of time, in seconds, to wait for a response during a health check. Note that this option is only applicable to environments with an application load balancer"
+}
+
+variable "healthcheck_healthy_threshold_count" {
+  type        = number
+  default     = 3
+  description = "The number of consecutive successful requests before Elastic Load Balancing changes the instance health status"
+}
+
+variable "healthcheck_unhealthy_threshold_count" {
+  type        = number
+  default     = 5
+  description = "The number of consecutive unsuccessful requests before Elastic Load Balancing changes the instance health status"
+}
+
+variable "healthcheck_httpcodes_to_match" {
+  type        = list(string)
+  default     = ["200"]
+  description = "A comma-separated list of HTTP code(s) that indicate that an instance is healthy. Note that this option is only applicable to environments with a network or application load balancer"
+}
+
+variable "root_volume_iops" {
+  type        = number
+  default     = null
+  description = "The IOPS of the EBS root volume (only applies for gp3 and io1 types)"
+}
+
+variable "root_volume_throughput" {
+  type        = number
+  default     = null
+  description = "The type of the EBS root volume (only applies for gp3 type)"
+}
+
+variable "enable_capacity_rebalancing" {
+  type        = bool
+  default     = false
+  description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
+}

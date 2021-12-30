@@ -129,6 +129,7 @@ usage: |-
       vpc_id               = module.vpc.vpc_id
       loadbalancer_subnets = module.subnets.public_subnet_ids
       application_subnets  = module.subnets.private_subnet_ids
+      
       security_group_rules = [
         {
           type                     = "egress"
@@ -145,10 +146,11 @@ usage: |-
           to_port                  = 65535
           protocol                 = "-1"
           source_security_group_id = [module.vpc.vpc_default_security_group_id]
-          cidr_blocks              = null
+          cidr_blocks              = []
           description              = "Allow all ingress traffic from trusted Security Groups"
         },
       ]
+      
       prefer_legacy_service_policy = false
 
       // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
