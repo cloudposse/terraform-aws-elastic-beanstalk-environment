@@ -468,6 +468,11 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "MatcherHTTPCode"
       value     = join(",", sort(var.healthcheck_httpcodes_to_match))
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "HealthCheckTimeout"
+      value     = var.healthcheck_timeout
     }
   ]
 
@@ -514,11 +519,6 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "HealthCheckInterval"
       value     = var.healthcheck_interval
-    },
-    {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "HealthCheckTimeout"
-      value     = var.healthcheck_timeout
     },
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
