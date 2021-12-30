@@ -41,15 +41,17 @@ module "alb" {
 }
 
 module "elastic_beanstalk_application" {
-  source      = "cloudposse/elastic-beanstalk-application/aws"
-  version     = "0.11.1"
+  source  = "cloudposse/elastic-beanstalk-application/aws"
+  version = "0.11.1"
+
   description = "Test Elastic Beanstalk application"
 
   context = module.this.context
 }
 
 module "elastic_beanstalk_environment" {
-  source                     = "../../"
+  source = "../../"
+
   description                = var.description
   region                     = var.region
   availability_zone_selector = var.availability_zone_selector
@@ -84,22 +86,12 @@ module "elastic_beanstalk_environment" {
   loadbalancer_subnets = module.subnets.public_subnet_ids
   application_subnets  = module.subnets.private_subnet_ids
 
-  security_group_rules = [
-    {
-      type                     = "egress"
-      from_port                = 0
-      to_port                  = 65535
-      protocol                 = "-1"
-      cidr_blocks              = ["0.0.0.0/0"]
-      source_security_group_id = null
-      description              = "Allow all outbound traffic"
-    },
+  additional_security_group_rules = [
     {
       type                     = "ingress"
       from_port                = 0
       to_port                  = 65535
       protocol                 = "-1"
-      cidr_blocks              = []
       source_security_group_id = module.vpc.vpc_default_security_group_id
       description              = "Allow all inbound traffic from trusted Security Groups"
     }
@@ -121,7 +113,8 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_ssm_policy     = false
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
-  context                      = module.this.context
+
+  context = module.this.context
 }
 
 data "aws_iam_policy_document" "minimal_s3_permissions" {

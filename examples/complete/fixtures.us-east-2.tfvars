@@ -26,7 +26,6 @@ autoscale_max = 2
 
 wait_for_ready_timeout = "20m"
 
-
 force_destroy = true
 
 rolling_update_enabled = true
@@ -89,17 +88,3 @@ env_vars = {
   "DB_PASSWORD"     = "zzzzzzzzzzzzzzzzzzz"
   "ANOTHER_ENV_VAR" = "123456789"
 }
-
-// https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-autoscaling-scheduledactions.html
-scheduled_actions = [
-  {
-    name            = "Refreshinstances"
-    minsize         = "1"
-    maxsize         = "2"
-    desiredcapacity = "2"
-    starttime       = "2015-05-14T07:00:00Z"
-    endtime         = "2025-01-12T07:00:00Z"
-    recurrence      = "*/20 * * * *"
-    suspend         = false
-  }
-]

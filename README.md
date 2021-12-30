@@ -110,110 +110,115 @@ For a complete example, see [examples/complete](examples/complete)
   provider "aws" {
     region = var.region
   }
-
+  
   module "vpc" {
-    source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.0"
-    namespace  = var.namespace
-    stage      = var.stage
-    name       = var.name
+    source     = "cloudposse/vpc/aws"
+    version    = "0.28.1"
+    
     cidr_block = "172.16.0.0/16"
-  }
 
+    context = module.this.context
+  }
+  
   module "subnets" {
-    source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.0"
+    source               = "cloudposse/dynamic-subnets/aws"
+    version              = "0.39.8"
+    
     availability_zones   = var.availability_zones
-    namespace            = var.namespace
-    stage                = var.stage
-    name                 = var.name
     vpc_id               = module.vpc.vpc_id
     igw_id               = module.vpc.igw_id
     cidr_block           = module.vpc.vpc_cidr_block
     nat_gateway_enabled  = true
     nat_instance_enabled = false
+  
+    context = module.this.context
   }
-
+  
   module "elastic_beanstalk_application" {
-    source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.3.0"
-    namespace   = var.namespace
-    stage       = var.stage
-    name        = var.name
-    description = "Test elastic_beanstalk_application"
+    source      = "cloudposse/elastic-beanstalk-application/aws"
+    version     = "0.11.1"
+    
+    description = "Test Elastic Beanstalk application"
+  
+    context = module.this.context
   }
-
+  
   module "elastic_beanstalk_environment" {
-    source = "cloudposse/elastic-beanstalk-environment/aws"
-    # Cloud Posse recommends pinning every module to a specific version
-    # version = "x.x.x"
-    namespace                          = var.namespace
-    stage                              = var.stage
-    name                               = var.name
-    description                        = "Test elastic_beanstalk_environment"
-    region                             = var.region
-    availability_zone_selector         = "Any 2"
-    dns_zone_id                        = var.dns_zone_id
+    source                     = "../../"
+  
+    description                = var.description
+    region                     = var.region
+    availability_zone_selector = var.availability_zone_selector
+    dns_zone_id                = var.dns_zone_id
+  
+    wait_for_ready_timeout             = var.wait_for_ready_timeout
     elastic_beanstalk_application_name = module.elastic_beanstalk_application.elastic_beanstalk_application_name
-
-    instance_type           = "t3.small"
-    autoscale_min           = 1
-    autoscale_max           = 2
-    updating_min_in_service = 0
-    updating_max_batch      = 1
-
-    loadbalancer_type    = "application"
+    environment_type                   = var.environment_type
+    loadbalancer_type                  = var.loadbalancer_type
+    elb_scheme                         = var.elb_scheme
+    tier                               = var.tier
+    version_label                      = var.version_label
+    force_destroy                      = var.force_destroy
+  
+    instance_type    = var.instance_type
+    root_volume_size = var.root_volume_size
+    root_volume_type = var.root_volume_type
+  
+    autoscale_min             = var.autoscale_min
+    autoscale_max             = var.autoscale_max
+    autoscale_measure_name    = var.autoscale_measure_name
+    autoscale_statistic       = var.autoscale_statistic
+    autoscale_unit            = var.autoscale_unit
+    autoscale_lower_bound     = var.autoscale_lower_bound
+    autoscale_lower_increment = var.autoscale_lower_increment
+    autoscale_upper_bound     = var.autoscale_upper_bound
+    autoscale_upper_increment = var.autoscale_upper_increment
+  
     vpc_id               = module.vpc.vpc_id
     loadbalancer_subnets = module.subnets.public_subnet_ids
     application_subnets  = module.subnets.private_subnet_ids
-    
-    security_group_rules = [
-      {
-        type                     = "egress"
-        from_port                = 0
-        to_port                  = 65535
-        protocol                 = "-1"
-        cidr_blocks              = ["0.0.0.0/0"]
-        source_security_group_id = null
-        description              = "Allow all outbound traffic"
-      },
+  
+    additional_security_group_rules = [
       {
         type                     = "ingress"
         from_port                = 0
         to_port                  = 65535
         protocol                 = "-1"
-        source_security_group_id = [module.vpc.vpc_default_security_group_id]
-        cidr_blocks              = []
-        description              = "Allow all ingress traffic from trusted Security Groups"
-      },
-    ]
-    
-    prefer_legacy_service_policy = false
-
-    // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
-    // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
-    solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.1-ce"
-
-    additional_settings = [
-      {
-        namespace = "aws:elasticbeanstalk:application:environment"
-        name      = "DB_HOST"
-        value     = "xxxxxxxxxxxxxx"
-      },
-      {
-        namespace = "aws:elasticbeanstalk:application:environment"
-        name      = "DB_USERNAME"
-        value     = "yyyyyyyyyyyyy"
-      },
-      {
-        namespace = "aws:elasticbeanstalk:application:environment"
-        name      = "DB_PASSWORD"
-        value     = "zzzzzzzzzzzzzzzzzzz"
-      },
-      {
-        namespace = "aws:elasticbeanstalk:application:environment"
-        name      = "ANOTHER_ENV_VAR"
-        value     = "123456789"
+        source_security_group_id = module.vpc.vpc_default_security_group_id
+        description              = "Allow all inbound traffic from trusted Security Groups"
       }
     ]
+  
+    rolling_update_enabled  = var.rolling_update_enabled
+    rolling_update_type     = var.rolling_update_type
+    updating_min_in_service = var.updating_min_in_service
+    updating_max_batch      = var.updating_max_batch
+  
+    healthcheck_url  = var.healthcheck_url
+    application_port = var.application_port
+  
+    solution_stack_name = var.solution_stack_name    
+    additional_settings = var.additional_settings
+    env_vars            = var.env_vars
+  
+    extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
+    prefer_legacy_ssm_policy     = false
+    prefer_legacy_service_policy = false
+    scheduled_actions            = var.scheduled_actions
+  
+    context = module.this.context
   }
+    
+  data "aws_iam_policy_document" "minimal_s3_permissions" {
+    statement {
+      sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+      actions = [
+      "s3:ListAllMyBuckets",
+      "s3:GetBucketLocation"
+    ]
+    resources = ["*"]
+  }
+}
 ```
 
 
@@ -251,8 +256,8 @@ Available targets:
 
 | Name | Source | Version |
 |------|--------|---------|
+| <a name="module_aws_security_group"></a> [aws\_security\_group](#module\_aws\_security\_group) | cloudposse/security-group/aws | 0.4.3 |
 | <a name="module_dns_hostname"></a> [dns\_hostname](#module\_dns\_hostname) | cloudposse/route53-cluster-hostname/aws | 0.12.2 |
-| <a name="module_security_group"></a> [security\_group](#module\_security\_group) | cloudposse/security-group/aws | 0.3.1 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
 
 ## Resources
@@ -286,6 +291,7 @@ Available targets:
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_additional_security_group_rules"></a> [additional\_security\_group\_rules](#input\_additional\_security\_group\_rules) | A list of Security Group rule objects to add to the created security group, in addition to the ones<br>this module normally creates. (To suppress the module's rules, set `create_security_group` to false<br>and supply your own security group via `associated_security_group_ids`.)<br>The keys and values of the objects are fully compatible with the `aws_security_group_rule` resource, except<br>for `security_group_id` which will be ignored, and the optional "key" which, if provided, must be unique and known at "plan" time.<br>To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule . | `list(any)` | `[]` | no |
 | <a name="input_additional_settings"></a> [additional\_settings](#input\_additional\_settings) | Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html | <pre>list(object({<br>    namespace = string<br>    name      = string<br>    value     = string<br>  }))</pre> | `[]` | no |
 | <a name="input_additional_tag_map"></a> [additional\_tag\_map](#input\_additional\_tag\_map) | Additional key-value pairs to add to each map in `tags_as_list_of_maps`. Not added to `tags` or `id`.<br>This is for some rare cases where resources want additional configuration of tags<br>and therefore take a list of maps with tag key, value, and additional configuration. | `map(string)` | `{}` | no |
 | <a name="input_alb_zone_id"></a> [alb\_zone\_id](#input\_alb\_zone\_id) | ALB zone id | `map(string)` | <pre>{<br>  "af-south-1": "Z1EI3BVKMKK4AM",<br>  "ap-east-1": "ZPWYUBWRU171A",<br>  "ap-northeast-1": "Z1R25G3KIG2GBW",<br>  "ap-northeast-2": "Z3JE5OI70TWKCP",<br>  "ap-south-1": "Z18NTBI3Y7N9TZ",<br>  "ap-southeast-1": "Z16FZ9L249IFLT",<br>  "ap-southeast-2": "Z2PCDNR3VC2G1N",<br>  "ca-central-1": "ZJFCZL7SSZB5I",<br>  "eu-central-1": "Z1FRNW7UH4DEZJ",<br>  "eu-north-1": "Z23GO28BZ5AETM",<br>  "eu-south-1": "Z10VDYYOA2JFKM",<br>  "eu-west-1": "Z2NYPWQ7DFZAZH",<br>  "eu-west-2": "Z1GKAAAUGATPF1",<br>  "eu-west-3": "Z3Q77PNBQS71R4",<br>  "me-south-1": "Z2BBTEKR2I36N2",<br>  "sa-east-1": "Z10X7K2B4QSOFV",<br>  "us-east-1": "Z117KPS5GTRQ2G",<br>  "us-east-2": "Z14LCN19Q5QHIC",<br>  "us-gov-east-1": "Z2NIFVYYW2VKV1",<br>  "us-gov-west-1": "Z31GFT0UA1I2HV",<br>  "us-west-1": "Z1LQECGX5PH1X",<br>  "us-west-2": "Z38NKT9BP95V3O"<br>}</pre> | no |
@@ -293,6 +299,7 @@ Available targets:
 | <a name="input_application_port"></a> [application\_port](#input\_application\_port) | Port application is listening on | `number` | `80` | no |
 | <a name="input_application_subnets"></a> [application\_subnets](#input\_application\_subnets) | List of subnets to place EC2 instances | `list(string)` | n/a | yes |
 | <a name="input_associate_public_ip_address"></a> [associate\_public\_ip\_address](#input\_associate\_public\_ip\_address) | Whether to associate public IP addresses to the instances | `bool` | `false` | no |
+| <a name="input_associated_security_group_ids"></a> [associated\_security\_group\_ids](#input\_associated\_security\_group\_ids) | A list of IDs of Security Groups to associate the created resource with, in addition to the created security group.<br>These security groups will not be modified and, if `create_security_group` is `false`, must have rules providing the desired access. | `list(string)` | `[]` | no |
 | <a name="input_attributes"></a> [attributes](#input\_attributes) | ID element. Additional attributes (e.g. `workers` or `cluster`) to add to `id`,<br>in the order they appear in the list. New attributes are appended to the<br>end of the list. The elements of the list are joined by the `delimiter`<br>and treated as a single ID element. | `list(string)` | `[]` | no |
 | <a name="input_autoscale_lower_bound"></a> [autoscale\_lower\_bound](#input\_autoscale\_lower\_bound) | Minimum level of autoscale metric to remove an instance | `number` | `20` | no |
 | <a name="input_autoscale_lower_increment"></a> [autoscale\_lower\_increment](#input\_autoscale\_lower\_increment) | How many Amazon EC2 instances to remove when performing a scaling activity. | `number` | `-1` | no |
@@ -305,6 +312,7 @@ Available targets:
 | <a name="input_autoscale_upper_increment"></a> [autoscale\_upper\_increment](#input\_autoscale\_upper\_increment) | How many Amazon EC2 instances to add when performing a scaling activity | `number` | `1` | no |
 | <a name="input_availability_zone_selector"></a> [availability\_zone\_selector](#input\_availability\_zone\_selector) | Availability Zone selector | `string` | `"Any 2"` | no |
 | <a name="input_context"></a> [context](#input\_context) | Single object for setting entire context at once.<br>See description of individual variables for details.<br>Leave string and numeric variables as `null` to use default value.<br>Individual variable settings (non-null) override settings in context object,<br>except for attributes, tags, and additional\_tag\_map, which are merged. | `any` | <pre>{<br>  "additional_tag_map": {},<br>  "attributes": [],<br>  "delimiter": null,<br>  "descriptor_formats": {},<br>  "enabled": true,<br>  "environment": null,<br>  "id_length_limit": null,<br>  "label_key_case": null,<br>  "label_order": [],<br>  "label_value_case": null,<br>  "labels_as_tags": [<br>    "unset"<br>  ],<br>  "name": null,<br>  "namespace": null,<br>  "regex_replace_chars": null,<br>  "stage": null,<br>  "tags": {},<br>  "tenant": null<br>}</pre> | no |
+| <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Set `true` to create and configure a Security Group for the cluster. | `bool` | `true` | no |
 | <a name="input_delimiter"></a> [delimiter](#input\_delimiter) | Delimiter to be used between ID elements.<br>Defaults to `-` (hyphen). Set to `""` to use no delimiter at all. | `string` | `null` | no |
 | <a name="input_deployment_batch_size"></a> [deployment\_batch\_size](#input\_deployment\_batch\_size) | Percentage or fixed number of Amazon EC2 instances in the Auto Scaling group on which to simultaneously perform deployments. Valid values vary per deployment\_batch\_size\_type setting | `number` | `1` | no |
 | <a name="input_deployment_batch_size_type"></a> [deployment\_batch\_size\_type](#input\_deployment\_batch\_size\_type) | The type of number that is specified in deployment\_batch\_size\_type | `string` | `"Fixed"` | no |
@@ -373,11 +381,11 @@ Available targets:
 | <a name="input_s3_bucket_encryption_enabled"></a> [s3\_bucket\_encryption\_enabled](#input\_s3\_bucket\_encryption\_enabled) | When set to 'true' the resource will have aes256 encryption enabled by default | `bool` | `true` | no |
 | <a name="input_s3_bucket_versioning_enabled"></a> [s3\_bucket\_versioning\_enabled](#input\_s3\_bucket\_versioning\_enabled) | When set to 'true' the s3 origin bucket will have versioning enabled | `bool` | `true` | no |
 | <a name="input_scheduled_actions"></a> [scheduled\_actions](#input\_scheduled\_actions) | Define a list of scheduled actions | <pre>list(object({<br>    name            = string<br>    minsize         = string<br>    maxsize         = string<br>    desiredcapacity = string<br>    starttime       = string<br>    endtime         = string<br>    recurrence      = string<br>    suspend         = bool<br>  }))</pre> | `[]` | no |
-| <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | The Security Group description. | `string` | `"Elastic Beanstalk environment Security Group"` | no |
-| <a name="input_security_group_enabled"></a> [security\_group\_enabled](#input\_security\_group\_enabled) | Whether to create Security Group. | `bool` | `true` | no |
-| <a name="input_security_group_rules"></a> [security\_group\_rules](#input\_security\_group\_rules) | A list of maps of Security Group rules.<br>The values of map is fully complated with `aws_security_group_rule` resource.<br>To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule . | `list(any)` | <pre>[<br>  {<br>    "cidr_blocks": [<br>      "0.0.0.0/0"<br>    ],<br>    "description": "Allow all outbound traffic",<br>    "from_port": 0,<br>    "protocol": "-1",<br>    "to_port": 65535,<br>    "type": "egress"<br>  }<br>]</pre> | no |
-| <a name="input_security_group_use_name_prefix"></a> [security\_group\_use\_name\_prefix](#input\_security\_group\_use\_name\_prefix) | Whether to create a default Security Group with unique name beginning with the normalized prefix. | `bool` | `false` | no |
-| <a name="input_security_groups"></a> [security\_groups](#input\_security\_groups) | A list of Security Group IDs to associate with EC2 instances. | `list(string)` | `[]` | no |
+| <a name="input_security_group_create_before_destroy"></a> [security\_group\_create\_before\_destroy](#input\_security\_group\_create\_before\_destroy) | Set `true` to enable Terraform `create_before_destroy` behavior on the created security group.<br>We recommend setting this `true` on new security groups, but default it to `false` because `true`<br>will cause existing security groups to be replaced, possibly requiring the resource to be deleted and recreated.<br>Note that changing this value will always cause the security group to be replaced. | `bool` | `false` | no |
+| <a name="input_security_group_create_timeout"></a> [security\_group\_create\_timeout](#input\_security\_group\_create\_timeout) | How long to wait for the security group to be created. | `string` | `"10m"` | no |
+| <a name="input_security_group_delete_timeout"></a> [security\_group\_delete\_timeout](#input\_security\_group\_delete\_timeout) | How long to retry on `DependencyViolation` errors during security group deletion from<br>lingering ENIs left by certain AWS services such as Elastic Load Balancing. | `string` | `"15m"` | no |
+| <a name="input_security_group_description"></a> [security\_group\_description](#input\_security\_group\_description) | The description to assign to the created Security Group.<br>Warning: Changing the description causes the security group to be replaced. | `string` | `"Security Group for EKS cluster"` | no |
+| <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | The name to assign to the created security group. Must be unique within the VPC.<br>If not provided, will be derived from the `null-label.context` passed in.<br>If `create_before_destroy` is true, will be used as a name prefix. | `list(string)` | `[]` | no |
 | <a name="input_shared_loadbalancer_arn"></a> [shared\_loadbalancer\_arn](#input\_shared\_loadbalancer\_arn) | ARN of the shared application load balancer. Only when loadbalancer\_type = "application". | `string` | `""` | no |
 | <a name="input_solution_stack_name"></a> [solution\_stack\_name](#input\_solution\_stack\_name) | Elastic Beanstalk stack, e.g. Docker, Go, Node, Java, IIS. For more info, see https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html | `string` | n/a | yes |
 | <a name="input_spot_fleet_on_demand_above_base_percentage"></a> [spot\_fleet\_on\_demand\_above\_base\_percentage](#input\_spot\_fleet\_on\_demand\_above\_base\_percentage) | The percentage of On-Demand Instances as part of additional capacity that your Auto Scaling group provisions beyond the SpotOnDemandBase instances. This option is relevant only when enable\_spot\_instances is true. | `number` | `-1` | no |

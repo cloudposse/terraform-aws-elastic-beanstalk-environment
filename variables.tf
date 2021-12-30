@@ -56,49 +56,6 @@ variable "dns_subdomain" {
   description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
 }
 
-variable "security_group_enabled" {
-  type        = bool
-  description = "Whether to create Security Group."
-  default     = true
-}
-
-variable "security_group_description" {
-  type        = string
-  default     = "Elastic Beanstalk environment Security Group"
-  description = "The Security Group description."
-}
-
-variable "security_group_use_name_prefix" {
-  type        = bool
-  default     = false
-  description = "Whether to create a default Security Group with unique name beginning with the normalized prefix."
-}
-
-variable "security_group_rules" {
-  type = list(any)
-  default = [
-    {
-      type        = "egress"
-      from_port   = 0
-      to_port     = 65535
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "Allow all outbound traffic"
-    }
-  ]
-  description = <<-EOT
-    A list of maps of Security Group rules.
-    The values of map is fully complated with `aws_security_group_rule` resource.
-    To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule .
-  EOT
-}
-
-variable "security_groups" {
-  type        = list(string)
-  description = "A list of Security Group IDs to associate with EC2 instances."
-  default     = []
-}
-
 variable "vpc_id" {
   type        = string
   description = "ID of the VPC in which to provision the AWS resources"

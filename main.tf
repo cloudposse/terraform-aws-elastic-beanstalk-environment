@@ -304,27 +304,12 @@ resource "aws_iam_instance_profile" "ec2" {
   tags = module.this.tags
 }
 
-module "security_group" {
-  source  = "cloudposse/security-group/aws"
-  version = "0.3.1"
-
-  use_name_prefix = var.security_group_use_name_prefix
-  rules           = var.security_group_rules
-  vpc_id          = var.vpc_id
-  description     = var.security_group_description
-
-  enabled = local.security_group_enabled
-  context = module.this.context
-}
-
 locals {
   # Remove `Name` tag from the map of tags because Elastic Beanstalk generates the `Name` tag automatically
   # and if it is provided, terraform tries to recreate the application on each `plan/apply`
   # `Namespace` should be removed as well since any string that contains `Name` forces recreation
   # https://github.com/terraform-providers/terraform-provider-aws/issues/3963
   tags = { for t in keys(module.this.tags) : t => module.this.tags[t] if t != "Name" && t != "Namespace" }
-
-  security_group_enabled = module.this.enabled && var.security_group_enabled
 
   classic_elb_settings = [
     {
@@ -602,7 +587,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "SecurityGroups"
-    value     = join(",", compact(sort(concat([module.security_group.id], var.security_groups))))
+    value     = join(",", compact(sort(concat([module.aws_security_group.id], var.associated_security_group_ids))))
     resource  = ""
   }
 

@@ -76,110 +76,115 @@ usage: |-
     provider "aws" {
       region = var.region
     }
-
+    
     module "vpc" {
-      source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.0"
-      namespace  = var.namespace
-      stage      = var.stage
-      name       = var.name
+      source     = "cloudposse/vpc/aws"
+      version    = "0.28.1"
+      
       cidr_block = "172.16.0.0/16"
+  
+      context = module.this.context
     }
-
+    
     module "subnets" {
-      source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.0"
+      source               = "cloudposse/dynamic-subnets/aws"
+      version              = "0.39.8"
+      
       availability_zones   = var.availability_zones
-      namespace            = var.namespace
-      stage                = var.stage
-      name                 = var.name
       vpc_id               = module.vpc.vpc_id
       igw_id               = module.vpc.igw_id
       cidr_block           = module.vpc.vpc_cidr_block
       nat_gateway_enabled  = true
       nat_instance_enabled = false
+    
+      context = module.this.context
     }
-
+    
     module "elastic_beanstalk_application" {
-      source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.3.0"
-      namespace   = var.namespace
-      stage       = var.stage
-      name        = var.name
-      description = "Test elastic_beanstalk_application"
+      source      = "cloudposse/elastic-beanstalk-application/aws"
+      version     = "0.11.1"
+      
+      description = "Test Elastic Beanstalk application"
+    
+      context = module.this.context
     }
-
+    
     module "elastic_beanstalk_environment" {
-      source = "cloudposse/elastic-beanstalk-environment/aws"
-      # Cloud Posse recommends pinning every module to a specific version
-      # version = "x.x.x"
-      namespace                          = var.namespace
-      stage                              = var.stage
-      name                               = var.name
-      description                        = "Test elastic_beanstalk_environment"
-      region                             = var.region
-      availability_zone_selector         = "Any 2"
-      dns_zone_id                        = var.dns_zone_id
+      source                     = "../../"
+    
+      description                = var.description
+      region                     = var.region
+      availability_zone_selector = var.availability_zone_selector
+      dns_zone_id                = var.dns_zone_id
+    
+      wait_for_ready_timeout             = var.wait_for_ready_timeout
       elastic_beanstalk_application_name = module.elastic_beanstalk_application.elastic_beanstalk_application_name
-
-      instance_type           = "t3.small"
-      autoscale_min           = 1
-      autoscale_max           = 2
-      updating_min_in_service = 0
-      updating_max_batch      = 1
-
-      loadbalancer_type    = "application"
+      environment_type                   = var.environment_type
+      loadbalancer_type                  = var.loadbalancer_type
+      elb_scheme                         = var.elb_scheme
+      tier                               = var.tier
+      version_label                      = var.version_label
+      force_destroy                      = var.force_destroy
+    
+      instance_type    = var.instance_type
+      root_volume_size = var.root_volume_size
+      root_volume_type = var.root_volume_type
+    
+      autoscale_min             = var.autoscale_min
+      autoscale_max             = var.autoscale_max
+      autoscale_measure_name    = var.autoscale_measure_name
+      autoscale_statistic       = var.autoscale_statistic
+      autoscale_unit            = var.autoscale_unit
+      autoscale_lower_bound     = var.autoscale_lower_bound
+      autoscale_lower_increment = var.autoscale_lower_increment
+      autoscale_upper_bound     = var.autoscale_upper_bound
+      autoscale_upper_increment = var.autoscale_upper_increment
+    
       vpc_id               = module.vpc.vpc_id
       loadbalancer_subnets = module.subnets.public_subnet_ids
       application_subnets  = module.subnets.private_subnet_ids
-      
-      security_group_rules = [
-        {
-          type                     = "egress"
-          from_port                = 0
-          to_port                  = 65535
-          protocol                 = "-1"
-          cidr_blocks              = ["0.0.0.0/0"]
-          source_security_group_id = null
-          description              = "Allow all outbound traffic"
-        },
+    
+      additional_security_group_rules = [
         {
           type                     = "ingress"
           from_port                = 0
           to_port                  = 65535
           protocol                 = "-1"
-          source_security_group_id = [module.vpc.vpc_default_security_group_id]
-          cidr_blocks              = []
-          description              = "Allow all ingress traffic from trusted Security Groups"
-        },
-      ]
-      
-      prefer_legacy_service_policy = false
-
-      // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
-      // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
-      solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.1-ce"
-
-      additional_settings = [
-        {
-          namespace = "aws:elasticbeanstalk:application:environment"
-          name      = "DB_HOST"
-          value     = "xxxxxxxxxxxxxx"
-        },
-        {
-          namespace = "aws:elasticbeanstalk:application:environment"
-          name      = "DB_USERNAME"
-          value     = "yyyyyyyyyyyyy"
-        },
-        {
-          namespace = "aws:elasticbeanstalk:application:environment"
-          name      = "DB_PASSWORD"
-          value     = "zzzzzzzzzzzzzzzzzzz"
-        },
-        {
-          namespace = "aws:elasticbeanstalk:application:environment"
-          name      = "ANOTHER_ENV_VAR"
-          value     = "123456789"
+          source_security_group_id = module.vpc.vpc_default_security_group_id
+          description              = "Allow all inbound traffic from trusted Security Groups"
         }
       ]
+    
+      rolling_update_enabled  = var.rolling_update_enabled
+      rolling_update_type     = var.rolling_update_type
+      updating_min_in_service = var.updating_min_in_service
+      updating_max_batch      = var.updating_max_batch
+    
+      healthcheck_url  = var.healthcheck_url
+      application_port = var.application_port
+    
+      solution_stack_name = var.solution_stack_name    
+      additional_settings = var.additional_settings
+      env_vars            = var.env_vars
+    
+      extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
+      prefer_legacy_ssm_policy     = false
+      prefer_legacy_service_policy = false
+      scheduled_actions            = var.scheduled_actions
+    
+      context = module.this.context
     }
+      
+    data "aws_iam_policy_document" "minimal_s3_permissions" {
+      statement {
+        sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+        actions = [
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation"
+      ]
+      resources = ["*"]
+    }
+  }
   ```
 
 include:
