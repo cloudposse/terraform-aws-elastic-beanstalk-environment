@@ -69,6 +69,8 @@ module "elastic_beanstalk_environment" {
   loadbalancer_subnets = module.subnets.public_subnet_ids
   application_subnets  = module.subnets.private_subnet_ids
 
+  allow_all_egress = true
+
   additional_security_group_rules = [
     {
       type                     = "ingress"

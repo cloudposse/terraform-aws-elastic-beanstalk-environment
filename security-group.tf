@@ -7,7 +7,7 @@ module "aws_security_group" {
   security_group_name        = length(var.security_group_name) > 0 ? var.security_group_name : [module.this.id]
   security_group_description = var.security_group_description
 
-  allow_all_egress = true
+  allow_all_egress = var.allow_all_egress
 
   rules = var.additional_security_group_rules
 

@@ -62,6 +62,15 @@ variable "security_group_delete_timeout" {
     EOT
 }
 
+variable "allow_all_egress" {
+  type        = bool
+  default     = true
+  description = <<-EOT
+    If `true`, the created security group will allow egress on all ports and protocols to all IP addresses.
+    If this is false and no egress rules are otherwise specified, then no egress will be allowed.
+    EOT
+}
+
 variable "additional_security_group_rules" {
   type        = list(any)
   default     = []
