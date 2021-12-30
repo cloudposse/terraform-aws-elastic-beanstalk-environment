@@ -463,6 +463,11 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "HealthCheckPath"
       value     = var.healthcheck_url
+    },
+    {
+      namespace = "aws:elasticbeanstalk:environment:process:default"
+      name      = "MatcherHTTPCode"
+      value     = join(",", sort(var.healthcheck_httpcodes_to_match))
     }
   ]
 
@@ -524,11 +529,6 @@ locals {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "UnhealthyThresholdCount"
       value     = var.healthcheck_unhealthy_threshold_count
-    },
-    {
-      namespace = "aws:elasticbeanstalk:environment:process:default"
-      name      = "MatcherHTTPCode"
-      value     = join(",", sort(var.healthcheck_httpcodes_to_match))
     }
   ]
 
