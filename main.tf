@@ -11,6 +11,8 @@ data "aws_partition" "current" {
 # Service
 #
 data "aws_iam_policy_document" "service" {
+  count = local.enabled ? 1 : 0
+
   statement {
     actions = [
       "sts:AssumeRole"
@@ -26,19 +28,24 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
+  count = local.enabled ? 1 : 0
+
   name               = "${module.this.id}-eb-service"
-  assume_role_policy = data.aws_iam_policy_document.service.json
+  assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
   tags               = module.this.tags
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
-  count      = local.enabled && var.enhanced_reporting_enabled ? 1 : 0
-  role       = aws_iam_role.service.name
+  count = local.enabled && var.enhanced_reporting_enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.service.*.name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
-  role       = aws_iam_role.service.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.service.*.name)
   policy_arn = var.prefer_legacy_service_policy ? "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
@@ -46,6 +53,8 @@ resource "aws_iam_role_policy_attachment" "service" {
 # EC2
 #
 data "aws_iam_policy_document" "ec2" {
+  count = local.enabled ? 1 : 0
+
   statement {
     sid = ""
 
@@ -78,34 +87,46 @@ data "aws_iam_policy_document" "ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
-  role       = aws_iam_role.ec2.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
 resource "aws_iam_role" "ec2" {
+  count = local.enabled ? 1 : 0
+
   name               = "${module.this.id}-eb-ec2"
-  assume_role_policy = data.aws_iam_policy_document.ec2.json
+  assume_role_policy = join("", data.aws_iam_policy_document.ec2.*.json)
   tags               = module.this.tags
 }
 
 resource "aws_iam_role_policy" "default" {
+  count = local.enabled ? 1 : 0
+
   name   = "${module.this.id}-eb-default"
-  role   = aws_iam_role.ec2.id
-  policy = data.aws_iam_policy_document.extended.json
+  role   = join("", aws_iam_role.ec2.*.id)
+  policy = join("", data.aws_iam_policy_document.extended.*.json)
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
-  role       = aws_iam_role.ec2.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
-  role       = aws_iam_role.ec2.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
-  role       = aws_iam_role.ec2.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = var.prefer_legacy_ssm_policy ? "arn:${local.partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:${local.partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
   lifecycle {
@@ -114,7 +135,9 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
-  role       = aws_iam_role.ec2.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
@@ -125,18 +148,24 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/create_deploy_docker.container.console.html
 # http://docs.aws.amazon.com/AmazonECR/latest/userguide/ecr_managed_policies.html#AmazonEC2ContainerRegistryReadOnly
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
-  role       = aws_iam_role.ec2.name
+  count = local.enabled ? 1 : 0
+
+  role       = join("", aws_iam_role.ec2.*.name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
 resource "aws_ssm_activation" "ec2" {
+  count = local.enabled ? 1 : 0
+
   name               = module.this.id
-  iam_role           = aws_iam_role.ec2.id
+  iam_role           = join("", aws_iam_role.ec2.*.id)
   registration_limit = var.autoscale_max
   tags               = module.this.tags
 }
 
 data "aws_iam_policy_document" "default" {
+  count = local.enabled ? 1 : 0
+
   statement {
     actions = [
       "elasticloadbalancing:DescribeInstanceHealth",
@@ -300,13 +329,17 @@ data "aws_iam_policy_document" "default" {
 }
 
 data "aws_iam_policy_document" "extended" {
-  source_json   = data.aws_iam_policy_document.default.json
+  count = local.enabled ? 1 : 0
+
+  source_json   = join("", data.aws_iam_policy_document.default.*.json)
   override_json = var.extended_ec2_policy_document
 }
 
 resource "aws_iam_instance_profile" "ec2" {
+  count = local.enabled ? 1 : 0
+
   name = "${module.this.id}-eb-ec2"
-  role = aws_iam_role.ec2.name
+  role = join("", aws_iam_role.ec2.*.name)
   tags = module.this.tags
 }
 
@@ -550,6 +583,8 @@ locals {
 # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html#command-options-general-elasticbeanstalkmanagedactionsplatformupdate
 #
 resource "aws_elastic_beanstalk_environment" "default" {
+  count = local.enabled ? 1 : 0
+
   name                   = module.this.id
   application            = var.elastic_beanstalk_application_name
   description            = var.description
@@ -600,7 +635,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = aws_iam_instance_profile.ec2.name
+    value     = join("", aws_iam_instance_profile.ec2.*.name)
     resource  = ""
   }
 
@@ -621,7 +656,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
-    value     = aws_iam_role.service.name
+    value     = join("", aws_iam_role.service.*.name)
     resource  = ""
   }
 
@@ -1042,11 +1077,11 @@ resource "aws_elastic_beanstalk_environment" "default" {
 }
 
 data "aws_elb_service_account" "main" {
-  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
+  count = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
 }
 
 data "aws_iam_policy_document" "elb_logs" {
-  count = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
+  count = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
 
   statement {
     sid = ""
@@ -1076,7 +1111,7 @@ resource "aws_s3_bucket" "elb_logs" {
   #bridgecrew:skip=BC_AWS_GENERAL_56:Skipping "Ensure S3 buckets are encrypted with KMS by default"
   #bridgecrew:skip=BC_AWS_NETWORKING_52:Skipping "Ensure S3 Bucket has public access blocks"
   #bridgecrew:skip=BC_AWS_GENERAL_72:Skipping "Ensure S3 bucket has cross-region replication enabled"
-  count         = var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
+  count         = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
@@ -1112,11 +1147,11 @@ module "dns_hostname" {
   source  = "cloudposse/route53-cluster-hostname/aws"
   version = "0.12.2"
 
-  enabled = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
+  enabled = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
 
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
   zone_id  = var.dns_zone_id
-  records  = [aws_elastic_beanstalk_environment.default.cname]
+  records  = [join("", aws_elastic_beanstalk_environment.default.*.cname)]
 
   context = module.this.context
 }

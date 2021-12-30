@@ -171,17 +171,17 @@
 | Name | Description |
 |------|-------------|
 | <a name="output_all_settings"></a> [all\_settings](#output\_all\_settings) | List of all option settings configured in the environment. These are a combination of default settings and their overrides from setting in the configuration |
-| <a name="output_application"></a> [application](#output\_application) | The Elastic Beanstalk Application specified for this environment |
+| <a name="output_application"></a> [application](#output\_application) | The Elastic Beanstalk Application for this environment |
 | <a name="output_autoscaling_groups"></a> [autoscaling\_groups](#output\_autoscaling\_groups) | The autoscaling groups used by this environment |
 | <a name="output_ec2_instance_profile_role_name"></a> [ec2\_instance\_profile\_role\_name](#output\_ec2\_instance\_profile\_role\_name) | Instance IAM role name |
-| <a name="output_elb_zone_id"></a> [elb\_zone\_id](#output\_elb\_zone\_id) | ELB zone id |
+| <a name="output_elb_zone_id"></a> [elb\_zone\_id](#output\_elb\_zone\_id) | ELB zone ID |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Fully qualified DNS name for the environment |
 | <a name="output_hostname"></a> [hostname](#output\_hostname) | DNS hostname |
 | <a name="output_id"></a> [id](#output\_id) | ID of the Elastic Beanstalk environment |
 | <a name="output_instances"></a> [instances](#output\_instances) | Instances used by this environment |
 | <a name="output_launch_configurations"></a> [launch\_configurations](#output\_launch\_configurations) | Launch configurations in use by this environment |
 | <a name="output_load_balancers"></a> [load\_balancers](#output\_load\_balancers) | Elastic Load Balancers in use by this environment |
-| <a name="output_name"></a> [name](#output\_name) | Name |
+| <a name="output_name"></a> [name](#output\_name) | Name of the Elastic Beanstalk environment |
 | <a name="output_queues"></a> [queues](#output\_queues) | SQS queues in use by this environment |
 | <a name="output_security_group_arn"></a> [security\_group\_arn](#output\_security\_group\_arn) | Elastic Beanstalk environment Security Group ARN |
 | <a name="output_security_group_id"></a> [security\_group\_id](#output\_security\_group\_id) | Elastic Beanstalk environment Security Group ID |
