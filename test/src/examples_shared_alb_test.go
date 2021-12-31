@@ -10,8 +10,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Test the Terraform module in examples/complete using Terratest.
-func TestExamplesComplete(t *testing.T) {
+// Test the Terraform module in examples/shared-alb using Terratest.
+func TestExamplesSharedAlb(t *testing.T) {
 	t.Parallel()
 
 	// Give this S3 Bucket a unique ID for a name tag so we can distinguish it from any other Buckets provisioned
@@ -20,7 +20,7 @@ func TestExamplesComplete(t *testing.T) {
 
 	terraformOptions := &terraform.Options{
 		// The path to where our Terraform code is located
-		TerraformDir: "../../examples/complete",
+		TerraformDir: "../../examples/shared-alb",
 		Upgrade:      true,
 		// Variables to pass to our Terraform code using -var-file options
 		VarFiles: []string{"fixtures.us-east-2.tfvars"},
@@ -51,7 +51,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, []string{"172.16.96.0/19", "172.16.128.0/19"}, publicSubnetCidrs)
 
 	// Run `terraform output` to get the value of an output variable
-	expectedName := fmt.Sprintf("eg-test-eb-env-%s", attributes[0])
+	expectedName := fmt.Sprintf("eg-test-eb-env-shared-alb-%s", attributes[0])
 	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedName, elasticBeanstalkApplicationName)
@@ -60,19 +60,4 @@ func TestExamplesComplete(t *testing.T) {
 	elasticBeanstalkEnvironmentName := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_name")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedName, elasticBeanstalkEnvironmentName)
-
-	// Run `terraform output` to get the value of an output variable
-	securityGroupName := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_name")
-	// Verify we're getting back the outputs we expect
-	assert.Equal(t, expectedName, securityGroupName)
-
-	// Run `terraform output` to get the value of an output variable
-	securityGroupID := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_id")
-	// Verify we're getting back the outputs we expect
-	assert.Contains(t, securityGroupID, "sg-", "SG ID should contains substring 'sg-'")
-
-	// Run `terraform output` to get the value of an output variable
-	securityGroupARN := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_arn")
-	// Verify we're getting back the outputs we expect
-	assert.Contains(t, securityGroupARN, "arn:aws:ec2", "SG ID should contains substring 'arn:aws:ec2'")
 }

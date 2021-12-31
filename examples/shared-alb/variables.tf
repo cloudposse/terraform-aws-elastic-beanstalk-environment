@@ -23,6 +23,18 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
+variable "loadbalancer_is_shared" {
+  type        = bool
+  default     = false
+  description = "Flag to create a shared application loadbalancer. Only when loadbalancer_type = \"application\" https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html"
+}
+
+variable "shared_loadbalancer_arn" {
+  type        = string
+  default     = ""
+  description = "ARN of the shared application load balancer. Only when loadbalancer_type = \"application\"."
+}
+
 variable "dns_zone_id" {
   type        = string
   description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
@@ -93,16 +105,6 @@ variable "updating_max_batch" {
   description = "Maximum number of instances to update at once"
 }
 
-variable "healthcheck_url" {
-  type        = string
-  description = "Application Health Check URL. Elastic Beanstalk will call this URL to check the health of the application running on EC2 instances"
-}
-
-variable "application_port" {
-  type        = number
-  description = "Port application is listening on"
-}
-
 variable "root_volume_size" {
   type        = number
   description = "The size of the EBS root volume"
@@ -146,11 +148,6 @@ variable "autoscale_upper_bound" {
 variable "autoscale_upper_increment" {
   type        = number
   description = "How many Amazon EC2 instances to add when performing a scaling activity"
-}
-
-variable "elb_scheme" {
-  type        = string
-  description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
 }
 
 variable "additional_settings" {
