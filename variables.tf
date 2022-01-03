@@ -26,6 +26,18 @@ variable "loadbalancer_type" {
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
+variable "loadbalancer_is_shared" {
+  type        = bool
+  default     = false
+  description = "Flag to create a shared application loadbalancer. Only when loadbalancer_type = \"application\" https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html"
+}
+
+variable "shared_loadbalancer_arn" {
+  type        = string
+  default     = ""
+  description = "ARN of the shared application load balancer. Only when loadbalancer_type = \"application\"."
+}
+
 variable "loadbalancer_crosszone" {
   type        = bool
   default     = true
@@ -42,49 +54,6 @@ variable "dns_subdomain" {
   type        = string
   default     = ""
   description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
-}
-
-variable "security_group_enabled" {
-  type        = bool
-  description = "Whether to create Security Group."
-  default     = true
-}
-
-variable "security_group_description" {
-  type        = string
-  default     = "Elastic Beanstalk environment Security Group"
-  description = "The Security Group description."
-}
-
-variable "security_group_use_name_prefix" {
-  type        = bool
-  default     = false
-  description = "Whether to create a default Security Group with unique name beginning with the normalized prefix."
-}
-
-variable "security_group_rules" {
-  type = list(any)
-  default = [
-    {
-      type        = "egress"
-      from_port   = 0
-      to_port     = 65535
-      protocol    = "-1"
-      cidr_blocks = ["0.0.0.0/0"]
-      description = "Allow all outbound traffic"
-    }
-  ]
-  description = <<-EOT
-    A list of maps of Security Group rules.
-    The values of map is fully complated with `aws_security_group_rule` resource.
-    To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule .
-  EOT
-}
-
-variable "security_groups" {
-  type        = list(string)
-  description = "A list of Security Group IDs to associate with EC2 instances."
-  default     = []
 }
 
 variable "vpc_id" {
@@ -545,4 +514,52 @@ variable "scheduled_actions" {
   }))
   default     = []
   description = "Define a list of scheduled actions"
+}
+
+variable "healthcheck_interval" {
+  type        = number
+  default     = 10
+  description = "The interval of time, in seconds, that Elastic Load Balancing checks the health of the Amazon EC2 instances of your application"
+}
+
+variable "healthcheck_timeout" {
+  type        = number
+  default     = 5
+  description = "The amount of time, in seconds, to wait for a response during a health check. Note that this option is only applicable to environments with an application load balancer"
+}
+
+variable "healthcheck_healthy_threshold_count" {
+  type        = number
+  default     = 3
+  description = "The number of consecutive successful requests before Elastic Load Balancing changes the instance health status"
+}
+
+variable "healthcheck_unhealthy_threshold_count" {
+  type        = number
+  default     = 3
+  description = "The number of consecutive unsuccessful requests before Elastic Load Balancing changes the instance health status"
+}
+
+variable "healthcheck_httpcodes_to_match" {
+  type        = list(string)
+  default     = ["200"]
+  description = "List of HTTP codes that indicate that an instance is healthy. Note that this option is only applicable to environments with a network or application load balancer"
+}
+
+variable "root_volume_iops" {
+  type        = number
+  default     = null
+  description = "The IOPS of the EBS root volume (only applies for gp3 and io1 types)"
+}
+
+variable "root_volume_throughput" {
+  type        = number
+  default     = null
+  description = "The type of the EBS root volume (only applies for gp3 type)"
+}
+
+variable "enable_capacity_rebalancing" {
+  type        = bool
+  default     = false
+  description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
 }

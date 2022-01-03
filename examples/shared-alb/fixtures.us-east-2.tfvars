@@ -6,7 +6,7 @@ namespace = "eg"
 
 stage = "test"
 
-name = "eb-env-nlb"
+name = "eb-env-shared-alb"
 
 description = "Test elastic-beanstalk-environment"
 
@@ -14,7 +14,9 @@ tier = "WebServer"
 
 environment_type = "LoadBalanced"
 
-loadbalancer_type = "network"
+loadbalancer_type = "application"
+
+loadbalancer_is_shared = true
 
 availability_zone_selector = "Any 2"
 
@@ -36,8 +38,6 @@ updating_min_in_service = 0
 
 updating_max_batch = 1
 
-application_port = 80
-
 root_volume_size = 8
 
 root_volume_type = "gp2"
@@ -55,8 +55,6 @@ autoscale_lower_increment = -1
 autoscale_upper_bound = 80
 
 autoscale_upper_increment = 1
-
-elb_scheme = "public"
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker

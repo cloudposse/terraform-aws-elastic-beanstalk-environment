@@ -6,7 +6,7 @@ namespace = "eg"
 
 stage = "test"
 
-name = "elastic-beanstalk-env"
+name = "eb-env"
 
 description = "Test elastic-beanstalk-environment"
 
@@ -25,7 +25,6 @@ autoscale_min = 1
 autoscale_max = 2
 
 wait_for_ready_timeout = "20m"
-
 
 force_destroy = true
 
@@ -67,7 +66,7 @@ solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.
 
 version_label = ""
 
-dns_zone_id = "Z3SO0TKDDQ0RGG"
+dns_zone_id = ""
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [
@@ -89,17 +88,3 @@ env_vars = {
   "DB_PASSWORD"     = "zzzzzzzzzzzzzzzzzzz"
   "ANOTHER_ENV_VAR" = "123456789"
 }
-
-// https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-autoscaling-scheduledactions.html
-scheduled_actions = [
-  {
-    name            = "Refreshinstances"
-    minsize         = "1"
-    maxsize         = "2"
-    desiredcapacity = "2"
-    starttime       = "2015-05-14T07:00:00Z"
-    endtime         = "2016-01-12T07:00:00Z"
-    recurrence      = "*/20 * * * *"
-    suspend         = false
-  }
-]
