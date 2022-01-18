@@ -420,7 +420,7 @@ locals {
     {
       namespace = "aws:elb:policies"
       name      = "ConnectionSettingIdleTimeout"
-      value     = var.ssh_listener_enabled ? "3600" : "60"
+      value     = var.loadbalancer_connection_idle_timeout
     },
     {
       namespace = "aws:elb:policies"
