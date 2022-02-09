@@ -929,7 +929,7 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 
 module "dns_hostname" {
-  source  = "git::https://github.com/cloudposse/terraform-aws-route53-cluster-hostname.git?ref=tags/0.7.0"
+  source  = "git::https://github.com/stavvy/terraform-aws-route53-cluster-hostname.git?ref=tags/0.7.1"
   enabled = var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
   name    = var.dns_subdomain != "" ? var.dns_subdomain : var.name
   zone_id = var.dns_zone_id
