@@ -28,7 +28,7 @@ variable "security_group_name" {
 
 variable "security_group_description" {
   type        = string
-  default     = "Security Group for EKS cluster"
+  default     = "Security Group for the EB environment"
   description = <<-EOT
     The description to assign to the created Security Group.
     Warning: Changing the description causes the security group to be replaced.
