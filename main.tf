@@ -1113,32 +1113,43 @@ resource "aws_s3_bucket" "elb_logs" {
   #bridgecrew:skip=BC_AWS_GENERAL_72:Skipping "Ensure S3 bucket has cross-region replication enabled"
   count         = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
-  acl           = "private"
   force_destroy = var.force_destroy
-  policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
   tags          = module.this.tags
+}
 
-  dynamic "server_side_encryption_configuration" {
-    for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
-
-    content {
-      rule {
-        apply_server_side_encryption_by_default {
-          sse_algorithm = "AES256"
-        }
-      }
-    }
+resource "aws_s3_bucket_versioning" "this" {
+  bucket = aws_s3_bucket.elb_logs[0].id
+  versioning_configuration {
+    status = var.s3_bucket_versioning_enabled ? "Enabled" : "Disabled"
   }
+}
 
-  versioning {
-    enabled = var.s3_bucket_versioning_enabled
-  }
+resource "aws_s3_bucket_acl" "this" {
+  bucket = aws_s3_bucket.elb_logs[0].id
+  acl    = "private"
+}
 
-  dynamic "logging" {
-    for_each = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
-    content {
-      target_bucket = var.s3_bucket_access_log_bucket_name
-      target_prefix = "logs/${module.this.id}/"
+resource "aws_s3_bucket_policy" "this" {
+  bucket = aws_s3_bucket.elb_logs[0].id
+  policy = join("", data.aws_iam_policy_document.elb_logs.*.json)
+}
+
+resource "aws_s3_bucket_logging" "this" {
+  count = var.s3_bucket_access_log_bucket_name != "" ? 1 : 0
+
+  bucket        = aws_s3_bucket.elb_logs[0].id
+  target_bucket = var.s3_bucket_access_log_bucket_name
+  target_prefix = "logs/${module.this.id}/"
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
+  count = var.s3_bucket_access_log_bucket_name != "" ? 1 : 0
+
+  bucket = aws_s3_bucket.elb_logs[0].id
+
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
 }
