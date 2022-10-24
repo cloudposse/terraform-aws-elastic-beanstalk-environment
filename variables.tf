@@ -473,7 +473,7 @@ variable "deployment_timeout" {
 
 variable "extended_ec2_policy_document" {
   type        = string
-  default     = "{}"
+  default     = ""
   description = "Extensions or overrides for the IAM role assigned to EC2 instances"
 }
 
