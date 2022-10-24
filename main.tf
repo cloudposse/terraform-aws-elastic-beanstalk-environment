@@ -345,8 +345,8 @@ data "aws_iam_policy_document" "default" {
 data "aws_iam_policy_document" "extended" {
   count = local.enabled ? 1 : 0
 
-  source_json   = join("", data.aws_iam_policy_document.default.*.json)
-  override_json = var.extended_ec2_policy_document
+  source_json               = join("", data.aws_iam_policy_document.default.*.json)
+  override_policy_documents = [var.extended_ec2_policy_document]
 }
 
 resource "aws_iam_instance_profile" "ec2" {
