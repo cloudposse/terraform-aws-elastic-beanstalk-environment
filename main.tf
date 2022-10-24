@@ -255,7 +255,6 @@ data "aws_iam_policy_document" "default" {
       "elasticloadbalancing:RegisterTargets",
       "elasticloadbalancing:DeregisterTargets",
       "iam:ListRoles",
-      "iam:PassRole",
       "logs:CreateLogGroup",
       "logs:PutRetentionPolicy",
       "rds:DescribeDBEngineVersions",
@@ -277,6 +276,21 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = ["*"]
+
+    effect = "Allow"
+  }
+
+  statement {
+    sid = "AllowPassRole"
+
+    actions = [
+      "iam:PassRole"
+    ]
+
+    resources = [
+      join("", aws_iam_role.ec2.*.arn),
+      join("", aws_iam_role.service.*.arn)
+    ]
 
     effect = "Allow"
   }
