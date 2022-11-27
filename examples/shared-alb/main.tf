@@ -116,6 +116,11 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
 
+  # Redirect HTTP to HTTPS
+  loadbalancer_redirect_http_to_https = true
+  loadbalancer_redirect_http_to_https_host = "example.com"
+
+
   context = module.this.context
 }
 
