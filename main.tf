@@ -1193,7 +1193,7 @@ resource "aws_lb_listener_rule" "redirect_http_to_https" {
       host        = var.loadbalancer_redirect_http_to_https_host
       port        = var.loadbalancer_redirect_http_to_https_port
       protocol    = "HTTPS"
-      status_code = var.loadbalancer_redirect_http_to_https_status_code
+      status_code = var.loadbalancer_redirect_http_to_https_permanently ? "HTTP_301" : "HTTP_302"
     }
   }
 }
