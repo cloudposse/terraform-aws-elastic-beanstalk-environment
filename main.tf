@@ -1172,28 +1172,28 @@ module "dns_hostname" {
 }
 
 data "aws_lb_listener" "http" {
-  load_balancer_arn = aws_elastic_beanstalk_environment.default.0.load_balancers[0]
+  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : var. aws_elastic_beanstalk_environment.default.0.load_balancers[0]
   port              = var.application_port
 }
 
-resource "aws_lb_listener_rule" "http_to_https_redirect" {
-  count        = var.http_to_https_redirect ? 1 : 0
+resource "aws_lb_listener_rule" "redirect_http_to_https" {
+  count        = var.loadbalancer_redirect_http_to_https ? 1 : 0
   listener_arn = data.aws_lb_listener.http.arn
-  priority     = var.http_to_https_redirect_priority
+  priority     = var.loadbalancer_redirect_http_to_https_priority
 
   condition {
     path_pattern {
-      values = var.http_to_https_redirect_path_pattern
+      values = var.loadbalancer_redirect_http_to_https_path_pattern
     }
   }
 
   action {
     type = "redirect"
     redirect {
-      host        = var.http_to_https_redirect_host
-      port        = var.http_to_https_redirect_port
+      host        = var.loadbalancer_redirect_http_to_https_host
+      port        = var.loadbalancer_redirect_http_to_https_port
       protocol    = "HTTPS"
-      status_code = var.http_to_https_redirect_status_code
+      status_code = var.loadbalancer_redirect_http_to_https_status_code
     }
   }
 }
