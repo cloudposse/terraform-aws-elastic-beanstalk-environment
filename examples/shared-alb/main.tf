@@ -117,7 +117,7 @@ module "elastic_beanstalk_environment" {
   scheduled_actions            = var.scheduled_actions
 
   # Redirect HTTP to HTTPS
-  loadbalancer_redirect_http_to_https = true
+  loadbalancer_redirect_http_to_https      = true
   loadbalancer_redirect_http_to_https_host = "example.com"
 
 
