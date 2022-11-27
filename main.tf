@@ -1170,3 +1170,30 @@ module "dns_hostname" {
 
   context = module.this.context
 }
+
+data "aws_lb_listener" "http" {
+  load_balancer_arn = aws_elastic_beanstalk_environment.default.0.load_balancers[0]
+  port              = var.application_port
+}
+
+resource "aws_lb_listener_rule" "http_to_https_redirect" {
+  count        = var.http_to_https_redirect ? 1 : 0
+  listener_arn = data.aws_lb_listener.http.arn
+  priority     = var.http_to_https_redirect_priority
+
+  condition {
+    path_pattern {
+      values = var.http_to_https_redirect_path_pattern
+    }
+  }
+
+  action {
+    type = "redirect"
+    redirect {
+      host        = var.http_to_https_redirect_host
+      port        = var.http_to_https_redirect_port
+      protocol    = "HTTPS"
+      status_code = var.http_to_https_redirect_status_code
+    }
+  }
+}
