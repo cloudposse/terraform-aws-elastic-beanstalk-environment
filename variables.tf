@@ -590,7 +590,7 @@ variable "loadbalancer_redirect_http_to_https_path_pattern" {
 
 variable "loadbalancer_redirect_http_to_https_host" {
   type        = string
-  default     = null
+  default     = "#{host}"
   description = "Defines the host for the HTTP to HTTPS redirection rule"
 }
 
