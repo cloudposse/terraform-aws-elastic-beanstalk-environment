@@ -1172,7 +1172,7 @@ module "dns_hostname" {
 }
 
 data "aws_lb_listener" "http" {
-  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : var.aws_elastic_beanstalk_environment.default.0.load_balancers[0]
+  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : aws_elastic_beanstalk_environment.default.0.load_balancers[0]
   port              = var.application_port
 }
 
