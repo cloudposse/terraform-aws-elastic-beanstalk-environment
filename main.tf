@@ -105,11 +105,10 @@ resource "aws_iam_role_policy_attachment" "policies_for_ec2_role" {
 }
 
 resource "aws_iam_role_policy" "default" {
-  count = local.enabled ? 1 : 0
 
   name   = "${module.this.id}-eb-default-${data.aws_region.current.name}"
   role   = aws_iam_role.ec2.id
-  policy = join("", data.aws_iam_policy_document.extended.*.json)
+  policy = data.aws_iam_policy_document.extended.json
 }
 
 resource "aws_ssm_activation" "ec2" {
@@ -301,10 +300,10 @@ data "aws_iam_policy_document" "default" {
 }
 
 data "aws_iam_policy_document" "extended" {
-  count = local.enabled ? 1 : 0
-
-  source_json               = join("", data.aws_iam_policy_document.default.*.json)
-  override_policy_documents = [var.extended_ec2_policy_document]
+  source_policy_documents = [
+    data.aws_iam_policy_document.default.json,
+    var.extended_ec2_policy_document
+  ]
 }
 
 resource "aws_iam_instance_profile" "ec2" {
