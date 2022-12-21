@@ -308,8 +308,6 @@ data "aws_iam_policy_document" "extended" {
 }
 
 resource "aws_iam_instance_profile" "ec2" {
-  count = local.enabled ? 1 : 0
-
   name = "${module.this.id}-eb-ec2-${data.aws_region.current.name}"
   role = aws_iam_role.ec2.name
   tags = module.this.tags
