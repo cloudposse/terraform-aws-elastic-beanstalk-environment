@@ -34,7 +34,7 @@ output "elb_zone_id" {
 }
 
 output "ec2_instance_profile_role_name" {
-  value       = join("", aws_iam_role.ec2.*.name)
+  value       = aws_iam_role.ec2.name
   description = "Instance IAM role name"
 }
 

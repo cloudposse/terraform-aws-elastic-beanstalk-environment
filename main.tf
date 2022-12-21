@@ -105,7 +105,6 @@ resource "aws_iam_role_policy_attachment" "policies_for_ec2_role" {
 }
 
 resource "aws_iam_role_policy" "default" {
-
   name   = "${module.this.id}-eb-default-${data.aws_region.current.name}"
   role   = aws_iam_role.ec2.id
   policy = data.aws_iam_policy_document.extended.json
@@ -121,8 +120,6 @@ resource "aws_ssm_activation" "ec2" {
 }
 
 data "aws_iam_policy_document" "default" {
-  count = local.enabled ? 1 : 0
-
   statement {
     actions = [
       "elasticloadbalancing:DescribeInstanceHealth",
