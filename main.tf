@@ -38,8 +38,6 @@ data "aws_iam_policy_document" "service" {
 }
 
 resource "aws_iam_role" "service" {
-  count = local.enabled ? 1 : 0
-
   name               = "${module.this.id}-eb-service-${data.aws_region.current.name}"
   assume_role_policy = data.aws_iam_policy_document.service.json
   tags               = module.this.tags
@@ -109,7 +107,7 @@ resource "aws_iam_role_policy_attachment" "policies_for_ec2_role" {
 resource "aws_iam_role_policy" "default" {
   count = local.enabled ? 1 : 0
 
-  name   = "${module.this.id}-eb-default"
+  name   = "${module.this.id}-eb-default-${data.aws_region.current.name}"
   role   = aws_iam_role.ec2.id
   policy = join("", data.aws_iam_policy_document.extended.*.json)
 }
