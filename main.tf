@@ -111,8 +111,6 @@ resource "aws_iam_role_policy" "default" {
 }
 
 resource "aws_ssm_activation" "ec2" {
-  count = local.enabled ? 1 : 0
-
   name               = module.this.id
   iam_role           = aws_iam_role.ec2.id
   registration_limit = var.autoscale_max
