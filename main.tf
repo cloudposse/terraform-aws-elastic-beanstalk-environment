@@ -1,6 +1,10 @@
+data "aws_partition" "current" {}
+
+data "aws_region" "current" {}
+
 locals {
   enabled   = module.this.enabled
-  partition = join("", data.aws_partition.current.partition)
+  partition = data.aws_partition.current.partition
   service_role_policy_arns = [
     "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth",
     "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
@@ -14,10 +18,6 @@ locals {
     "arn:${local.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
   ]
 }
-
-data "aws_partition" "current" {}
-
-data "aws_region" "current" {}
 
 #
 # Service
