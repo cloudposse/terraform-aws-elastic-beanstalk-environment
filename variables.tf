@@ -287,6 +287,12 @@ variable "application_port" {
   description = "Port application is listening on"
 }
 
+variable "application_protocol" {
+  type        = string
+  default     = "HTTP"
+  description = "Port protocol is listening on. HTTP or HTTPS"
+}
+
 variable "preferred_start_time" {
   type        = string
   default     = "Sun:10:00"
@@ -373,7 +379,7 @@ variable "elb_scheme" {
 
 variable "ssh_source_restriction" {
   type        = string
-  default     = "0.0.0.0/0"
+  default     = "127.0.0.1/32"
   description = "Used to lock down SSH access to the EC2 instances"
 }
 

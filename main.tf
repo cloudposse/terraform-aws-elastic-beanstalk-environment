@@ -512,7 +512,7 @@ locals {
     {
       namespace = "aws:elasticbeanstalk:environment:process:default"
       name      = "Protocol"
-      value     = var.loadbalancer_type == "network" ? "TCP" : "HTTP"
+      value     = var.loadbalancer_type == "network" ? "TCP" : var.application_protocol
     },
     {
       namespace = "aws:ec2:vpc"
@@ -605,6 +605,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "IamInstanceProfile"
     value     = aws_iam_instance_profile.ec2.name
     resource  = ""
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SSHSourceRestriction"
+    value     = "tcp,${var.ssh_listener_port},22,${var.ssh_source_restriction}"
   }
 
   setting {
