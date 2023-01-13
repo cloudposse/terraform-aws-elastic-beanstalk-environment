@@ -569,3 +569,12 @@ variable "enable_capacity_rebalancing" {
   default     = false
   description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
 }
+
+variable "service_role" {
+  type        = string
+  description = "Specifies the service role to use"
+}
+variable "iam_instance_profile" {
+  type        = string
+  description = "Specifies the iam instance profile"
+}
