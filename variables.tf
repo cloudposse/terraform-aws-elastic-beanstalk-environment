@@ -22,7 +22,7 @@ variable "environment_type" {
 
 variable "loadbalancer_type" {
   type        = string
-  default     = "classic"
+  default     = "application"
   description = "Load Balancer type, e.g. 'application' or 'classic'"
 }
 
@@ -86,7 +86,7 @@ variable "availability_zone_selector" {
 
 variable "instance_type" {
   type        = string
-  default     = "t2.micro"
+  default     = "t3.small"
   description = "Instances type"
 }
 
@@ -116,19 +116,19 @@ variable "spot_max_price" {
 
 variable "enhanced_reporting_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether to enable \"enhanced\" health reporting for this environment.  If false, \"basic\" reporting is used.  When you set this to false, you must also set `enable_managed_actions` to false"
 }
 
 variable "managed_actions_enabled" {
   type        = bool
-  default     = true
+  default     = false
   description = "Enable managed platform updates. When you set this to true, you must also specify a `PreferredStartTime` and `UpdateLevel`"
 }
 
 variable "autoscale_min" {
   type        = number
-  default     = 2
+  default     = 1
   description = "Minumum instances to launch"
 }
 
@@ -145,7 +145,7 @@ variable "solution_stack_name" {
 
 variable "wait_for_ready_timeout" {
   type        = string
-  default     = "20m"
+  default     = "30m"
   description = "The maximum duration to wait for the Elastic Beanstalk Environment to be in a ready state before timing out"
 }
 
@@ -259,7 +259,7 @@ variable "loadbalancer_certificate_arn" {
 
 variable "loadbalancer_ssl_policy" {
   type        = string
-  default     = ""
+  default     = "ELBSecurityPolicy-FS-1-2-2019-08"
   description = "Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer"
 }
 
@@ -467,13 +467,13 @@ variable "deployment_batch_size" {
 
 variable "deployment_ignore_health_check" {
   type        = bool
-  default     = false
+  default     = true
   description = "Do not cancel a deployment due to failed health checks"
 }
 
 variable "deployment_timeout" {
   type        = number
-  default     = 600
+  default     = 900
   description = "Number of seconds to wait for an instance to complete executing commands"
 }
 
@@ -485,13 +485,13 @@ variable "extended_ec2_policy_document" {
 
 variable "prefer_legacy_ssm_policy" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
 }
 
 variable "prefer_legacy_service_policy" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether to use AWSElasticBeanstalkService (deprecated) or AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy policy"
 }
 
@@ -530,13 +530,13 @@ variable "scheduled_actions" {
 
 variable "healthcheck_interval" {
   type        = number
-  default     = 10
+  default     = 30
   description = "The interval of time, in seconds, that Elastic Load Balancing checks the health of the Amazon EC2 instances of your application"
 }
 
 variable "healthcheck_timeout" {
   type        = number
-  default     = 5
+  default     = 10
   description = "The amount of time, in seconds, to wait for a response during a health check. Note that this option is only applicable to environments with an application load balancer"
 }
 
