@@ -1172,13 +1172,14 @@ module "dns_hostname" {
 }
 
 data "aws_lb_listener" "http" {
-  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : aws_elastic_beanstalk_environment.default.0.load_balancers[0]
+  count             = local.enabled && var.loadbalancer_redirect_http_to_https ? 1 : 0
+  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(module.elastic_beanstalk_environment.default[*].load_balancers)
   port              = var.application_port
 }
 
 resource "aws_lb_listener_rule" "redirect_http_to_https" {
-  count        = var.loadbalancer_redirect_http_to_https ? 1 : 0
-  listener_arn = data.aws_lb_listener.http.arn
+  count        = local.enabled && var.loadbalancer_redirect_http_to_https ? 1 : 0
+  listener_arn = join("", data.aws_lb_listener.http.*.arn)
   priority     = var.loadbalancer_redirect_http_to_https_priority
 
   condition {
