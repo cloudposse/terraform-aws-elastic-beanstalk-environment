@@ -1173,7 +1173,7 @@ module "dns_hostname" {
 
 data "aws_lb_listener" "http" {
   count             = local.enabled && var.loadbalancer_redirect_http_to_https ? 1 : 0
-  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(module.elastic_beanstalk_environment.default[*].load_balancers)
+  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(aws_elastic_beanstalk_environment.default[*].load_balancers)
   port              = var.application_port
 }
 
