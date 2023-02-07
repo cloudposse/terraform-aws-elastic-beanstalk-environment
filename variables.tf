@@ -600,8 +600,13 @@ variable "loadbalancer_redirect_http_to_https_port" {
   description = "Defines the port for the HTTP to HTTPS redirection rule"
 }
 
-variable "loadbalancer_redirect_http_to_https_permanently" {
-  type        = bool
-  default     = true
-  description = "The redirect is either permanent `true` (HTTP_301) or temporary `false` (HTTP_302)"
+variable "loadbalancer_redirect_http_to_https_status_code" {
+  type        = string
+  default     = "HTTP_301"
+  description = "The redirect status code"
+
+  validation {
+    condition     = contains(["HTTP_301", "HTTP_302"], var.loadbalancer_redirect_http_to_https_status_code)
+    error_message = "Allowed values are \"HTTP_301\" or \"HTTP_302\""
+  }
 }

@@ -108,10 +108,6 @@ module "elastic_beanstalk_environment" {
   # Health check interval must be either 10 seconds or 30 seconds for Network Load Balancers
   healthcheck_interval = 30
 
-  # Redirect HTTP to HTTPS
-  loadbalancer_redirect_http_to_https      = true
-  loadbalancer_redirect_http_to_https_host = "example.com"
-
   context = module.this.context
 }
 
