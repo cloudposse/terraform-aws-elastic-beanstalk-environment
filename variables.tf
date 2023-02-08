@@ -607,6 +607,6 @@ variable "loadbalancer_redirect_http_to_https_status_code" {
 
   validation {
     condition     = contains(["HTTP_301", "HTTP_302"], var.loadbalancer_redirect_http_to_https_status_code)
-    error_message = "Allowed values are \"HTTP_301\" or \"HTTP_302\""
+    error_message = "Allowed values are \"HTTP_301\" or \"HTTP_302\"."
   }
 }
