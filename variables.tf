@@ -616,3 +616,9 @@ variable "loadbalancer_redirect_http_to_https_status_code" {
     error_message = "Allowed values are \"HTTP_301\" or \"HTTP_302\"."
   }
 }
+
+variable "enable_alb_s3_logs" {
+  type        = bool
+  default     = true
+  description = "Enable ALB S3 logs"
+}
