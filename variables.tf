@@ -618,7 +618,7 @@ variable "loadbalancer_redirect_http_to_https_status_code" {
 }
 
 variable "enable_alb_s3_logs" {
-  type        = bool
-  default     = true
-  description = "Enable ALB S3 logs"
+  type        = string
+  default     = "true"
+  description = "Enable ALB S3 logs. true or false"
 }
