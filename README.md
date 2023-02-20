@@ -248,7 +248,7 @@ Available targets:
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.14.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.15.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.0 |
 
 ## Providers
@@ -282,6 +282,7 @@ Available targets:
 | [aws_iam_role_policy_attachment.ssm_ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.web_tier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.worker_tier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_lb_listener_rule.redirect_http_to_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_rule) | resource |
 | [aws_s3_bucket.elb_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_ssm_activation.ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_activation) | resource |
 | [aws_elb_service_account.main](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/elb_service_account) | data source |
@@ -290,6 +291,7 @@ Available targets:
 | [aws_iam_policy_document.elb_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.extended](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/lb_listener) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 
 ## Inputs
@@ -365,6 +367,12 @@ Available targets:
 | <a name="input_loadbalancer_crosszone"></a> [loadbalancer\_crosszone](#input\_loadbalancer\_crosszone) | Configure the classic load balancer to route traffic evenly across all instances in all Availability Zones rather than only within each zone. | `bool` | `true` | no |
 | <a name="input_loadbalancer_is_shared"></a> [loadbalancer\_is\_shared](#input\_loadbalancer\_is\_shared) | Flag to create a shared application loadbalancer. Only when loadbalancer\_type = "application" https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html | `bool` | `false` | no |
 | <a name="input_loadbalancer_managed_security_group"></a> [loadbalancer\_managed\_security\_group](#input\_loadbalancer\_managed\_security\_group) | Load balancer managed security group | `string` | `""` | no |
+| <a name="input_loadbalancer_redirect_http_to_https"></a> [loadbalancer\_redirect\_http\_to\_https](#input\_loadbalancer\_redirect\_http\_to\_https) | Redirect HTTP traffic to HTTPS listener | `bool` | `false` | no |
+| <a name="input_loadbalancer_redirect_http_to_https_host"></a> [loadbalancer\_redirect\_http\_to\_https\_host](#input\_loadbalancer\_redirect\_http\_to\_https\_host) | Defines the host for the HTTP to HTTPS redirection rule | `string` | `"#{host}"` | no |
+| <a name="input_loadbalancer_redirect_http_to_https_path_pattern"></a> [loadbalancer\_redirect\_http\_to\_https\_path\_pattern](#input\_loadbalancer\_redirect\_http\_to\_https\_path\_pattern) | Defines the path pattern for the HTTP to HTTPS redirection rule | `list(string)` | <pre>[<br>  "*"<br>]</pre> | no |
+| <a name="input_loadbalancer_redirect_http_to_https_port"></a> [loadbalancer\_redirect\_http\_to\_https\_port](#input\_loadbalancer\_redirect\_http\_to\_https\_port) | Defines the port for the HTTP to HTTPS redirection rule | `string` | `"443"` | no |
+| <a name="input_loadbalancer_redirect_http_to_https_priority"></a> [loadbalancer\_redirect\_http\_to\_https\_priority](#input\_loadbalancer\_redirect\_http\_to\_https\_priority) | Defines the priority for the HTTP to HTTPS redirection rule | `number` | `1` | no |
+| <a name="input_loadbalancer_redirect_http_to_https_status_code"></a> [loadbalancer\_redirect\_http\_to\_https\_status\_code](#input\_loadbalancer\_redirect\_http\_to\_https\_status\_code) | The redirect status code | `string` | `"HTTP_301"` | no |
 | <a name="input_loadbalancer_security_groups"></a> [loadbalancer\_security\_groups](#input\_loadbalancer\_security\_groups) | Load balancer security groups | `list(string)` | `[]` | no |
 | <a name="input_loadbalancer_ssl_policy"></a> [loadbalancer\_ssl\_policy](#input\_loadbalancer\_ssl\_policy) | Specify a security policy to apply to the listener. This option is only applicable to environments with an application load balancer | `string` | `""` | no |
 | <a name="input_loadbalancer_subnets"></a> [loadbalancer\_subnets](#input\_loadbalancer\_subnets) | List of subnets to place Elastic Load Balancer | `list(string)` | `[]` | no |
@@ -529,7 +537,7 @@ In general, PRs are welcome. We follow the typical "fork-and-pull" Git workflow.
 
 ## Copyright
 
-Copyright © 2017-2022 [Cloud Posse, LLC](https://cpco.io/copyright)
+Copyright © 2017-2023 [Cloud Posse, LLC](https://cpco.io/copyright)
 
 
 

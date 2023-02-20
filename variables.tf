@@ -575,3 +575,44 @@ variable "enable_capacity_rebalancing" {
   default     = false
   description = "Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group"
 }
+
+variable "loadbalancer_redirect_http_to_https" {
+  type        = bool
+  default     = false
+  description = "Redirect HTTP traffic to HTTPS listener"
+}
+
+variable "loadbalancer_redirect_http_to_https_priority" {
+  type        = number
+  default     = 1
+  description = "Defines the priority for the HTTP to HTTPS redirection rule"
+}
+
+variable "loadbalancer_redirect_http_to_https_path_pattern" {
+  type        = list(string)
+  default     = ["*"]
+  description = "Defines the path pattern for the HTTP to HTTPS redirection rule"
+}
+
+variable "loadbalancer_redirect_http_to_https_host" {
+  type        = string
+  default     = "#{host}"
+  description = "Defines the host for the HTTP to HTTPS redirection rule"
+}
+
+variable "loadbalancer_redirect_http_to_https_port" {
+  type        = string
+  default     = "443"
+  description = "Defines the port for the HTTP to HTTPS redirection rule"
+}
+
+variable "loadbalancer_redirect_http_to_https_status_code" {
+  type        = string
+  default     = "HTTP_301"
+  description = "The redirect status code"
+
+  validation {
+    condition     = contains(["HTTP_301", "HTTP_302"], var.loadbalancer_redirect_http_to_https_status_code)
+    error_message = "Allowed values are \"HTTP_301\" or \"HTTP_302\"."
+  }
+}
