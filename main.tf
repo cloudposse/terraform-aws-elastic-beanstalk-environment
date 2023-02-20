@@ -119,7 +119,6 @@ resource "aws_ssm_activation" "ec2" {
   iam_role           = aws_iam_role.ec2.id
   registration_limit = var.autoscale_max
   tags               = module.this.tags
-  depends_on         = [aws_elastic_beanstalk_environment.default]
 }
 
 data "aws_iam_policy_document" "default" {
