@@ -422,7 +422,7 @@ locals {
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
-      value     = !var.loadbalancer_is_shared ? join("", sort(aws_s3_bucket.elb_logs.*.id)) : ""
+      value     = !var.loadbalancer_is_shared ? "${module.this.id}-eb-loadbalancer-logs" : ""
     },
     {
       namespace = "aws:elbv2:loadbalancer"
