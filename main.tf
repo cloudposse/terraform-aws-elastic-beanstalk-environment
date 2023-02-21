@@ -418,17 +418,20 @@ locals {
     }
   ]
 
-  alb_settings = [
+  alb_s3_settings = [
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
-      value     = !var.loadbalancer_is_shared ? "${module.this.id}-eb-loadbalancer-logs" : ""
+      value     = !var.loadbalancer_is_shared ? join("", sort(aws_s3_bucket.elb_logs.*.id)) : ""
     },
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Enabled"
       value     = var.enable_alb_s3_logs
-    },
+    }
+  ]
+
+  alb_settings = [
     {
       namespace = "aws:elbv2:listener:default"
       name      = "ListenerEnabled"
@@ -537,8 +540,9 @@ locals {
   ]
 
   # Select elb configuration depending on loadbalancer_type
+  elb_s3_settings         = var.loadbalancer_type == "application" && !var.loadbalancer_is_shared && var.enable_alb_s3_logs ? local.alb_s3_settings : []
   elb_settings_nlb        = var.loadbalancer_type == "network" ? concat(local.nlb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
-  elb_settings_alb        = var.loadbalancer_type == "application" && !var.loadbalancer_is_shared ? concat(local.alb_settings, local.generic_alb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
+  elb_settings_alb        = var.loadbalancer_type == "application" && !var.loadbalancer_is_shared ? concat(local.alb_settings, local.generic_alb_settings, local.generic_elb_settings, local.beanstalk_elb_settings, local.elb_s3_settings) : []
   elb_settings_shared_alb = var.loadbalancer_type == "application" && var.loadbalancer_is_shared ? concat(local.shared_alb_settings, local.generic_alb_settings, local.generic_elb_settings) : []
   elb_setting_classic     = var.loadbalancer_type == "classic" ? concat(local.classic_elb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
 
