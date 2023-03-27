@@ -29,12 +29,6 @@ variable "loadbalancer_is_shared" {
   description = "Flag to create a shared application loadbalancer. Only when loadbalancer_type = \"application\" https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/environments-cfg-alb-shared.html"
 }
 
-variable "shared_loadbalancer_arn" {
-  type        = string
-  default     = ""
-  description = "ARN of the shared application load balancer. Only when loadbalancer_type = \"application\"."
-}
-
 variable "dns_zone_id" {
   type        = string
   description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
