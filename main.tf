@@ -1,6 +1,6 @@
 locals {
   enabled   = module.this.enabled
-  partition = join("", data.aws_partition.current.*.partition)
+  partition = join("", data.aws_partition.current[*].partition)
 }
 
 data "aws_partition" "current" {
@@ -31,21 +31,21 @@ resource "aws_iam_role" "service" {
   count = local.enabled ? 1 : 0
 
   name               = "${module.this.id}-eb-service"
-  assume_role_policy = join("", data.aws_iam_policy_document.service.*.json)
+  assume_role_policy = join("", data.aws_iam_policy_document.service[*].json)
   tags               = module.this.tags
 }
 
 resource "aws_iam_role_policy_attachment" "enhanced_health" {
   count = local.enabled && var.enhanced_reporting_enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.service.*.name)
+  role       = join("", aws_iam_role.service[*].name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
 resource "aws_iam_role_policy_attachment" "service" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.service.*.name)
+  role       = join("", aws_iam_role.service[*].name)
   policy_arn = var.prefer_legacy_service_policy ? "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkService" : "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy"
 }
 
@@ -89,7 +89,7 @@ data "aws_iam_policy_document" "ec2" {
 resource "aws_iam_role_policy_attachment" "elastic_beanstalk_multi_container_docker" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.ec2.*.name)
+  role       = join("", aws_iam_role.ec2[*].name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker"
 }
 
@@ -97,7 +97,7 @@ resource "aws_iam_role" "ec2" {
   count = local.enabled ? 1 : 0
 
   name               = "${module.this.id}-eb-ec2"
-  assume_role_policy = join("", data.aws_iam_policy_document.ec2.*.json)
+  assume_role_policy = join("", data.aws_iam_policy_document.ec2[*].json)
   tags               = module.this.tags
 }
 
@@ -105,28 +105,28 @@ resource "aws_iam_role_policy" "default" {
   count = local.enabled ? 1 : 0
 
   name   = "${module.this.id}-eb-default"
-  role   = join("", aws_iam_role.ec2.*.id)
-  policy = join("", data.aws_iam_policy_document.extended.*.json)
+  role   = join("", aws_iam_role.ec2[*].id)
+  policy = join("", data.aws_iam_policy_document.extended[*].json)
 }
 
 resource "aws_iam_role_policy_attachment" "web_tier" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.ec2.*.name)
+  role       = join("", aws_iam_role.ec2[*].name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkWebTier"
 }
 
 resource "aws_iam_role_policy_attachment" "worker_tier" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.ec2.*.name)
+  role       = join("", aws_iam_role.ec2[*].name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AWSElasticBeanstalkWorkerTier"
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_ec2" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.ec2.*.name)
+  role       = join("", aws_iam_role.ec2[*].name)
   policy_arn = var.prefer_legacy_ssm_policy ? "arn:${local.partition}:iam::aws:policy/service-role/AmazonEC2RoleforSSM" : "arn:${local.partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
 
   lifecycle {
@@ -137,7 +137,7 @@ resource "aws_iam_role_policy_attachment" "ssm_ec2" {
 resource "aws_iam_role_policy_attachment" "ssm_automation" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.ec2.*.name)
+  role       = join("", aws_iam_role.ec2[*].name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AmazonSSMAutomationRole"
 
   lifecycle {
@@ -150,7 +150,7 @@ resource "aws_iam_role_policy_attachment" "ssm_automation" {
 resource "aws_iam_role_policy_attachment" "ecr_readonly" {
   count = local.enabled ? 1 : 0
 
-  role       = join("", aws_iam_role.ec2.*.name)
+  role       = join("", aws_iam_role.ec2[*].name)
   policy_arn = "arn:${local.partition}:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
@@ -158,7 +158,7 @@ resource "aws_ssm_activation" "ec2" {
   count = local.enabled ? 1 : 0
 
   name               = module.this.id
-  iam_role           = join("", aws_iam_role.ec2.*.id)
+  iam_role           = join("", aws_iam_role.ec2[*].id)
   registration_limit = var.autoscale_max
   tags               = module.this.tags
   depends_on         = [aws_elastic_beanstalk_environment.default]
@@ -289,8 +289,8 @@ data "aws_iam_policy_document" "default" {
     ]
 
     resources = [
-      join("", aws_iam_role.ec2.*.arn),
-      join("", aws_iam_role.service.*.arn)
+      join("", aws_iam_role.ec2[*].arn),
+      join("", aws_iam_role.service[*].arn)
     ]
 
     effect = "Allow"
@@ -346,7 +346,7 @@ data "aws_iam_policy_document" "default" {
 data "aws_iam_policy_document" "extended" {
   count = local.enabled ? 1 : 0
 
-  source_json               = join("", data.aws_iam_policy_document.default.*.json)
+  source_json               = join("", data.aws_iam_policy_document.default[*].json)
   override_policy_documents = [var.extended_ec2_policy_document]
 }
 
@@ -354,7 +354,7 @@ resource "aws_iam_instance_profile" "ec2" {
   count = local.enabled ? 1 : 0
 
   name = "${module.this.id}-eb-ec2"
-  role = join("", aws_iam_role.ec2.*.name)
+  role = join("", aws_iam_role.ec2[*].name)
   tags = module.this.tags
 }
 
@@ -469,7 +469,7 @@ locals {
     {
       namespace = "aws:elbv2:loadbalancer"
       name      = "AccessLogsS3Bucket"
-      value     = !var.loadbalancer_is_shared ? join("", sort(aws_s3_bucket.elb_logs.*.id)) : ""
+      value     = !var.loadbalancer_is_shared ? join("", sort(aws_s3_bucket.elb_logs[*].id)) : ""
     },
     {
       namespace = "aws:elbv2:loadbalancer"
@@ -650,7 +650,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:autoscaling:launchconfiguration"
     name      = "IamInstanceProfile"
-    value     = join("", aws_iam_instance_profile.ec2.*.name)
+    value     = join("", aws_iam_instance_profile.ec2[*].name)
     resource  = ""
   }
 
@@ -671,7 +671,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
   setting {
     namespace = "aws:elasticbeanstalk:environment"
     name      = "ServiceRole"
-    value     = join("", aws_iam_role.service.*.name)
+    value     = join("", aws_iam_role.service[*].name)
     resource  = ""
   }
 
@@ -1111,7 +1111,7 @@ data "aws_iam_policy_document" "elb_logs" {
 
     principals {
       type        = "AWS"
-      identifiers = [join("", data.aws_elb_service_account.main.*.arn)]
+      identifiers = [join("", data.aws_elb_service_account.main[*].arn)]
     }
 
     effect = "Allow"
@@ -1130,7 +1130,7 @@ resource "aws_s3_bucket" "elb_logs" {
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
-  policy        = join("", data.aws_iam_policy_document.elb_logs.*.json)
+  policy        = join("", data.aws_iam_policy_document.elb_logs[*].json)
   tags          = module.this.tags
 
   dynamic "server_side_encryption_configuration" {
@@ -1166,20 +1166,20 @@ module "dns_hostname" {
 
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
   zone_id  = var.dns_zone_id
-  records  = [join("", aws_elastic_beanstalk_environment.default.*.cname)]
+  records  = [join("", aws_elastic_beanstalk_environment.default[*].cname)]
 
   context = module.this.context
 }
 
 data "aws_lb_listener" "http" {
   count             = local.enabled && var.loadbalancer_redirect_http_to_https ? 1 : 0
-  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(aws_elastic_beanstalk_environment.default.0.load_balancers)
+  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(aws_elastic_beanstalk_environment.default[0].load_balancers)
   port              = var.application_port
 }
 
 resource "aws_lb_listener_rule" "redirect_http_to_https" {
   count        = local.enabled && var.loadbalancer_redirect_http_to_https ? 1 : 0
-  listener_arn = one(data.aws_lb_listener.http.*.arn)
+  listener_arn = one(data.aws_lb_listener.http[*].arn)
   priority     = var.loadbalancer_redirect_http_to_https_priority
 
   condition {
