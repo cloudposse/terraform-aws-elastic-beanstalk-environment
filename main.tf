@@ -1136,7 +1136,7 @@ resource "aws_s3_bucket" "elb_logs" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
   for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
-  bucket = aws_s3_bucket.elb_logs.id
+  bucket   = aws_s3_bucket.elb_logs.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -1146,17 +1146,17 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
 }
 
 resource "aws_s3_bucket_versioning" "elb_logs" {
-    bucket = aws_s3_bucket.elb_logs.id
-    versioning_configuration {
-      status = var.s3_bucket_versioning_enabled
-    }
+  bucket = aws_s3_bucket.elb_logs.id
+  versioning_configuration {
+    status = var.s3_bucket_versioning_enabled
+  }
 }
 
 resource "aws_s3_bucket_logging" "elb_logs" {
-    for_each = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
-    bucket = aws_s3_bucket.elb_logs.id
-    target_bucket = var.s3_bucket_access_log_bucket_name
-    target_prefix = "logs/${module.this.id}/"
+  for_each      = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
+  bucket        = aws_s3_bucket.elb_logs.id
+  target_bucket = var.s3_bucket_access_log_bucket_name
+  target_prefix = "logs/${module.this.id}/"
 }
 
 module "dns_hostname" {
