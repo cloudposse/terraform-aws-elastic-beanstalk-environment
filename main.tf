@@ -22,7 +22,6 @@ data "aws_iam_policy_document" "service" {
       type        = "Service"
       identifiers = ["elasticbeanstalk.amazonaws.com"]
     }
-
     effect = "Allow"
   }
 }
