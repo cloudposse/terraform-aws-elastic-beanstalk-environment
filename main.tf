@@ -39,6 +39,7 @@ resource "aws_iam_role_policy_attachment" "enhanced_health" {
   count = local.enabled && var.enhanced_reporting_enabled ? 1 : 0
 
   role       = join("", aws_iam_role.service[*].name)
+  
   policy_arn = "arn:${local.partition}:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth"
 }
 
