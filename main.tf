@@ -1126,36 +1126,37 @@ resource "aws_s3_bucket" "elb_logs" {
   #bridgecrew:skip=BC_AWS_GENERAL_56:Skipping "Ensure S3 buckets are encrypted with KMS by default"
   #bridgecrew:skip=BC_AWS_NETWORKING_52:Skipping "Ensure S3 Bucket has public access blocks"
   #bridgecrew:skip=BC_AWS_GENERAL_72:Skipping "Ensure S3 bucket has cross-region replication enabled"
-  count         = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
-  bucket        = "${module.this.id}-eb-loadbalancer-logs"
-  acl           = "private"
-  force_destroy = var.force_destroy
-  policy        = join("", data.aws_iam_policy_document.elb_logs[*].json)
-  tags          = module.this.tags
+  count                = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
+  bucket               = "${module.this.id}-eb-loadbalancer-logs"
+  aws_s3_bucket_acl    = "private"
+  force_destroy        = var.force_destroy
+  aws_s3_bucket_policy = join("", data.aws_iam_policy_document.elb_logs[*].json)
+  tags                 = module.this.tags
+}
 
-  dynamic "server_side_encryption_configuration" {
-    for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
+resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
+  for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
+  bucket = aws_s3_bucket.elb_logs.id
 
-    content {
-      rule {
-        apply_server_side_encryption_by_default {
-          sse_algorithm = "AES256"
-        }
-      }
+  rule {
+    apply_server_side_encryption_by_default {
+      sse_algorithm = "AES256"
     }
   }
+}
 
-  versioning {
-    enabled = var.s3_bucket_versioning_enabled
-  }
+resource "aws_s3_bucket_versioning" "elb_logs" {
+    bucket = aws_s3_bucket.elb_logs.id
+    versioning_configuration {
+      status = var.s3_bucket_versioning_enabled
+    }
+}
 
-  dynamic "logging" {
+resource "aws_s3_bucket_logging" "elb_logs" {
     for_each = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
-    content {
-      target_bucket = var.s3_bucket_access_log_bucket_name
-      target_prefix = "logs/${module.this.id}/"
-    }
-  }
+    bucket = aws_s3_bucket.elb_logs.id
+    target_bucket = var.s3_bucket_access_log_bucket_name
+    target_prefix = "logs/${module.this.id}/"
 }
 
 module "dns_hostname" {
