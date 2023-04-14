@@ -371,12 +371,6 @@ variable "elb_scheme" {
   description = "Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC"
 }
 
-variable "ssh_source_restriction" {
-  type        = string
-  default     = "0.0.0.0/0"
-  description = "Used to lock down SSH access to the EC2 instances"
-}
-
 variable "ssh_listener_enabled" {
   type        = bool
   default     = false
