@@ -1,6 +1,7 @@
 locals {
-  enabled   = module.this.enabled
-  partition = join("", data.aws_partition.current[*].partition)
+  enabled          = module.this.enabled
+  partition        = join("", data.aws_partition.current[*].partition)
+  elb_logs_enabled = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
 }
 
 data "aws_partition" "current" {
@@ -1126,7 +1127,7 @@ resource "aws_s3_bucket" "elb_logs" {
   #bridgecrew:skip=BC_AWS_GENERAL_56:Skipping "Ensure S3 buckets are encrypted with KMS by default"
   #bridgecrew:skip=BC_AWS_NETWORKING_52:Skipping "Ensure S3 Bucket has public access blocks"
   #bridgecrew:skip=BC_AWS_GENERAL_72:Skipping "Ensure S3 bucket has cross-region replication enabled"
-  count         = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
+  count         = local.elb_logs_enabled ? 1 : 0
   bucket        = "${module.this.id}-eb-loadbalancer-logs"
   acl           = "private"
   force_destroy = var.force_destroy
@@ -1135,8 +1136,8 @@ resource "aws_s3_bucket" "elb_logs" {
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
-  for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
-  bucket   = aws_s3_bucket.elb_logs.id
+  count  = local.elb_logs_enabled && var.s3_bucket_encryption_enabled ? 1 : 0
+  bucket = aws_s3_bucket.elb_logs.id
 
   rule {
     apply_server_side_encryption_by_default {
@@ -1146,6 +1147,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
 }
 
 resource "aws_s3_bucket_versioning" "elb_logs" {
+  count  = local.elb_logs_enabled ? 1 : 0
   bucket = aws_s3_bucket.elb_logs.id
   versioning_configuration {
     status = var.s3_bucket_versioning_enabled
@@ -1153,7 +1155,7 @@ resource "aws_s3_bucket_versioning" "elb_logs" {
 }
 
 resource "aws_s3_bucket_logging" "elb_logs" {
-  for_each      = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
+  count         = var.s3_bucket_access_log_bucket_name != "" ? 1 : 0
   bucket        = aws_s3_bucket.elb_logs.id
   target_bucket = var.s3_bucket_access_log_bucket_name
   target_prefix = "logs/${module.this.id}/"
