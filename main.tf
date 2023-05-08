@@ -1137,7 +1137,7 @@ resource "aws_s3_bucket" "elb_logs" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
   count  = local.elb_logs_enabled && var.s3_bucket_encryption_enabled ? 1 : 0
-  bucket = join("", aws_s3_bucket.elb_logs[*]id)
+  bucket = join("", aws_s3_bucket.elb_logs[*].id)
 
   rule {
     apply_server_side_encryption_by_default {
@@ -1148,7 +1148,7 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "elb_logs" {
 
 resource "aws_s3_bucket_versioning" "elb_logs" {
   count  = local.elb_logs_enabled ? 1 : 0
-  bucket = join("", aws_s3_bucket.elb_logs[*]id)
+  bucket = join("", aws_s3_bucket.elb_logs[*].id)
   versioning_configuration {
     status = var.s3_bucket_versioning_enabled
   }
@@ -1156,7 +1156,7 @@ resource "aws_s3_bucket_versioning" "elb_logs" {
 
 resource "aws_s3_bucket_logging" "elb_logs" {
   count         = var.s3_bucket_access_log_bucket_name != "" ? 1 : 0
-  bucket        = join("", aws_s3_bucket.elb_logs[*]id)
+  bucket        = join("", aws_s3_bucket.elb_logs[*].id)
   target_bucket = var.s3_bucket_access_log_bucket_name
   target_prefix = "logs/${module.this.id}/"
 }
