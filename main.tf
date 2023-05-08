@@ -1150,7 +1150,7 @@ resource "aws_s3_bucket_versioning" "elb_logs" {
   count  = local.elb_logs_enabled ? 1 : 0
   bucket = join("", aws_s3_bucket.elb_logs[*].id)
   versioning_configuration {
-    status = var.s3_bucket_versioning_enabled
+    status = var.s3_bucket_versioning_enabled ? "Enabled" : "Disabled"
   }
 }
 
