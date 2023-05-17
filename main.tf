@@ -1160,7 +1160,7 @@ resource "aws_s3_bucket" "elb_logs" {
 
 module "dns_hostname" {
   source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.2"
+  version = "0.13.0"
 
   enabled = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
 
