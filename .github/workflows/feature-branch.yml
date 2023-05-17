@@ -1,3 +1,4 @@
+---
 name: feature-branch
 on:
   pull_request:
@@ -9,7 +10,7 @@ on:
 permissions:
   pull-requests: write
   id-token: write
-  contents: read
+  contents: write
 
 jobs:
   terraform-module:
