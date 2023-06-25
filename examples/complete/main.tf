@@ -4,21 +4,22 @@ provider "aws" {
 
 module "vpc" {
   source  = "cloudposse/vpc/aws"
-  version = "0.28.1"
+  version = "2.1.0"
 
-  cidr_block = "172.16.0.0/16"
+  ipv4_primary_cidr_block = "172.16.0.0/16"
 
   context = module.this.context
 }
 
 module "subnets" {
   source  = "cloudposse/dynamic-subnets/aws"
-  version = "0.39.8"
+  version = "2.4.1"
 
   availability_zones   = var.availability_zones
   vpc_id               = module.vpc.vpc_id
-  igw_id               = module.vpc.igw_id
-  cidr_block           = module.vpc.vpc_cidr_block
+  igw_id               = [module.vpc.igw_id]
+  ipv4_enabled         = true
+  ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
   nat_gateway_enabled  = true
   nat_instance_enabled = false
 
@@ -102,6 +103,9 @@ module "elastic_beanstalk_environment" {
   prefer_legacy_ssm_policy     = false
   prefer_legacy_service_policy = false
   scheduled_actions            = var.scheduled_actions
+
+  s3_bucket_versioning_enabled = var.s3_bucket_versioning_enabled
+  enable_loadbalancer_logs     = var.enable_loadbalancer_logs
 
   context = module.this.context
 }
