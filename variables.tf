@@ -245,6 +245,12 @@ variable "logs_delete_on_terminate" {
   description = "Whether to delete the log groups when the environment is terminated. If false, the logs are kept RetentionInDays days"
 }
 
+variable "enable_loadbalancer_logs" {
+  type        = bool
+  default     = true
+  description = "Whether to enable Load Balancer Logging to the S3 bucket."
+}
+
 variable "logs_retention_in_days" {
   type        = number
   default     = 7
@@ -493,12 +499,6 @@ variable "s3_bucket_versioning_enabled" {
   type        = bool
   default     = true
   description = "When set to 'true' the s3 origin bucket will have versioning enabled"
-}
-
-variable "s3_bucket_encryption_enabled" {
-  type        = bool
-  default     = true
-  description = "When set to 'true' the resource will have aes256 encryption enabled by default"
 }
 
 variable "scheduled_actions" {
