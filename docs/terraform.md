@@ -11,12 +11,8 @@
 
 | Name | Version |
 |------|---------|
-<<<<<<< HEAD
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.2.0 |
-=======
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.5.1 |
->>>>>>> 92c3ba4e23e87653fe53357399901d65881dbb98
 
 ## Modules
 
