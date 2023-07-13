@@ -344,9 +344,8 @@ data "aws_iam_policy_document" "default" {
 }
 
 data "aws_iam_policy_document" "extended" {
-  count = local.enabled ? 1 : 0
-
-  source_json               = join("", data.aws_iam_policy_document.default[*].json)
+  count                     = local.enabled ? 1 : 0
+  source_policy_documents   = [join("", data.aws_iam_policy_document.default[*].json)]
   override_policy_documents = [var.extended_ec2_policy_document]
 }
 
@@ -467,16 +466,6 @@ locals {
 
   alb_settings = [
     {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "AccessLogsS3Bucket"
-      value     = !var.loadbalancer_is_shared ? join("", sort(aws_s3_bucket.elb_logs[*].id)) : ""
-    },
-    {
-      namespace = "aws:elbv2:loadbalancer"
-      name      = "AccessLogsS3Enabled"
-      value     = "true"
-    },
-    {
       namespace = "aws:elbv2:listener:default"
       name      = "ListenerEnabled"
       value     = var.http_listener_enabled || var.loadbalancer_certificate_arn == "" ? "true" : "false"
@@ -526,6 +515,18 @@ locals {
       value     = var.healthcheck_timeout
     }
   ]
+
+  alb_settings_logging = !var.loadbalancer_is_shared && var.enable_loadbalancer_logs ? [
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Enabled"
+      value     = "true"
+    },
+    {
+      namespace = "aws:elbv2:loadbalancer"
+      name      = "AccessLogsS3Bucket"
+      value     = module.elb_logs.bucket_id
+  }] : []
 
   nlb_settings = [
     {
@@ -585,7 +586,7 @@ locals {
 
   # Select elb configuration depending on loadbalancer_type
   elb_settings_nlb        = var.loadbalancer_type == "network" ? concat(local.nlb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
-  elb_settings_alb        = var.loadbalancer_type == "application" && !var.loadbalancer_is_shared ? concat(local.alb_settings, local.generic_alb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
+  elb_settings_alb        = var.loadbalancer_type == "application" && !var.loadbalancer_is_shared ? concat(local.alb_settings, local.generic_alb_settings, local.generic_elb_settings, local.beanstalk_elb_settings, local.alb_settings_logging) : []
   elb_settings_shared_alb = var.loadbalancer_type == "application" && var.loadbalancer_is_shared ? concat(local.shared_alb_settings, local.generic_alb_settings, local.generic_elb_settings) : []
   elb_setting_classic     = var.loadbalancer_type == "classic" ? concat(local.classic_elb_settings, local.generic_elb_settings, local.beanstalk_elb_settings) : []
 
@@ -1089,73 +1090,23 @@ resource "aws_elastic_beanstalk_environment" "default" {
       resource  = ""
     }
   }
+
 }
 
-data "aws_elb_service_account" "main" {
-  count = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" ? 1 : 0
+resource "random_string" "elb_logs_suffix" {
+  length  = 5
+  special = false
+  upper   = false
 }
 
-data "aws_iam_policy_document" "elb_logs" {
-  count = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
-
-  statement {
-    sid = ""
-
-    actions = [
-      "s3:PutObject",
-    ]
-
-    resources = [
-      "arn:${local.partition}:s3:::${module.this.id}-eb-loadbalancer-logs/*"
-    ]
-
-    principals {
-      type        = "AWS"
-      identifiers = [join("", data.aws_elb_service_account.main[*].arn)]
-    }
-
-    effect = "Allow"
-  }
-}
-
-resource "aws_s3_bucket" "elb_logs" {
-  #bridgecrew:skip=BC_AWS_S3_13:Skipping `Enable S3 Bucket Logging` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
-  #bridgecrew:skip=BC_AWS_S3_14:Skipping `Ensure all data stored in the S3 bucket is securely encrypted at rest` check until bridgecrew will support dynamic blocks (https://github.com/bridgecrewio/checkov/issues/776).
-  #bridgecrew:skip=CKV_AWS_52:Skipping `Ensure S3 bucket has MFA delete enabled` due to issue in terraform (https://github.com/hashicorp/terraform-provider-aws/issues/629).
-  #bridgecrew:skip=BC_AWS_S3_16:Skipping since adding count condition sounds like to trigger an error. (https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/pull/182)
-  #bridgecrew:skip=BC_AWS_GENERAL_56:Skipping "Ensure S3 buckets are encrypted with KMS by default"
-  #bridgecrew:skip=BC_AWS_NETWORKING_52:Skipping "Ensure S3 Bucket has public access blocks"
-  #bridgecrew:skip=BC_AWS_GENERAL_72:Skipping "Ensure S3 bucket has cross-region replication enabled"
-  count         = local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? 1 : 0
-  bucket        = "${module.this.id}-eb-loadbalancer-logs"
-  acl           = "private"
-  force_destroy = var.force_destroy
-  policy        = join("", data.aws_iam_policy_document.elb_logs[*].json)
-  tags          = module.this.tags
-
-  dynamic "server_side_encryption_configuration" {
-    for_each = var.s3_bucket_encryption_enabled ? ["true"] : []
-
-    content {
-      rule {
-        apply_server_side_encryption_by_default {
-          sse_algorithm = "AES256"
-        }
-      }
-    }
-  }
-
-  versioning {
-    enabled = var.s3_bucket_versioning_enabled
-  }
-
-  dynamic "logging" {
-    for_each = var.s3_bucket_access_log_bucket_name != "" ? [1] : []
-    content {
-      target_bucket = var.s3_bucket_access_log_bucket_name
-      target_prefix = "logs/${module.this.id}/"
-    }
-  }
+module "elb_logs" {
+  source             = "cloudposse/lb-s3-bucket/aws"
+  version            = "0.19.0"
+  enabled            = var.enable_loadbalancer_logs && local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? true : false
+  name               = "${module.this.id}-alb-logs-${random_string.elb_logs_suffix.result}"
+  force_destroy      = var.force_destroy
+  versioning_enabled = var.s3_bucket_versioning_enabled
+  context            = module.this.context
 }
 
 module "dns_hostname" {

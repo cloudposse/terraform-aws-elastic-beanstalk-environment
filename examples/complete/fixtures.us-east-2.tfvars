@@ -62,7 +62,7 @@ elb_scheme = "public"
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
-solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.1-ce"
+solution_stack_name = "64bit Amazon Linux 2023 v4.0.1 running Python 3.11"
 
 version_label = ""
 
@@ -88,3 +88,6 @@ env_vars = {
   "DB_PASSWORD"     = "zzzzzzzzzzzzzzzzzzz"
   "ANOTHER_ENV_VAR" = "123456789"
 }
+
+s3_bucket_versioning_enabled = false
+enable_loadbalancer_logs     = false
