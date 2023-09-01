@@ -84,7 +84,7 @@ output "load_balancers" {
 }
 
 output "load_balancer_log_bucket" {
-  value       = var.enable_loadbalancer_logs ? "${module.this.id}-eb-loadbalancer-logs-${random_string.elb_logs_suffix.result}" : null
+  value       = var.enable_loadbalancer_logs ? local.s3_bucket_access_log_name : null
   description = "Name of bucket where Load Balancer logs are stored (if enabled)"
 }
 
