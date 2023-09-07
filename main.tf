@@ -1,6 +1,7 @@
 locals {
-  enabled   = module.this.enabled
-  partition = join("", data.aws_partition.current[*].partition)
+  enabled                   = module.this.enabled
+  partition                 = join("", data.aws_partition.current[*].partition)
+  s3_bucket_access_log_name = var.s3_bucket_access_log_bucket_name != "" ? var.s3_bucket_access_log_bucket_name : "${module.this.id}-alb-logs-${random_string.elb_logs_suffix.result}"
 }
 
 data "aws_partition" "current" {
@@ -1103,7 +1104,7 @@ module "elb_logs" {
   source             = "cloudposse/lb-s3-bucket/aws"
   version            = "0.19.0"
   enabled            = var.enable_loadbalancer_logs && local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? true : false
-  name               = "${module.this.id}-alb-logs-${random_string.elb_logs_suffix.result}"
+  name               = local.s3_bucket_access_log_name
   force_destroy      = var.force_destroy
   versioning_enabled = var.s3_bucket_versioning_enabled
   context            = module.this.context
