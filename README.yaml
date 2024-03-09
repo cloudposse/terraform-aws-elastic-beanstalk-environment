@@ -1,4 +1,3 @@
----
 #
 # This is the canonical configuration for the `README.md`
 # Run `make readme` to rebuild the `README.md`
@@ -34,13 +33,17 @@ github_repo: cloudposse/terraform-aws-elastic-beanstalk-environment
 
 # Badges to display
 badges:
-  - name: "Latest Release"
-    image: "https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-environment.svg"
-    url: "https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/releases/latest"
-  - name: "Slack Community"
-    image: "https://slack.cloudposse.com/badge.svg"
-    url: "https://slack.cloudposse.com"
+  - name: Latest Release
+    image: https://img.shields.io/github/release/cloudposse/terraform-aws-elastic-beanstalk-environment.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/releases/latest
+  - name: Last Updated
+    image: https://img.shields.io/github/last-commit/cloudposse/terraform-aws-elastic-beanstalk-environment.svg?style=for-the-badge
+    url: https://github.com/cloudposse/terraform-aws-elastic-beanstalk-environment/commits
+  - name: Slack Community
+    image: https://slack.cloudposse.com/for-the-badge.svg
+    url: https://slack.cloudposse.com
 
+# List any related terraform modules that this module may be used with or that this module depends on.
 related:
   - name: "terraform-aws-jenkins"
     description: "Terraform module to build Docker image with Jenkins, save it to an ECR repo, and deploy to Elastic Beanstalk running Docker stack"
@@ -71,7 +74,7 @@ description: |-
   If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
 
 # How to use this project
-usage: |-
+usage: |2-
 
   For a complete example, see [examples/complete](examples/complete)
 
@@ -86,7 +89,7 @@ usage: |-
       version = "x.x.x"
       
       cidr_block = "172.16.0.0/16"
-  
+
       context = module.this.context
     }
     
@@ -200,28 +203,4 @@ include:
   - "docs/terraform.md"
 
 # Contributors to this project
-contributors:
-  - name: "Erik Osterman"
-    homepage: "https://github.com/osterman"
-    avatar: "https://s.gravatar.com/avatar/88c480d4f73b813904e00a5695a454cb?s=144"
-    github: "osterman"
-  - name: "Igor Rodionov"
-    homepage: "https://github.com/goruha/"
-    avatar: "https://s.gravatar.com/avatar/bc70834d32ed4517568a1feb0b9be7e2?s=144"
-    github: "goruha"
-  - name: "Andriy Knysh"
-    homepage: "https://github.com/aknysh/"
-    avatar: "https://avatars0.githubusercontent.com/u/7356997?v=4&u=ed9ce1c9151d552d985bdf5546772e14ef7ab617&s=144"
-    github: "aknysh"
-  - name: "Guillaume Delacour"
-    github: "guikcd"
-  - name: "Viktor Erpylev"
-    github: "velmoga"
-  - name: "Lucas Pearson"
-    github: "pearson-lucas-dev"
-  - name: "Chris Green"
-    github: "DirectRoot"
-  - name: "Vladimir Syromyatnikov"
-    github: "SweetOps"
-  - name: "Aleksandar Knezevic"
-    github: "aleksandarknezevic"
+contributors: []
