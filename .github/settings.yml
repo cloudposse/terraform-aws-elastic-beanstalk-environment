@@ -1,0 +1,5 @@
+# Upstream changes from _extends are only recognized when modifications are made to this file in the default branch.
+_extends: .github
+repository:
+  name: terraform-aws-elastic-beanstalk-environment
+  description: Terraform module to provision an AWS Elastic Beanstalk Environment
