@@ -1101,13 +1101,14 @@ resource "random_string" "elb_logs_suffix" {
 }
 
 module "elb_logs" {
-  source             = "cloudposse/lb-s3-bucket/aws"
-  version            = "0.19.0"
-  enabled            = var.enable_loadbalancer_logs && local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? true : false
-  name               = local.s3_bucket_access_log_name
-  force_destroy      = var.force_destroy
-  versioning_enabled = var.s3_bucket_versioning_enabled
-  context            = module.this.context
+  source                 = "cloudposse/lb-s3-bucket/aws"
+  version                = "0.19.0"
+  enabled                = var.enable_loadbalancer_logs && local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? true : false
+  bucket_name            = local.s3_bucket_access_log_name
+  access_log_bucket_name = null # Intentionally not used. Naming is confusing (LB access logs vs S3 access logs)
+  force_destroy          = var.force_destroy
+  versioning_enabled     = var.s3_bucket_versioning_enabled
+  context                = module.this.context
 }
 
 module "dns_hostname" {
