@@ -1102,7 +1102,7 @@ resource "random_string" "elb_logs_suffix" {
 
 module "elb_logs" {
   source             = "cloudposse/lb-s3-bucket/aws"
-  version            = "0.19.0"
+  version            = "0.20.0"
   enabled            = var.enable_loadbalancer_logs && local.enabled && var.tier == "WebServer" && var.environment_type == "LoadBalanced" && var.loadbalancer_type != "network" && !var.loadbalancer_is_shared ? true : false
   name               = local.s3_bucket_access_log_name
   force_destroy      = var.force_destroy
