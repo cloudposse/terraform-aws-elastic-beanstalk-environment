@@ -1092,6 +1092,7 @@ resource "aws_elastic_beanstalk_environment" "default" {
     }
   }
 
+  depends_on = [aws_iam_instance_profile.ec2]
 }
 
 resource "random_string" "elb_logs_suffix" {
