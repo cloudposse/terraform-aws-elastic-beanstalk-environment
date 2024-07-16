@@ -5,3 +5,4 @@ repository:
   description: Terraform module to provision an AWS Elastic Beanstalk Environment
   homepage: https://cloudposse.com/accelerate
   topics: terraform, terraform-modules, elasticbeanstalk, aws, environment, hcl2
+
