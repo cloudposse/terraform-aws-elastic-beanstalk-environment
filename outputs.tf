@@ -38,6 +38,11 @@ output "ec2_instance_profile_role_name" {
   description = "Instance IAM role name"
 }
 
+output "ec2_service_role_arn" {
+  value       = join("", aws_iam_role.service[*].arn)
+  description = "EC2 service IAM role ARN"
+}
+
 output "tier" {
   value       = join("", aws_elastic_beanstalk_environment.default[*].tier)
   description = "The environment tier"
