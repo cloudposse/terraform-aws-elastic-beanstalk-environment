@@ -380,6 +380,7 @@ For a complete example, see [examples/complete](examples/complete)
 | <a name="output_application"></a> [application](#output\_application) | The Elastic Beanstalk Application for this environment |
 | <a name="output_autoscaling_groups"></a> [autoscaling\_groups](#output\_autoscaling\_groups) | The autoscaling groups used by this environment |
 | <a name="output_ec2_instance_profile_role_name"></a> [ec2\_instance\_profile\_role\_name](#output\_ec2\_instance\_profile\_role\_name) | Instance IAM role name |
+| <a name="output_ec2_service_role_arn"></a> [ec2\_service\_role\_arn](#output\_ec2\_service\_role\_arn) | EC2 service IAM role ARN |
 | <a name="output_elb_zone_id"></a> [elb\_zone\_id](#output\_elb\_zone\_id) | ELB zone ID |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Fully qualified DNS name for the environment |
 | <a name="output_hostname"></a> [hostname](#output\_hostname) | DNS hostname |
