@@ -22,6 +22,7 @@ module "subnets" {
   ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
   nat_gateway_enabled  = true
   nat_instance_enabled = false
+  max_nats             = 1
 
   context = module.this.context
 }
