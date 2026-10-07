@@ -418,6 +418,8 @@ variable "alb_zone_id" {
     ap-southeast-1 = "Z16FZ9L249IFLT"
     ap-southeast-2 = "Z2PCDNR3VC2G1N"
     ca-central-1   = "ZJFCZL7SSZB5I"
+    cn-north-1     = "Z1GDH35T77C1KE"
+    cn-northwest-1 = "ZM7IZAIOVVDZF"
     eu-central-1   = "Z1FRNW7UH4DEZJ"
     eu-west-1      = "Z2NYPWQ7DFZAZH"
     eu-west-2      = "Z1GKAAAUGATPF1"
