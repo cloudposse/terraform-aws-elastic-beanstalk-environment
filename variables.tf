@@ -23,7 +23,12 @@ variable "environment_type" {
 variable "loadbalancer_type" {
   type        = string
   default     = "classic"
-  description = "Load Balancer type, e.g. 'application' or 'classic'"
+  description = "Load balancer type: application, network, or classic"
+
+  validation {
+    condition     = contains(["application", "network", "classic"], var.loadbalancer_type)
+    error_message = "loadbalancer_type must be application, network, or classic."
+  }
 }
 
 variable "loadbalancer_is_shared" {
@@ -406,41 +411,102 @@ variable "env_vars" {
   description = "Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env_vars = { DB_USER = 'admin' DB_PASS = 'xxxxxx' }"
 }
 
-# From: http://docs.aws.amazon.com/general/latest/gr/rande.html#elasticbeanstalk_region
-# Via: https://github.com/hashicorp/terraform/issues/7071
+# Route 53 hosted zone IDs for Elastic Load Balancing aliases.
+# Application and Classic load balancers use the first ID in the AWS ELB
+# endpoints table; Network Load Balancers use the second ID.
+# https://docs.aws.amazon.com/general/latest/gr/elb.html
 variable "alb_zone_id" {
   type = map(string)
 
   default = {
-    ap-northeast-1 = "Z1R25G3KIG2GBW"
-    ap-northeast-2 = "Z3JE5OI70TWKCP"
-    ap-south-1     = "Z18NTBI3Y7N9TZ"
-    ap-southeast-1 = "Z16FZ9L249IFLT"
-    ap-southeast-2 = "Z2PCDNR3VC2G1N"
-    ca-central-1   = "ZJFCZL7SSZB5I"
+    af-south-1     = "Z268VQBMOI5EKX"
+    ap-east-1      = "Z3DQVH9N71FHZ0"
+    ap-east-2      = "Z02789141MW7T1WBU19PO"
+    ap-northeast-1 = "Z14GRHDCWA56QT"
+    ap-northeast-2 = "ZWKZPGTI48KDX"
+    ap-northeast-3 = "Z5LXEXXYW11ES"
+    ap-south-1     = "ZP97RAFLXTNZK"
+    ap-south-2     = "Z0173938T07WNTVAEPZN"
+    ap-southeast-1 = "Z1LMS91P8CMLE5"
+    ap-southeast-2 = "Z1GM3OXH4ZPM65"
+    ap-southeast-3 = "Z08888821HLRG5A9ZRTER"
+    ap-southeast-4 = "Z09517862IB2WZLPXG76F"
+    ap-southeast-5 = "Z06010284QMVVW7WO5J"
+    ap-southeast-6 = "Z023301818UFJ50CIO0MV"
+    ap-southeast-7 = "Z0390008CMBRTHFGWBCB"
+    ca-central-1   = "ZQSVJUPU6J1EY"
+    ca-west-1      = "Z06473681N0SF6OS049SD"
     cn-north-1     = "Z1GDH35T77C1KE"
     cn-northwest-1 = "ZM7IZAIOVVDZF"
-    eu-central-1   = "Z1FRNW7UH4DEZJ"
-    eu-west-1      = "Z2NYPWQ7DFZAZH"
-    eu-west-2      = "Z1GKAAAUGATPF1"
-    sa-east-1      = "Z10X7K2B4QSOFV"
-    us-east-1      = "Z117KPS5GTRQ2G"
-    us-east-2      = "Z14LCN19Q5QHIC"
-    us-west-1      = "Z1LQECGX5PH1X"
-    us-west-2      = "Z38NKT9BP95V3O"
+    eu-central-1   = "Z215JYRZR1TBD5"
+    eu-central-2   = "Z06391101F2ZOEP8P5EB3"
+    eu-north-1     = "Z23TAZ6LKFMNIO"
+    eu-south-1     = "Z3ULH7SSC9OV64"
+    eu-south-2     = "Z0956581394HF5D5LXGAP"
+    eu-west-1      = "Z32O12XQLNTSW2"
+    eu-west-2      = "ZHURV8PSTC4K8"
     eu-west-3      = "Z3Q77PNBQS71R4"
-    af-south-1     = "Z1EI3BVKMKK4AM"
-    ap-east-1      = "ZPWYUBWRU171A"
-    eu-central-1   = "Z1FRNW7UH4DEZJ"
-    eu-south-1     = "Z10VDYYOA2JFKM"
-    eu-north-1     = "Z23GO28BZ5AETM"
-    me-south-1     = "Z2BBTEKR2I36N2"
-    sa-east-1      = "Z10X7K2B4QSOFV"
-    us-gov-west-1  = "Z31GFT0UA1I2HV"
-    us-gov-east-1  = "Z2NIFVYYW2VKV1"
+    il-central-1   = "Z09170902867EHPV2DABU"
+    me-central-1   = "Z08230872XQRWHG2XF6I"
+    me-south-1     = "ZS929ML54UICD"
+    mx-central-1   = "Z023552324OKD1BB28BH5"
+    sa-east-1      = "Z2P70J7HTTTPLU"
+    us-east-1      = "Z35SXDOTRQ7X7K"
+    us-east-2      = "Z3AADJGX6KTTL2"
+    us-gov-east-1  = "Z166TLBEWOO7G0"
+    us-gov-west-1  = "Z33AYJ8TM3BH4J"
+    us-west-1      = "Z368ELLRRE2KJ0"
+    us-west-2      = "Z1H1FL5HABSF5"
   }
 
-  description = "ALB zone id"
+  description = "Route 53 hosted zone IDs for Application and Classic load balancers, keyed by AWS region. Used by the elb_zone_id output unless loadbalancer_type is network."
+}
+
+variable "nlb_zone_id" {
+  type = map(string)
+
+  default = {
+    af-south-1     = "Z203XCE67M25HM"
+    ap-east-1      = "Z12Y7K3UBGUAD1"
+    ap-east-2      = "Z09176273OC2HWIAUNYW"
+    ap-northeast-1 = "Z31USIVHYNEOWT"
+    ap-northeast-2 = "ZIBE1TIR4HY56"
+    ap-northeast-3 = "Z1GWIQ4HH19I5X"
+    ap-south-1     = "ZVDDRBQ08TROA"
+    ap-south-2     = "Z0711778386UTO08407HT"
+    ap-southeast-1 = "ZKVM4W9LS7TM"
+    ap-southeast-2 = "ZCT6FZBF4DROD"
+    ap-southeast-3 = "Z01971771FYVNCOVWJU1G"
+    ap-southeast-4 = "Z01156963G8MIIL7X90IV"
+    ap-southeast-5 = "Z026317210H9ACVTRO6FB"
+    ap-southeast-6 = "Z01392953RKV2Q3RBP0KU"
+    ap-southeast-7 = "Z054363131YWATEMWRG5L"
+    ca-central-1   = "Z2EPGBW3API2WT"
+    ca-west-1      = "Z02754302KBB00W2LKWZ9"
+    cn-north-1     = "Z3QFB96KMJ7ED6"
+    cn-northwest-1 = "ZQEIKTCZ8352D"
+    eu-central-1   = "Z3F0SRJ5LGBH90"
+    eu-central-2   = "Z02239872DOALSIDCX66S"
+    eu-north-1     = "Z1UDT6IFJ4EJM"
+    eu-south-1     = "Z23146JA1KNAFP"
+    eu-south-2     = "Z1011216NVTVYADP1SSV"
+    eu-west-1      = "Z2IFOLAFXWLO4F"
+    eu-west-2      = "ZD4D7Y8KGAS4G"
+    eu-west-3      = "Z1CMS0P5QUZ6D5"
+    il-central-1   = "Z0313266YDI6ZRHTGQY4"
+    me-central-1   = "Z00282643NTTLPANJJG2P"
+    me-south-1     = "Z3QSRYVP46NYYV"
+    mx-central-1   = "Z02031231H3ID6HYJ9A7U"
+    sa-east-1      = "ZTK26PT1VY4CU"
+    us-east-1      = "Z26RNL4JYFTOTI"
+    us-east-2      = "ZLMOA37VPKANP"
+    us-gov-east-1  = "Z1ZSMQQ6Q24QQ8"
+    us-gov-west-1  = "ZMG1MZ2THAWF1"
+    us-west-1      = "Z24FKFUX50B4VW"
+    us-west-2      = "Z18D5FSROUN65G"
+  }
+
+  description = "Route 53 hosted zone IDs for Network Load Balancers, keyed by AWS region. Used by the elb_zone_id output when loadbalancer_type is network."
 }
 
 variable "ami_id" {
