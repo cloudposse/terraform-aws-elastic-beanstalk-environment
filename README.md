@@ -181,6 +181,17 @@ For a complete example, see [examples/complete](examples/complete)
 }
 ```
 
+To create a Route 53 A alias instead of the default CNAME, set `dns_alias_enabled = true`. Set `dns_alias_apex_enabled = true` to create the record at the hosted zone apex; otherwise, the module uses `dns_subdomain` or its default name. Alias records require an Elastic Beanstalk environment with a regionalized domain name. For regions without a default Beanstalk hosted zone ID, set `dns_alias_zone_id` to the ID published by AWS for that region.
+
+```hcl
+module "elastic_beanstalk_environment" {
+  source                    = "cloudposse/elastic-beanstalk-environment/aws"
+  dns_zone_id               = "Z1234567890"
+  dns_alias_enabled         = true
+  dns_alias_apex_enabled    = true
+}
+```
+
 > [!IMPORTANT]
 > In Cloud Posse's examples, we avoid pinning modules to specific versions to prevent discrepancies between the documentation
 > and the latest released versions. However, for your own projects, we strongly advise pinning each module to the exact version
@@ -215,7 +226,6 @@ For a complete example, see [examples/complete](examples/complete)
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_aws_security_group"></a> [aws\_security\_group](#module\_aws\_security\_group) | cloudposse/security-group/aws | 1.0.1 |
-| <a name="module_dns_hostname"></a> [dns\_hostname](#module\_dns\_hostname) | cloudposse/route53-cluster-hostname/aws | 0.12.2 |
 | <a name="module_elb_logs"></a> [elb\_logs](#module\_elb\_logs) | cloudposse/lb-s3-bucket/aws | 0.20.0 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
 
@@ -237,6 +247,7 @@ For a complete example, see [examples/complete](examples/complete)
 | [aws_iam_role_policy_attachment.web_tier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.worker_tier](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_lb_listener_rule.redirect_http_to_https](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_listener_rule) | resource |
+| [aws_route53_record.dns_hostname](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route53_record) | resource |
 | [aws_ssm_activation.ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/ssm_activation) | resource |
 | [random_string.elb_logs_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_iam_policy_document.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
@@ -245,6 +256,7 @@ For a complete example, see [examples/complete](examples/complete)
 | [aws_iam_policy_document.service](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_lb_listener.http](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/lb_listener) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
+| [aws_route53_zone.dns_alias](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/route53_zone) | data source |
 
 ## Inputs
 
@@ -281,6 +293,9 @@ For a complete example, see [examples/complete](examples/complete)
 | <a name="input_deployment_timeout"></a> [deployment\_timeout](#input\_deployment\_timeout) | Number of seconds to wait for an instance to complete executing commands | `number` | `600` | no |
 | <a name="input_description"></a> [description](#input\_description) | Short description of the Environment | `string` | `""` | no |
 | <a name="input_descriptor_formats"></a> [descriptor\_formats](#input\_descriptor\_formats) | Describe additional descriptors to be output in the `descriptors` output map.<br/>Map of maps. Keys are names of descriptors. Values are maps of the form<br/>`{<br/>   format = string<br/>   labels = list(string)<br/>}`<br/>(Type is `any` so the map values can later be enhanced to provide additional options.)<br/>`format` is a Terraform format string to be passed to the `format()` function.<br/>`labels` is a list of labels, in order, to pass to `format()` function.<br/>Label values will be normalized before being passed to `format()` so they will be<br/>identical to how they appear in `id`.<br/>Default is `{}` (`descriptors` output will be empty). | `any` | `{}` | no |
+| <a name="input_dns_alias_apex_enabled"></a> [dns\_alias\_apex\_enabled](#input\_dns\_alias\_apex\_enabled) | Whether to create the A alias at the Route 53 hosted zone apex instead of the configured dns\_subdomain or default module name. Requires dns\_alias\_enabled = true. | `bool` | `false` | no |
+| <a name="input_dns_alias_enabled"></a> [dns\_alias\_enabled](#input\_dns\_alias\_enabled) | Whether to create an A alias record for the Elastic Beanstalk environment instead of a CNAME record. The environment must have a regionalized domain name. | `bool` | `false` | no |
+| <a name="input_dns_alias_zone_id"></a> [dns\_alias\_zone\_id](#input\_dns\_alias\_zone\_id) | Override the Route 53 hosted zone ID for the Elastic Beanstalk alias target. Set this when the module does not have a default ID for the selected region. | `string` | `""` | no |
 | <a name="input_dns_subdomain"></a> [dns\_subdomain](#input\_dns\_subdomain) | The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well | `string` | `""` | no |
 | <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment | `string` | `""` | no |
 | <a name="input_elastic_beanstalk_application_name"></a> [elastic\_beanstalk\_application\_name](#input\_elastic\_beanstalk\_application\_name) | Elastic Beanstalk application name | `string` | n/a | yes |

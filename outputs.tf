@@ -1,5 +1,5 @@
 output "hostname" {
-  value       = module.dns_hostname.hostname
+  value       = join("", aws_route53_record.dns_hostname[*].fqdn)
   description = "DNS hostname"
 }
 
