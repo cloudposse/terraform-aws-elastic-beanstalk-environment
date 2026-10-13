@@ -8,6 +8,11 @@ data "aws_partition" "current" {
   count = local.enabled ? 1 : 0
 }
 
+data "aws_elastic_beanstalk_hosted_zone" "default" {
+  count  = local.enabled && !contains(keys(var.alb_zone_id), var.region) ? 1 : 0
+  region = var.region
+}
+
 #
 # Service
 #
