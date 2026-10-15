@@ -41,6 +41,7 @@ The Cloud Posse team no longer utilizes Beanstalk all that much, but this module
 If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
 
 
+
 > [!TIP]
 > #### 👽 Use Atmos with Terraform
 > Cloud Posse uses [`atmos`](https://atmos.tools) to easily orchestrate multiple environments using Terraform. <br/>
@@ -51,6 +52,7 @@ If you're interested, reach out to us via the `#terraform` channel in [the Sweet
 > <img src="https://github.com/cloudposse/atmos/blob/main/docs/demo.gif?raw=true"/><br/>
 > <i>Example of running <a href="https://atmos.tools"><code>atmos</code></a> to manage infrastructure from our <a href="https://atmos.tools/quick-start/">Quick Start</a> tutorial.</i>
 > </detalis>
+
 
 
 
@@ -209,7 +211,7 @@ module "elastic_beanstalk_environment" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5.1 |
@@ -217,14 +219,14 @@ module "elastic_beanstalk_environment" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.5.1 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_aws_security_group"></a> [aws\_security\_group](#module\_aws\_security\_group) | cloudposse/security-group/aws | 1.0.1 |
 | <a name="module_elb_logs"></a> [elb\_logs](#module\_elb\_logs) | cloudposse/lb-s3-bucket/aws | 0.20.0 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
@@ -232,7 +234,7 @@ module "elastic_beanstalk_environment" {
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_elastic_beanstalk_environment.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elastic_beanstalk_environment) | resource |
 | [aws_iam_instance_profile.ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_role.ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -261,7 +263,7 @@ module "elastic_beanstalk_environment" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_additional_security_group_rules"></a> [additional\_security\_group\_rules](#input\_additional\_security\_group\_rules) | A list of Security Group rule objects to add to the created security group, in addition to the ones<br/>this module normally creates. (To suppress the module's rules, set `create_security_group` to false<br/>and supply your own security group via `associated_security_group_ids`.)<br/>The keys and values of the objects are fully compatible with the `aws_security_group_rule` resource, except<br/>for `security_group_id` which will be ignored, and the optional "key" which, if provided, must be unique and known at "plan" time.<br/>To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule . | `list(any)` | `[]` | no |
 | <a name="input_additional_settings"></a> [additional\_settings](#input\_additional\_settings) | Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html | <pre>list(object({<br/>    namespace = string<br/>    name      = string<br/>    value     = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_additional_tag_map"></a> [additional\_tag\_map](#input\_additional\_tag\_map) | Additional key-value pairs to add to each map in `tags_as_list_of_maps`. Not added to `tags` or `id`.<br/>This is for some rare cases where resources want additional configuration of tags<br/>and therefore take a list of maps with tag key, value, and additional configuration. | `map(string)` | `{}` | no |
@@ -390,7 +392,7 @@ module "elastic_beanstalk_environment" {
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_all_settings"></a> [all\_settings](#output\_all\_settings) | List of all option settings configured in the environment. These are a combination of default settings and their overrides from setting in the configuration |
 | <a name="output_application"></a> [application](#output\_application) | The Elastic Beanstalk Application for this environment |
 | <a name="output_autoscaling_groups"></a> [autoscaling\_groups](#output\_autoscaling\_groups) | The autoscaling groups used by this environment |
