@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "service" {
 
     principals {
       type        = "Service"
-      identifiers = ["elasticbeanstalk.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "elasticbeanstalk.amazonaws.com.cn" : "elasticbeanstalk.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -65,7 +65,7 @@ data "aws_iam_policy_document" "ec2" {
 
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "ec2.amazonaws.com.cn" : "ec2.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -80,7 +80,7 @@ data "aws_iam_policy_document" "ec2" {
 
     principals {
       type        = "Service"
-      identifiers = ["ssm.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "ssm.amazonaws.com.cn" : "ssm.amazonaws.com"]
     }
 
     effect = "Allow"
