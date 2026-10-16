@@ -3,51 +3,42 @@ provider "aws" {
 }
 
 module "vpc" {
-  source     = "git::https://github.com/cloudposse/terraform-aws-vpc.git?ref=tags/0.8.0"
-  namespace  = var.namespace
-  stage      = var.stage
-  name       = var.name
-  attributes = var.attributes
-  tags       = var.tags
-  delimiter  = var.delimiter
-  cidr_block = "172.16.0.0/16"
+  source  = "cloudposse/vpc/aws"
+  version = "2.1.0"
+
+  ipv4_primary_cidr_block = "172.16.0.0/16"
+
+  context = module.this.context
 }
 
 module "subnets" {
-  source               = "git::https://github.com/cloudposse/terraform-aws-dynamic-subnets.git?ref=tags/0.16.0"
+  source  = "cloudposse/dynamic-subnets/aws"
+  version = "2.4.1"
+
   availability_zones   = var.availability_zones
-  namespace            = var.namespace
-  stage                = var.stage
-  name                 = var.name
-  attributes           = var.attributes
-  tags                 = var.tags
-  delimiter            = var.delimiter
   vpc_id               = module.vpc.vpc_id
-  igw_id               = module.vpc.igw_id
-  cidr_block           = module.vpc.vpc_cidr_block
+  igw_id               = [module.vpc.igw_id]
+  ipv4_enabled         = true
+  ipv4_cidr_block      = [module.vpc.vpc_cidr_block]
   nat_gateway_enabled  = true
   nat_instance_enabled = false
+  max_nats             = 1
+
+  context = module.this.context
 }
 
 module "elastic_beanstalk_application" {
-  source      = "git::https://github.com/cloudposse/terraform-aws-elastic-beanstalk-application.git?ref=tags/0.3.0"
-  namespace   = var.namespace
-  stage       = var.stage
-  name        = var.name
-  attributes  = var.attributes
-  tags        = var.tags
-  delimiter   = var.delimiter
-  description = "Test elastic_beanstalk_application"
+  source  = "cloudposse/elastic-beanstalk-application/aws"
+  version = "0.11.1"
+
+  description = "Test Elastic Beanstalk application"
+
+  context = module.this.context
 }
 
 module "elastic_beanstalk_environment" {
-  source                     = "../../"
-  namespace                  = var.namespace
-  stage                      = var.stage
-  name                       = var.name
-  attributes                 = var.attributes
-  tags                       = var.tags
-  delimiter                  = var.delimiter
+  source = "../../"
+
   description                = var.description
   region                     = var.region
   availability_zone_selector = var.availability_zone_selector
@@ -76,10 +67,23 @@ module "elastic_beanstalk_environment" {
   autoscale_upper_bound     = var.autoscale_upper_bound
   autoscale_upper_increment = var.autoscale_upper_increment
 
-  vpc_id                  = module.vpc.vpc_id
-  loadbalancer_subnets    = module.subnets.public_subnet_ids
-  application_subnets     = module.subnets.private_subnet_ids
-  allowed_security_groups = [module.vpc.vpc_default_security_group_id]
+  vpc_id                              = module.vpc.vpc_id
+  loadbalancer_subnets                = module.subnets.public_subnet_ids
+  loadbalancer_redirect_http_to_https = true
+  application_subnets                 = module.subnets.private_subnet_ids
+
+  allow_all_egress = true
+
+  additional_security_group_rules = [
+    {
+      type                     = "ingress"
+      from_port                = 0
+      to_port                  = 65535
+      protocol                 = "-1"
+      source_security_group_id = module.vpc.vpc_default_security_group_id
+      description              = "Allow all inbound traffic from trusted Security Groups"
+    }
+  ]
 
   rolling_update_enabled  = var.rolling_update_enabled
   rolling_update_type     = var.rolling_update_type
@@ -89,10 +93,31 @@ module "elastic_beanstalk_environment" {
   healthcheck_url  = var.healthcheck_url
   application_port = var.application_port
 
-  // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
-  // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
+  # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
+  # https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
   solution_stack_name = var.solution_stack_name
 
   additional_settings = var.additional_settings
   env_vars            = var.env_vars
+
+  extended_ec2_policy_document = data.aws_iam_policy_document.minimal_s3_permissions.json
+  prefer_legacy_ssm_policy     = false
+  prefer_legacy_service_policy = false
+  scheduled_actions            = var.scheduled_actions
+
+  s3_bucket_versioning_enabled = var.s3_bucket_versioning_enabled
+  enable_loadbalancer_logs     = var.enable_loadbalancer_logs
+
+  context = module.this.context
+}
+
+data "aws_iam_policy_document" "minimal_s3_permissions" {
+  statement {
+    sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+    actions = [
+      "s3:ListAllMyBuckets",
+      "s3:GetBucketLocation"
+    ]
+    resources = ["*"]
+  }
 }

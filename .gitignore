@@ -5,6 +5,8 @@
 *.tfstate
 *.tfstate.*
 
+**/.terraform.lock.hcl
+
 **/.idea
 **/*.iml
 

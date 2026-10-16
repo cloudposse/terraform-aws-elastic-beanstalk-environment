@@ -5,8 +5,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/gruntwork-io/terratest/modules/random"
+	"github.com/gruntwork-io/terratest/modules/terraform"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -51,7 +51,7 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, []string{"172.16.96.0/19", "172.16.128.0/19"}, publicSubnetCidrs)
 
 	// Run `terraform output` to get the value of an output variable
-	expectedName := fmt.Sprintf("eg-test-elastic-beanstalk-env-%s", attributes[0])
+	expectedName := fmt.Sprintf("eg-test-eb-env-%s", attributes[0])
 	elasticBeanstalkApplicationName := terraform.Output(t, terraformOptions, "elastic_beanstalk_application_name")
 	// Verify we're getting back the outputs we expect
 	assert.Equal(t, expectedName, elasticBeanstalkApplicationName)
@@ -62,7 +62,17 @@ func TestExamplesComplete(t *testing.T) {
 	assert.Equal(t, expectedName, elasticBeanstalkEnvironmentName)
 
 	// Run `terraform output` to get the value of an output variable
-	elasticBeanstalkEnvironmentHostname := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_hostname")
+	securityGroupName := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_name")
 	// Verify we're getting back the outputs we expect
-	assert.Equal(t, "elastic-beanstalk-env.testing.cloudposse.co", elasticBeanstalkEnvironmentHostname)
+	assert.Equal(t, expectedName, securityGroupName)
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupID := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_id")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, securityGroupID, "sg-", "SG ID should contains substring 'sg-'")
+
+	// Run `terraform output` to get the value of an output variable
+	securityGroupARN := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_arn")
+	// Verify we're getting back the outputs we expect
+	assert.Contains(t, securityGroupARN, "arn:aws:ec2", "SG ID should contains substring 'arn:aws:ec2'")
 }

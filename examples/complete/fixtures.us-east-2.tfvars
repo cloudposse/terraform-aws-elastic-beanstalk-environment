@@ -6,7 +6,7 @@ namespace = "eg"
 
 stage = "test"
 
-name = "elastic-beanstalk-env"
+name = "eb-env"
 
 description = "Test elastic-beanstalk-environment"
 
@@ -25,7 +25,6 @@ autoscale_min = 1
 autoscale_max = 2
 
 wait_for_ready_timeout = "20m"
-
 
 force_destroy = true
 
@@ -63,11 +62,11 @@ elb_scheme = "public"
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
-solution_stack_name = "64bit Amazon Linux 2018.03 v2.12.17 running Docker 18.06.1-ce"
+solution_stack_name = "64bit Amazon Linux 2023 v4.6.2 running Python 3.11"
 
 version_label = ""
 
-dns_zone_id = "Z3SO0TKDDQ0RGG"
+dns_zone_id = ""
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [
@@ -89,3 +88,6 @@ env_vars = {
   "DB_PASSWORD"     = "zzzzzzzzzzzzzzzzzzz"
   "ANOTHER_ENV_VAR" = "123456789"
 }
+
+s3_bucket_versioning_enabled = false
+enable_loadbalancer_logs     = false

@@ -8,39 +8,6 @@ variable "availability_zones" {
   description = "List of availability zones"
 }
 
-variable "namespace" {
-  type        = string
-  description = "Namespace, which could be your organization name, e.g. 'eg' or 'cp'"
-}
-
-variable "stage" {
-  type        = string
-  description = "Stage, e.g. 'prod', 'staging', 'dev', or 'test'"
-}
-
-variable "name" {
-  type        = string
-  description = "Solution name, e.g. 'app' or 'cluster'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `name`, `namespace`, `stage`, etc."
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit`,`XYZ`)"
-}
-
 variable "description" {
   type        = string
   description = "Short description of the Environment"
@@ -201,4 +168,29 @@ variable "env_vars" {
   type        = map(string)
   default     = {}
   description = "Map of custom ENV variables to be provided to the application running on Elastic Beanstalk, e.g. env_vars = { DB_USER = 'admin' DB_PASS = 'xxxxxx' }"
+}
+
+variable "scheduled_actions" {
+  type = list(object({
+    name            = string
+    minsize         = string
+    maxsize         = string
+    desiredcapacity = string
+    starttime       = string
+    endtime         = string
+    recurrence      = string
+    suspend         = bool
+  }))
+  default     = []
+  description = "Define a list of scheduled actions"
+}
+
+variable "s3_bucket_versioning_enabled" {
+  type        = bool
+  description = "When set to 'true' the s3 origin bucket will have versioning enabled"
+}
+
+variable "enable_loadbalancer_logs" {
+  type        = bool
+  description = "Whether to enable Load Balancer Logging to the S3 bucket."
 }
