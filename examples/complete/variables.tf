@@ -184,3 +184,13 @@ variable "scheduled_actions" {
   default     = []
   description = "Define a list of scheduled actions"
 }
+
+variable "s3_bucket_versioning_enabled" {
+  type        = bool
+  description = "When set to 'true' the s3 origin bucket will have versioning enabled"
+}
+
+variable "enable_loadbalancer_logs" {
+  type        = bool
+  description = "Whether to enable Load Balancer Logging to the S3 bucket."
+}

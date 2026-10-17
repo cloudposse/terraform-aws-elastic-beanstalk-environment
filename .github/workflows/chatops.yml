@@ -1,0 +1,17 @@
+---
+name: chatops
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  pull-requests: write
+  id-token: write
+  contents: write
+  statuses: write
+
+jobs:
+  test:
+    uses: cloudposse/.github/.github/workflows/shared-terraform-chatops.yml@main
+    if: ${{ github.event.issue.pull_request && contains(github.event.comment.body, '/terratest') }}
+    secrets: inherit

@@ -38,6 +38,11 @@ output "ec2_instance_profile_role_name" {
   description = "Instance IAM role name"
 }
 
+output "ec2_service_role_arn" {
+  value       = join("", aws_iam_role.service[*].arn)
+  description = "EC2 service IAM role ARN"
+}
+
 output "tier" {
   value       = join("", aws_elastic_beanstalk_environment.default[*].tier)
   description = "The environment tier"
@@ -81,6 +86,11 @@ output "launch_configurations" {
 output "load_balancers" {
   value       = try(aws_elastic_beanstalk_environment.default[0].load_balancers, [])
   description = "Elastic Load Balancers in use by this environment"
+}
+
+output "load_balancer_log_bucket" {
+  value       = var.enable_loadbalancer_logs ? local.s3_bucket_access_log_name : null
+  description = "Name of bucket where Load Balancer logs are stored (if enabled)"
 }
 
 output "queues" {
