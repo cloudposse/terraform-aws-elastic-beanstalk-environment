@@ -262,9 +262,6 @@ data "aws_iam_policy_document" "default" {
       "rds:DescribeDBEngineVersions",
       "rds:DescribeDBInstances",
       "rds:DescribeOrderableDBInstanceOptions",
-      "s3:GetObject",
-      "s3:GetObjectAcl",
-      "s3:ListBucket",
       "sns:CreateTopic",
       "sns:GetTopicAttributes",
       "sns:ListSubscriptionsByTopic",
@@ -301,14 +298,14 @@ data "aws_iam_policy_document" "default" {
     sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
 
     actions = [
-      "s3:*"
+      "s3:Get*",
+      "s3:List*",
+      "s3:PutObject",
     ]
 
     resources = [
-      #bridgecrew:skip=BC_AWS_IAM_57:Skipping "Ensure IAM policies does not allow write access without constraint"
-      #bridgecrew:skip=BC_AWS_IAM_56:Skipping "Ensure IAM policies do not allow permissions management / resource exposure without constraint"
-      #bridgecrew:skip=BC_AWS_IAM_55:Skipping "Ensure IAM policies do not allow data exfiltration"
-      "arn:${local.partition}:s3:::*"
+      "arn:${local.partition}:s3:::elasticbeanstalk-*",
+      "arn:${local.partition}:s3:::elasticbeanstalk-*/*",
     ]
 
     effect = "Allow"
