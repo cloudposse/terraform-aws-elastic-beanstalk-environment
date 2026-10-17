@@ -62,7 +62,7 @@ solution_stack_name = "64bit Amazon Linux 2023 v4.6.2 running Python 3.11"
 
 version_label = ""
 
-dns_zone_id = ""
+dns_zone_id = []
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [

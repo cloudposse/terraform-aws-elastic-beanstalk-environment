@@ -30,7 +30,7 @@ variable "loadbalancer_is_shared" {
 }
 
 variable "dns_zone_id" {
-  type        = string
+  type        = list(string)
   description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
 }
 
