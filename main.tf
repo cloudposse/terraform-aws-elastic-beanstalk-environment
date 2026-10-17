@@ -1115,10 +1115,10 @@ module "dns_hostname" {
   source  = "cloudposse/route53-cluster-hostname/aws"
   version = "0.12.2"
 
-  enabled = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
+  enabled = local.enabled && length(var.dns_zone_id) > 0 && var.tier == "WebServer" ? true : false
 
   dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
-  zone_id  = var.dns_zone_id
+  zone_id  = join("", var.dns_zone_id)
   records  = [join("", aws_elastic_beanstalk_environment.default[*].cname)]
 
   context = module.this.context

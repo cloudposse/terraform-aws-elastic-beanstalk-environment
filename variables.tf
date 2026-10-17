@@ -51,9 +51,9 @@ variable "loadbalancer_connection_idle_timeout" {
 }
 
 variable "dns_zone_id" {
-  type        = string
-  default     = ""
-  description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
+  type        = list(string)
+  default     = []
+  description = "Route53 parent zone ID, as a list with zero or one element. The module will create sub-domain DNS record in the parent zone for the EB environment"
 }
 
 variable "dns_subdomain" {
