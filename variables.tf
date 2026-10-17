@@ -409,7 +409,7 @@ variable "env_vars" {
 variable "alb_zone_id" {
   type        = map(string)
   default     = {}
-  description = "DEPRECATED. Override the Elastic Beanstalk hosted zone ID per region. Leave empty to use the AWS provider's value."
+  description = "Override the Elastic Beanstalk hosted zone ID for specific regions. Regions not listed use the module's default map."
 }
 
 variable "ami_id" {
