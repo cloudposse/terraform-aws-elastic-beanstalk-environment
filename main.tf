@@ -2,10 +2,54 @@ locals {
   enabled                   = module.this.enabled
   partition                 = join("", data.aws_partition.current[*].partition)
   s3_bucket_access_log_name = var.s3_bucket_access_log_bucket_name != "" ? var.s3_bucket_access_log_bucket_name : "${module.this.id}-alb-logs-${random_string.elb_logs_suffix.result}"
+  # Route 53 hosted zone IDs for Elastic Beanstalk alias targets.
+  # https://docs.aws.amazon.com/general/latest/gr/elasticbeanstalk.html
+  beanstalk_alias_zone_id = var.dns_alias_zone_id != "" ? var.dns_alias_zone_id : lookup({
+    af-south-1     = "Z1EI3BVKMKK4AM"
+    ap-east-1      = "ZPWYUBWRU171A"
+    ap-northeast-1 = "Z1R25G3KIG2GBW"
+    ap-northeast-2 = "Z3JE5OI70TWKCP"
+    ap-northeast-3 = "ZNE5GEY1TIAGY"
+    ap-south-1     = "Z18NTBI3Y7N9TZ"
+    ap-south-2     = "Z10223522IBWPBF2C2FJS"
+    ap-southeast-1 = "Z16FZ9L249IFLT"
+    ap-southeast-2 = "Z2PCDNR3VC2G1N"
+    ap-southeast-3 = "Z05913172VM7EAZB40TA8"
+    ap-southeast-4 = "Z0666869LC74UHAO5YE4"
+    ap-southeast-5 = "Z01812971H0QCYWSL7WOH"
+    ap-southeast-6 = "Z01144401H1NECCLJDD4D"
+    ap-southeast-7 = "Z08384933QM5LSQCVMNZM"
+    ca-central-1   = "ZJFCZL7SSZB5I"
+    ca-west-1      = "Z1021028356Y0CYS11DQI"
+    eu-central-1   = "Z1FRNW7UH4DEZJ"
+    eu-central-2   = "Z00227012FSHBMZNNSJJI"
+    eu-north-1     = "Z23GO28BZ5AETM"
+    eu-south-1     = "Z10VDYYOA2JFKM"
+    eu-south-2     = "Z0243492AO4B9S3KI68O"
+    eu-west-1      = "Z2NYPWQ7DFZAZH"
+    eu-west-2      = "Z1GKAAAUGATPF1"
+    eu-west-3      = "Z5WN6GAYWG5OB"
+    il-central-1   = "Z02941091PERNCB1MI5H7"
+    me-central-1   = "Z0650511N84AAKGW7QUK"
+    me-south-1     = "Z2BBTEKR2I36N2"
+    sa-east-1      = "Z10X7K2B4QSOFV"
+    us-east-1      = "Z117KPS5GTRQ2G"
+    us-east-2      = "Z14LCN19Q5QHIC"
+    us-gov-east-1  = "Z35TSARG0EJ4VU"
+    us-gov-west-1  = "Z4KAURWC4UUUG"
+    us-west-1      = "Z1LQECGX5PH1X"
+    us-west-2      = "Z38NKT9BP95V3O"
+  }, var.region, "")
 }
 
 data "aws_partition" "current" {
   count = local.enabled ? 1 : 0
+}
+
+data "aws_route53_zone" "dns_alias" {
+  count = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" && var.dns_alias_enabled && var.dns_alias_apex_enabled ? 1 : 0
+
+  zone_id = var.dns_zone_id
 }
 
 #
@@ -1111,17 +1155,37 @@ module "elb_logs" {
   context            = module.this.context
 }
 
-module "dns_hostname" {
-  source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.2"
+# Keep the existing Route 53 record state when moving it out of the hostname module.
+moved {
+  from = module.dns_hostname.aws_route53_record.default[0]
+  to   = aws_route53_record.dns_hostname[0]
+}
 
-  enabled = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
+resource "aws_route53_record" "dns_hostname" {
+  count = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? 1 : 0
 
-  dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
-  zone_id  = var.dns_zone_id
-  records  = [join("", aws_elastic_beanstalk_environment.default[*].cname)]
+  zone_id = var.dns_zone_id
+  name    = var.dns_alias_enabled && var.dns_alias_apex_enabled ? one(data.aws_route53_zone.dns_alias[*].name) : (var.dns_subdomain != "" ? var.dns_subdomain : module.this.name)
+  type    = var.dns_alias_enabled ? "A" : "CNAME"
+  ttl     = var.dns_alias_enabled ? null : 300
+  records = var.dns_alias_enabled ? null : [join("", aws_elastic_beanstalk_environment.default[*].cname)]
 
-  context = module.this.context
+  dynamic "alias" {
+    for_each = var.dns_alias_enabled ? [true] : []
+
+    content {
+      name                   = join("", aws_elastic_beanstalk_environment.default[*].cname)
+      zone_id                = local.beanstalk_alias_zone_id
+      evaluate_target_health = true
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = !var.dns_alias_enabled || local.beanstalk_alias_zone_id != ""
+      error_message = "No Elastic Beanstalk Route 53 hosted zone ID is available for region ${var.region}. Set dns_alias_zone_id to the correct regional hosted zone ID."
+    }
+  }
 }
 
 data "aws_lb_listener" "http" {
