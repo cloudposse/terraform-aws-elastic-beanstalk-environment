@@ -389,6 +389,12 @@ variable "ssh_listener_port" {
   description = "SSH port"
 }
 
+variable "ssh_source_restriction" {
+  type        = string
+  default     = "0.0.0.0/0"
+  description = "Used to lock down SSH access to the EC2 instances"
+}
+
 variable "additional_settings" {
   type = list(object({
     namespace = string

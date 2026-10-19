@@ -58,7 +58,7 @@ autoscale_upper_increment = 1
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
-solution_stack_name = "64bit Amazon Linux 2023 v4.6.2 running Python 3.11"
+solution_stack_name = "64bit Amazon Linux 2023 v4.13.10 running Python 3.14"
 
 version_label = ""
 
