@@ -53,7 +53,13 @@ variable "loadbalancer_connection_idle_timeout" {
 variable "dns_zone_id" {
   type        = list(string)
   default     = []
+  nullable    = false
   description = "Route53 parent zone ID, as a list with zero or one element. The module will create sub-domain DNS record in the parent zone for the EB environment"
+
+  validation {
+    condition     = length(var.dns_zone_id) <= 1
+    error_message = "dns_zone_id must contain zero or one element."
+  }
 }
 
 variable "dns_subdomain" {
