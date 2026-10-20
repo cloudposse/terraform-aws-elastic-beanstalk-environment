@@ -207,6 +207,8 @@ data "aws_iam_policy_document" "default" {
   count = local.enabled ? 1 : 0
 
   statement {
+    sid = "AllowReadOnlyOperations"
+
     actions = [
       "elasticloadbalancing:DescribeInstanceHealth",
       "elasticloadbalancing:DescribeLoadBalancers",
