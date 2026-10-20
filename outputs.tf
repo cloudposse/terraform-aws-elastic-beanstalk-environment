@@ -29,8 +29,8 @@ output "security_group_name" {
 }
 
 output "elb_zone_id" {
-  value       = var.alb_zone_id[var.region]
-  description = "ELB zone ID"
+  value       = lookup(var.alb_zone_id, var.region, lookup(local.elastic_beanstalk_hosted_zone_ids, var.region, ""))
+  description = "Route 53 hosted zone ID for aliasing to the environment endpoint"
 }
 
 output "ec2_instance_profile_role_name" {
