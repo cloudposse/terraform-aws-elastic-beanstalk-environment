@@ -456,7 +456,7 @@ variable "extended_ec2_policy_document" {
 
 variable "prefer_legacy_ssm_policy" {
   type        = bool
-  default     = true
+  default     = false
   description = "Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy"
 }
 

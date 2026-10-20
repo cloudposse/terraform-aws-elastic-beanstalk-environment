@@ -63,6 +63,14 @@ If you're interested, reach out to us via the `#terraform` channel in [the Sweet
 
 For a complete example, see [examples/complete](examples/complete)
 
+The default EC2 inline IAM policy is restricted: it does not grant general S3 access and only allows log group creation under `/aws/elasticbeanstalk*`.
+Workloads relying on removed permissions must explicitly grant the required resource-scoped access through `extended_ec2_policy_document`.
+Other AWS-managed policy attachments are unchanged; this is not a complete least-privilege policy for the role.
+
+**Breaking change:** `prefer_legacy_ssm_policy` now defaults to `false`, selecting `AmazonSSMManagedInstanceCore` instead of `AmazonEC2RoleforSSM`.
+Grant any additional S3, CloudWatch, or application permissions explicitly through `extended_ec2_policy_document`.
+Setting `prefer_legacy_ssm_policy = true` restores the legacy SSM policy only, not the removed inline permissions.
+
 ```hcl
   provider "aws" {
     region = var.region
@@ -338,7 +346,7 @@ For a complete example, see [examples/complete](examples/complete)
 | <a name="input_name"></a> [name](#input\_name) | ID element. Usually the component or solution name, e.g. 'app' or 'jenkins'.<br/>This is the only ID element not also included as a `tag`.<br/>The "name" tag is set to the full `id` string. There is no tag with the value of the `name` input. | `string` | `null` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique | `string` | `null` | no |
 | <a name="input_prefer_legacy_service_policy"></a> [prefer\_legacy\_service\_policy](#input\_prefer\_legacy\_service\_policy) | Whether to use AWSElasticBeanstalkService (deprecated) or AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy policy | `bool` | `true` | no |
-| <a name="input_prefer_legacy_ssm_policy"></a> [prefer\_legacy\_ssm\_policy](#input\_prefer\_legacy\_ssm\_policy) | Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy | `bool` | `true` | no |
+| <a name="input_prefer_legacy_ssm_policy"></a> [prefer\_legacy\_ssm\_policy](#input\_prefer\_legacy\_ssm\_policy) | Whether to use AmazonEC2RoleforSSM (will soon be deprecated) or AmazonSSMManagedInstanceCore policy | `bool` | `false` | no |
 | <a name="input_preferred_start_time"></a> [preferred\_start\_time](#input\_preferred\_start\_time) | Configure a maintenance window for managed actions in UTC | `string` | `"Sun:10:00"` | no |
 | <a name="input_regex_replace_chars"></a> [regex\_replace\_chars](#input\_regex\_replace\_chars) | Terraform regular expression (regex) string.<br/>Characters matching the regex will be removed from the ID elements.<br/>If not set, `"/[^a-zA-Z0-9-]/"` is used to remove all characters other than hyphens, letters and digits. | `string` | `null` | no |
 | <a name="input_region"></a> [region](#input\_region) | AWS region | `string` | n/a | yes |

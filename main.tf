@@ -213,8 +213,6 @@ data "aws_iam_policy_document" "default" {
       "elasticloadbalancing:DescribeTargetHealth",
       "ec2:DescribeInstances",
       "ec2:DescribeInstanceStatus",
-      "ec2:GetConsoleOutput",
-      "ec2:AssociateAddress",
       "ec2:DescribeAddresses",
       "ec2:DescribeSecurityGroups",
       "sqs:GetQueueAttributes",
@@ -234,12 +232,7 @@ data "aws_iam_policy_document" "default" {
     sid = "AllowOperations"
 
     actions = [
-      "autoscaling:AttachInstances",
-      "autoscaling:CreateAutoScalingGroup",
       "autoscaling:CreateLaunchConfiguration",
-      "autoscaling:DeleteLaunchConfiguration",
-      "autoscaling:DeleteAutoScalingGroup",
-      "autoscaling:DeleteScheduledAction",
       "autoscaling:DescribeAccountLimits",
       "autoscaling:DescribeAutoScalingGroups",
       "autoscaling:DescribeAutoScalingInstances",
@@ -248,71 +241,16 @@ data "aws_iam_policy_document" "default" {
       "autoscaling:DescribeNotificationConfigurations",
       "autoscaling:DescribeScalingActivities",
       "autoscaling:DescribeScheduledActions",
-      "autoscaling:DetachInstances",
-      "autoscaling:PutScheduledUpdateGroupAction",
-      "autoscaling:ResumeProcesses",
-      "autoscaling:SetDesiredCapacity",
-      "autoscaling:SetInstanceProtection",
-      "autoscaling:SuspendProcesses",
-      "autoscaling:TerminateInstanceInAutoScalingGroup",
       "autoscaling:UpdateAutoScalingGroup",
       "cloudwatch:PutMetricAlarm",
-      "ec2:AssociateAddress",
-      "ec2:AllocateAddress",
-      "ec2:AuthorizeSecurityGroupEgress",
-      "ec2:AuthorizeSecurityGroupIngress",
-      "ec2:CreateSecurityGroup",
-      "ec2:DeleteSecurityGroup",
-      "ec2:DescribeAccountAttributes",
-      "ec2:DescribeAddresses",
-      "ec2:DescribeImages",
-      "ec2:DescribeInstances",
-      "ec2:DescribeKeyPairs",
-      "ec2:DescribeSecurityGroups",
-      "ec2:DescribeSnapshots",
-      "ec2:DescribeSubnets",
-      "ec2:DescribeVpcs",
-      "ec2:DisassociateAddress",
-      "ec2:ReleaseAddress",
-      "ec2:RevokeSecurityGroupEgress",
-      "ec2:RevokeSecurityGroupIngress",
-      "ec2:TerminateInstances",
-      "ecs:CreateCluster",
-      "ecs:DeleteCluster",
-      "ecs:DescribeClusters",
-      "ecs:RegisterTaskDefinition",
       "elasticbeanstalk:*",
       "elasticloadbalancing:ApplySecurityGroupsToLoadBalancer",
       "elasticloadbalancing:ConfigureHealthCheck",
       "elasticloadbalancing:CreateLoadBalancer",
-      "elasticloadbalancing:DeleteLoadBalancer",
-      "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
       "elasticloadbalancing:DescribeInstanceHealth",
       "elasticloadbalancing:DescribeLoadBalancers",
       "elasticloadbalancing:DescribeTargetHealth",
-      "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
       "elasticloadbalancing:DescribeTargetGroups",
-      "elasticloadbalancing:RegisterTargets",
-      "elasticloadbalancing:DeregisterTargets",
-      "iam:ListRoles",
-      "logs:CreateLogGroup",
-      "logs:PutRetentionPolicy",
-      "rds:DescribeDBEngineVersions",
-      "rds:DescribeDBInstances",
-      "rds:DescribeOrderableDBInstanceOptions",
-      "s3:GetObject",
-      "s3:GetObjectAcl",
-      "s3:ListBucket",
-      "sns:CreateTopic",
-      "sns:GetTopicAttributes",
-      "sns:ListSubscriptionsByTopic",
-      "sns:Subscribe",
-      "sqs:GetQueueAttributes",
-      "sqs:GetQueueUrl",
-      "codebuild:CreateProject",
-      "codebuild:DeleteProject",
-      "codebuild:BatchGetBuilds",
-      "codebuild:StartBuild",
     ]
 
     resources = ["*"]
@@ -336,27 +274,24 @@ data "aws_iam_policy_document" "default" {
   }
 
   statement {
-    sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
+    sid = "AllowDeleteCloudwatchLogGroups"
 
     actions = [
-      "s3:*"
+      "logs:DeleteLogGroup"
     ]
 
     resources = [
-      #bridgecrew:skip=BC_AWS_IAM_57:Skipping "Ensure IAM policies does not allow write access without constraint"
-      #bridgecrew:skip=BC_AWS_IAM_56:Skipping "Ensure IAM policies do not allow permissions management / resource exposure without constraint"
-      #bridgecrew:skip=BC_AWS_IAM_55:Skipping "Ensure IAM policies do not allow data exfiltration"
-      "arn:${local.partition}:s3:::*"
+      "arn:${local.partition}:logs:*:*:log-group:/aws/elasticbeanstalk*"
     ]
 
     effect = "Allow"
   }
 
   statement {
-    sid = "AllowDeleteCloudwatchLogGroups"
+    sid = "AllowCreateCloudwatchLogGroups"
 
     actions = [
-      "logs:DeleteLogGroup"
+      "logs:CreateLogGroup"
     ]
 
     resources = [
