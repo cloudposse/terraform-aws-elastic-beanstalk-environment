@@ -63,13 +63,8 @@ If you're interested, reach out to us via the `#terraform` channel in [the Sweet
 
 For a complete example, see [examples/complete](examples/complete)
 
-The default EC2 inline IAM policy is restricted: it does not grant general S3 access and only allows log group creation under `/aws/elasticbeanstalk*`.
-Workloads relying on removed permissions must explicitly grant the required resource-scoped access through `extended_ec2_policy_document`.
-Other AWS-managed policy attachments are unchanged; this is not a complete least-privilege policy for the role.
-
 **Breaking change:** `prefer_legacy_ssm_policy` now defaults to `false`, selecting `AmazonSSMManagedInstanceCore` instead of `AmazonEC2RoleforSSM`.
-Grant any additional S3, CloudWatch, or application permissions explicitly through `extended_ec2_policy_document`.
-Setting `prefer_legacy_ssm_policy = true` restores the legacy SSM policy only, not the removed inline permissions.
+Grant any additional permissions previously supplied by the legacy SSM policy explicitly through `extended_ec2_policy_document`, or set `prefer_legacy_ssm_policy = true` to retain the legacy policy.
 
 ```hcl
   provider "aws" {
