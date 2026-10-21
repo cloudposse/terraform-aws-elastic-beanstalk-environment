@@ -452,6 +452,7 @@ variable "extended_ec2_policy_document" {
   type        = string
   default     = ""
   description = "Extensions or overrides for the IAM role assigned to EC2 instances"
+  nullable    = false
 }
 
 variable "prefer_legacy_ssm_policy" {
