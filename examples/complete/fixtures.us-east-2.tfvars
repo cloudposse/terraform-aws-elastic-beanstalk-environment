@@ -68,6 +68,8 @@ version_label = ""
 
 dns_zone_id = ""
 
+dns_alias_enabled = true
+
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [
   {
