@@ -36,13 +36,26 @@ module "elastic_beanstalk_application" {
   context = module.this.context
 }
 
+resource "aws_route53_zone" "default" {
+  count = var.dns_zone_id == "" && (var.dns_alias_enabled || var.dns_subdomain != "") ? 1 : 0
+
+  name          = "${module.this.id}.example.com"
+  force_destroy = true
+
+  tags = module.this.tags
+}
+
 module "elastic_beanstalk_environment" {
   source = "../../"
 
   description                = var.description
   region                     = var.region
   availability_zone_selector = var.availability_zone_selector
-  dns_zone_id                = var.dns_zone_id
+  dns_zone_id                = var.dns_zone_id != "" ? var.dns_zone_id : (length(aws_route53_zone.default) > 0 ? aws_route53_zone.default[0].zone_id : "")
+  dns_subdomain              = var.dns_subdomain
+  dns_alias_enabled          = var.dns_alias_enabled
+  dns_alias_apex_enabled     = var.dns_alias_apex_enabled
+  dns_alias_zone_id          = var.dns_alias_zone_id
 
   wait_for_ready_timeout             = var.wait_for_ready_timeout
   elastic_beanstalk_application_name = module.elastic_beanstalk_application.elastic_beanstalk_application_name

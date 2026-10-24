@@ -4,7 +4,7 @@ locals {
   s3_bucket_access_log_name = var.s3_bucket_access_log_bucket_name != "" ? var.s3_bucket_access_log_bucket_name : "${module.this.id}-alb-logs-${random_string.elb_logs_suffix.result}"
   # Route 53 hosted zone IDs for Elastic Beanstalk alias targets.
   # https://docs.aws.amazon.com/general/latest/gr/elasticbeanstalk.html
-  beanstalk_alias_zone_id = var.dns_alias_zone_id != "" ? var.dns_alias_zone_id : lookup({
+  elastic_beanstalk_hosted_zone_ids = {
     af-south-1     = "Z1EI3BVKMKK4AM"
     ap-east-1      = "ZPWYUBWRU171A"
     ap-northeast-1 = "Z1R25G3KIG2GBW"
@@ -39,7 +39,8 @@ locals {
     us-gov-west-1  = "Z4KAURWC4UUUG"
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
-  }, var.region, "")
+  }
+  beanstalk_alias_zone_id = var.dns_alias_zone_id != "" ? var.dns_alias_zone_id : lookup(var.alb_zone_id, var.region, lookup(local.elastic_beanstalk_hosted_zone_ids, var.region, ""))
 }
 
 data "aws_partition" "current" {
@@ -65,7 +66,7 @@ data "aws_iam_policy_document" "service" {
 
     principals {
       type        = "Service"
-      identifiers = ["elasticbeanstalk.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "elasticbeanstalk.amazonaws.com.cn" : "elasticbeanstalk.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -109,7 +110,7 @@ data "aws_iam_policy_document" "ec2" {
 
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "ec2.amazonaws.com.cn" : "ec2.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -124,7 +125,7 @@ data "aws_iam_policy_document" "ec2" {
 
     principals {
       type        = "Service"
-      identifiers = ["ssm.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "ssm.amazonaws.com.cn" : "ssm.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -698,6 +699,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "IamInstanceProfile"
     value     = join("", aws_iam_instance_profile.ec2[*].name)
     resource  = ""
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SSHSourceRestriction"
+    value     = "tcp,22,22,${var.ssh_source_restriction}"
   }
 
   setting {

@@ -62,11 +62,13 @@ elb_scheme = "public"
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/platforms/platforms-supported.html#platforms-supported.docker
-solution_stack_name = "64bit Amazon Linux 2023 v4.6.2 running Python 3.11"
+solution_stack_name = "64bit Amazon Linux 2023 v4.13.10 running Python 3.14"
 
 version_label = ""
 
 dns_zone_id = ""
+
+dns_alias_enabled = true
 
 // https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html
 additional_settings = [

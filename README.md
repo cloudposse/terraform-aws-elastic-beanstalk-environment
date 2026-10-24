@@ -41,6 +41,7 @@ The Cloud Posse team no longer utilizes Beanstalk all that much, but this module
 If you're interested, reach out to us via the `#terraform` channel in [the SweetOps Slack](https://slack.sweetops.com/) or directly [via email @ hello@cloudposse.com](mailto:hello@cloudposse.com)
 
 
+
 > [!TIP]
 > #### 👽 Use Atmos with Terraform
 > Cloud Posse uses [`atmos`](https://atmos.tools) to easily orchestrate multiple environments using Terraform. <br/>
@@ -51,6 +52,7 @@ If you're interested, reach out to us via the `#terraform` channel in [the Sweet
 > <img src="https://github.com/cloudposse/atmos/blob/main/docs/demo.gif?raw=true"/><br/>
 > <i>Example of running <a href="https://atmos.tools"><code>atmos</code></a> to manage infrastructure from our <a href="https://atmos.tools/quick-start/">Quick Start</a> tutorial.</i>
 > </detalis>
+
 
 
 
@@ -181,17 +183,6 @@ For a complete example, see [examples/complete](examples/complete)
 }
 ```
 
-To create a Route 53 A alias instead of the default CNAME, set `dns_alias_enabled = true`. Set `dns_alias_apex_enabled = true` to create the record at the hosted zone apex; otherwise, the module uses `dns_subdomain` or its default name. Alias records require an Elastic Beanstalk environment with a regionalized domain name. For regions without a default Beanstalk hosted zone ID, set `dns_alias_zone_id` to the ID published by AWS for that region.
-
-```hcl
-module "elastic_beanstalk_environment" {
-  source                    = "cloudposse/elastic-beanstalk-environment/aws"
-  dns_zone_id               = "Z1234567890"
-  dns_alias_enabled         = true
-  dns_alias_apex_enabled    = true
-}
-```
-
 > [!IMPORTANT]
 > In Cloud Posse's examples, we avoid pinning modules to specific versions to prevent discrepancies between the documentation
 > and the latest released versions. However, for your own projects, we strongly advise pinning each module to the exact version
@@ -209,7 +200,7 @@ module "elastic_beanstalk_environment" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5.1 |
@@ -217,14 +208,14 @@ module "elastic_beanstalk_environment" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.5.1 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_aws_security_group"></a> [aws\_security\_group](#module\_aws\_security\_group) | cloudposse/security-group/aws | 1.0.1 |
 | <a name="module_elb_logs"></a> [elb\_logs](#module\_elb\_logs) | cloudposse/lb-s3-bucket/aws | 0.20.0 |
 | <a name="module_this"></a> [this](#module\_this) | cloudposse/label/null | 0.25.0 |
@@ -232,7 +223,7 @@ module "elastic_beanstalk_environment" {
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_elastic_beanstalk_environment.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/elastic_beanstalk_environment) | resource |
 | [aws_iam_instance_profile.ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
 | [aws_iam_role.ec2](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
@@ -261,11 +252,11 @@ module "elastic_beanstalk_environment" {
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_additional_security_group_rules"></a> [additional\_security\_group\_rules](#input\_additional\_security\_group\_rules) | A list of Security Group rule objects to add to the created security group, in addition to the ones<br/>this module normally creates. (To suppress the module's rules, set `create_security_group` to false<br/>and supply your own security group via `associated_security_group_ids`.)<br/>The keys and values of the objects are fully compatible with the `aws_security_group_rule` resource, except<br/>for `security_group_id` which will be ignored, and the optional "key" which, if provided, must be unique and known at "plan" time.<br/>To get more info see https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/security_group_rule . | `list(any)` | `[]` | no |
 | <a name="input_additional_settings"></a> [additional\_settings](#input\_additional\_settings) | Additional Elastic Beanstalk setttings. For full list of options, see https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/command-options-general.html | <pre>list(object({<br/>    namespace = string<br/>    name      = string<br/>    value     = string<br/>  }))</pre> | `[]` | no |
 | <a name="input_additional_tag_map"></a> [additional\_tag\_map](#input\_additional\_tag\_map) | Additional key-value pairs to add to each map in `tags_as_list_of_maps`. Not added to `tags` or `id`.<br/>This is for some rare cases where resources want additional configuration of tags<br/>and therefore take a list of maps with tag key, value, and additional configuration. | `map(string)` | `{}` | no |
-| <a name="input_alb_zone_id"></a> [alb\_zone\_id](#input\_alb\_zone\_id) | ALB zone id | `map(string)` | <pre>{<br/>  "af-south-1": "Z1EI3BVKMKK4AM",<br/>  "ap-east-1": "ZPWYUBWRU171A",<br/>  "ap-northeast-1": "Z1R25G3KIG2GBW",<br/>  "ap-northeast-2": "Z3JE5OI70TWKCP",<br/>  "ap-south-1": "Z18NTBI3Y7N9TZ",<br/>  "ap-southeast-1": "Z16FZ9L249IFLT",<br/>  "ap-southeast-2": "Z2PCDNR3VC2G1N",<br/>  "ca-central-1": "ZJFCZL7SSZB5I",<br/>  "eu-central-1": "Z1FRNW7UH4DEZJ",<br/>  "eu-north-1": "Z23GO28BZ5AETM",<br/>  "eu-south-1": "Z10VDYYOA2JFKM",<br/>  "eu-west-1": "Z2NYPWQ7DFZAZH",<br/>  "eu-west-2": "Z1GKAAAUGATPF1",<br/>  "eu-west-3": "Z3Q77PNBQS71R4",<br/>  "me-south-1": "Z2BBTEKR2I36N2",<br/>  "sa-east-1": "Z10X7K2B4QSOFV",<br/>  "us-east-1": "Z117KPS5GTRQ2G",<br/>  "us-east-2": "Z14LCN19Q5QHIC",<br/>  "us-gov-east-1": "Z2NIFVYYW2VKV1",<br/>  "us-gov-west-1": "Z31GFT0UA1I2HV",<br/>  "us-west-1": "Z1LQECGX5PH1X",<br/>  "us-west-2": "Z38NKT9BP95V3O"<br/>}</pre> | no |
+| <a name="input_alb_zone_id"></a> [alb\_zone\_id](#input\_alb\_zone\_id) | Override the Elastic Beanstalk hosted zone ID for specific regions. Regions not listed use the module's default map. | `map(string)` | `{}` | no |
 | <a name="input_allow_all_egress"></a> [allow\_all\_egress](#input\_allow\_all\_egress) | If `true`, the created security group will allow egress on all ports and protocols to all IP addresses.<br/>If this is false and no egress rules are otherwise specified, then no egress will be allowed. | `bool` | `true` | no |
 | <a name="input_ami_id"></a> [ami\_id](#input\_ami\_id) | The id of the AMI to associate with the Amazon EC2 instances | `string` | `null` | no |
 | <a name="input_application_port"></a> [application\_port](#input\_application\_port) | Port application is listening on | `number` | `80` | no |
@@ -376,6 +367,7 @@ module "elastic_beanstalk_environment" {
 | <a name="input_spot_max_price"></a> [spot\_max\_price](#input\_spot\_max\_price) | The maximum price per unit hour, in US$, that you're willing to pay for a Spot Instance. This option is relevant only when enable\_spot\_instances is true. Valid values are between 0.001 and 20.0 | `number` | `-1` | no |
 | <a name="input_ssh_listener_enabled"></a> [ssh\_listener\_enabled](#input\_ssh\_listener\_enabled) | Enable SSH port | `bool` | `false` | no |
 | <a name="input_ssh_listener_port"></a> [ssh\_listener\_port](#input\_ssh\_listener\_port) | SSH port | `number` | `22` | no |
+| <a name="input_ssh_source_restriction"></a> [ssh\_source\_restriction](#input\_ssh\_source\_restriction) | Used to lock down SSH access to the EC2 instances | `string` | `"0.0.0.0/0"` | no |
 | <a name="input_stage"></a> [stage](#input\_stage) | ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Additional tags (e.g. `{'BusinessUnit': 'XYZ'}`).<br/>Neither the tag keys nor the tag values will be modified by this module. | `map(string)` | `{}` | no |
 | <a name="input_tenant"></a> [tenant](#input\_tenant) | ID element \_(Rarely used, not included by default)\_. A customer identifier, indicating who this instance of a resource is for | `string` | `null` | no |
@@ -390,13 +382,13 @@ module "elastic_beanstalk_environment" {
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_all_settings"></a> [all\_settings](#output\_all\_settings) | List of all option settings configured in the environment. These are a combination of default settings and their overrides from setting in the configuration |
 | <a name="output_application"></a> [application](#output\_application) | The Elastic Beanstalk Application for this environment |
 | <a name="output_autoscaling_groups"></a> [autoscaling\_groups](#output\_autoscaling\_groups) | The autoscaling groups used by this environment |
 | <a name="output_ec2_instance_profile_role_name"></a> [ec2\_instance\_profile\_role\_name](#output\_ec2\_instance\_profile\_role\_name) | Instance IAM role name |
 | <a name="output_ec2_service_role_arn"></a> [ec2\_service\_role\_arn](#output\_ec2\_service\_role\_arn) | EC2 service IAM role ARN |
-| <a name="output_elb_zone_id"></a> [elb\_zone\_id](#output\_elb\_zone\_id) | ELB zone ID |
+| <a name="output_elb_zone_id"></a> [elb\_zone\_id](#output\_elb\_zone\_id) | Route 53 hosted zone ID for aliasing to the environment endpoint |
 | <a name="output_endpoint"></a> [endpoint](#output\_endpoint) | Fully qualified DNS name for the environment |
 | <a name="output_hostname"></a> [hostname](#output\_hostname) | DNS hostname |
 | <a name="output_id"></a> [id](#output\_id) | ID of the Elastic Beanstalk environment |

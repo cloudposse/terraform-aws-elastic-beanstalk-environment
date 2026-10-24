@@ -75,4 +75,10 @@ func TestExamplesComplete(t *testing.T) {
 	securityGroupARN := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_security_group_arn")
 	// Verify we're getting back the outputs we expect
 	assert.Contains(t, securityGroupARN, "arn:aws:ec2", "SG ID should contains substring 'arn:aws:ec2'")
+
+	// Run `terraform output` to get the value of an output variable
+	expectedHostname := fmt.Sprintf("eb-env.%s.example.com", expectedName)
+	hostname := terraform.Output(t, terraformOptions, "elastic_beanstalk_environment_hostname")
+	// Verify we're getting back the outputs we expect
+	assert.Equal(t, expectedHostname, hostname)
 }
