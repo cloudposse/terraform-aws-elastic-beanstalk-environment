@@ -2,6 +2,44 @@ locals {
   enabled                   = module.this.enabled
   partition                 = join("", data.aws_partition.current[*].partition)
   s3_bucket_access_log_name = var.s3_bucket_access_log_bucket_name != "" ? var.s3_bucket_access_log_bucket_name : "${module.this.id}-alb-logs-${random_string.elb_logs_suffix.result}"
+  # Route 53 hosted zone IDs for Elastic Beanstalk alias targets.
+  # https://docs.aws.amazon.com/general/latest/gr/elasticbeanstalk.html
+  elastic_beanstalk_hosted_zone_ids = {
+    af-south-1     = "Z1EI3BVKMKK4AM"
+    ap-east-1      = "ZPWYUBWRU171A"
+    ap-northeast-1 = "Z1R25G3KIG2GBW"
+    ap-northeast-2 = "Z3JE5OI70TWKCP"
+    ap-northeast-3 = "ZNE5GEY1TIAGY"
+    ap-south-1     = "Z18NTBI3Y7N9TZ"
+    ap-south-2     = "Z10223522IBWPBF2C2FJS"
+    ap-southeast-1 = "Z16FZ9L249IFLT"
+    ap-southeast-2 = "Z2PCDNR3VC2G1N"
+    ap-southeast-3 = "Z05913172VM7EAZB40TA8"
+    ap-southeast-4 = "Z0666869LC74UHAO5YE4"
+    ap-southeast-5 = "Z01812971H0QCYWSL7WOH"
+    ap-southeast-6 = "Z01144401H1NECCLJDD4D"
+    ap-southeast-7 = "Z08384933QM5LSQCVMNZM"
+    ca-central-1   = "ZJFCZL7SSZB5I"
+    ca-west-1      = "Z1021028356Y0CYS11DQI"
+    eu-central-1   = "Z1FRNW7UH4DEZJ"
+    eu-central-2   = "Z00227012FSHBMZNNSJJI"
+    eu-north-1     = "Z23GO28BZ5AETM"
+    eu-south-1     = "Z10VDYYOA2JFKM"
+    eu-south-2     = "Z0243492AO4B9S3KI68O"
+    eu-west-1      = "Z2NYPWQ7DFZAZH"
+    eu-west-2      = "Z1GKAAAUGATPF1"
+    eu-west-3      = "Z5WN6GAYWG5OB"
+    il-central-1   = "Z02941091PERNCB1MI5H7"
+    me-central-1   = "Z0650511N84AAKGW7QUK"
+    me-south-1     = "Z2BBTEKR2I36N2"
+    sa-east-1      = "Z10X7K2B4QSOFV"
+    us-east-1      = "Z117KPS5GTRQ2G"
+    us-east-2      = "Z14LCN19Q5QHIC"
+    us-gov-east-1  = "Z35TSARG0EJ4VU"
+    us-gov-west-1  = "Z4KAURWC4UUUG"
+    us-west-1      = "Z1LQECGX5PH1X"
+    us-west-2      = "Z38NKT9BP95V3O"
+  }
 }
 
 data "aws_partition" "current" {
@@ -21,7 +59,7 @@ data "aws_iam_policy_document" "service" {
 
     principals {
       type        = "Service"
-      identifiers = ["elasticbeanstalk.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "elasticbeanstalk.amazonaws.com.cn" : "elasticbeanstalk.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -65,7 +103,7 @@ data "aws_iam_policy_document" "ec2" {
 
     principals {
       type        = "Service"
-      identifiers = ["ec2.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "ec2.amazonaws.com.cn" : "ec2.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -80,7 +118,7 @@ data "aws_iam_policy_document" "ec2" {
 
     principals {
       type        = "Service"
-      identifiers = ["ssm.amazonaws.com"]
+      identifiers = [local.partition == "aws-cn" ? "ssm.amazonaws.com.cn" : "ssm.amazonaws.com"]
     }
 
     effect = "Allow"
@@ -651,6 +689,12 @@ resource "aws_elastic_beanstalk_environment" "default" {
     name      = "IamInstanceProfile"
     value     = join("", aws_iam_instance_profile.ec2[*].name)
     resource  = ""
+  }
+
+  setting {
+    namespace = "aws:autoscaling:launchconfiguration"
+    name      = "SSHSourceRestriction"
+    value     = "tcp,22,22,${var.ssh_source_restriction}"
   }
 
   setting {
