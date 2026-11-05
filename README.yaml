@@ -78,6 +78,9 @@ usage: |2-
 
   For a complete example, see [examples/complete](examples/complete)
 
+  **Breaking change:** `prefer_legacy_ssm_policy` now defaults to `false`, selecting `AmazonSSMManagedInstanceCore` instead of `AmazonEC2RoleforSSM`.
+  Grant any additional permissions previously supplied by the legacy SSM policy explicitly through `extended_ec2_policy_document`, or set `prefer_legacy_ssm_policy = true` to retain the legacy policy.
+
   ```hcl
     provider "aws" {
       region = var.region
