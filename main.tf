@@ -48,9 +48,9 @@ data "aws_partition" "current" {
 }
 
 data "aws_route53_zone" "dns_alias" {
-  count = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" && var.dns_alias_enabled && var.dns_alias_apex_enabled ? 1 : 0
+  count = local.enabled && length(var.dns_zone_id) > 0 && var.tier == "WebServer" && var.dns_alias_enabled && var.dns_alias_apex_enabled ? 1 : 0
 
-  zone_id = var.dns_zone_id
+  zone_id = one(var.dns_zone_id)
 }
 
 #
@@ -1169,9 +1169,9 @@ moved {
 }
 
 resource "aws_route53_record" "dns_hostname" {
-  count = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? 1 : 0
+  count = local.enabled && length(var.dns_zone_id) > 0 && var.tier == "WebServer" ? 1 : 0
 
-  zone_id = var.dns_zone_id
+  zone_id = one(var.dns_zone_id)
   name    = var.dns_alias_enabled && var.dns_alias_apex_enabled ? one(data.aws_route53_zone.dns_alias[*].name) : (var.dns_subdomain != "" ? var.dns_subdomain : module.this.name)
   type    = var.dns_alias_enabled ? "A" : "CNAME"
   ttl     = var.dns_alias_enabled ? null : 300

@@ -203,7 +203,7 @@ usage: |2-
   ```hcl
   module "elastic_beanstalk_environment" {
     source                 = "cloudposse/elastic-beanstalk-environment/aws"
-    dns_zone_id            = "Z1234567890"
+    dns_zone_id            = ["Z1234567890"]
     dns_alias_enabled      = true
     dns_alias_apex_enabled = true
   }

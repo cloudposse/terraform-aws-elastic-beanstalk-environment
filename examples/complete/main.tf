@@ -37,7 +37,7 @@ module "elastic_beanstalk_application" {
 }
 
 resource "aws_route53_zone" "default" {
-  count = var.dns_zone_id == "" && (var.dns_alias_enabled || var.dns_subdomain != "") ? 1 : 0
+  count = length(var.dns_zone_id) == 0 && (var.dns_alias_enabled || var.dns_subdomain != "") ? 1 : 0
 
   name          = "${module.this.id}.example.com"
   force_destroy = true
@@ -51,7 +51,7 @@ module "elastic_beanstalk_environment" {
   description                = var.description
   region                     = var.region
   availability_zone_selector = var.availability_zone_selector
-  dns_zone_id                = var.dns_zone_id != "" ? var.dns_zone_id : (length(aws_route53_zone.default) > 0 ? aws_route53_zone.default[0].zone_id : "")
+  dns_zone_id                = length(var.dns_zone_id) > 0 ? var.dns_zone_id : aws_route53_zone.default[*].zone_id
   dns_subdomain              = var.dns_subdomain
   dns_alias_enabled          = var.dns_alias_enabled
   dns_alias_apex_enabled     = var.dns_alias_apex_enabled

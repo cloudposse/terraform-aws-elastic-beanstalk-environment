@@ -205,13 +205,6 @@ For a complete example, see [examples/complete](examples/complete)
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.5.1 |
 
-## Providers
-
-| Name | Version |
-| ---- | ------- |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 3.5.1 |
-
 ## Modules
 
 | Name | Source | Version |
@@ -288,7 +281,7 @@ For a complete example, see [examples/complete](examples/complete)
 | <a name="input_dns_alias_enabled"></a> [dns\_alias\_enabled](#input\_dns\_alias\_enabled) | Whether to create an A alias record for the Elastic Beanstalk environment instead of a CNAME record. The environment must have a regionalized domain name. | `bool` | `false` | no |
 | <a name="input_dns_alias_zone_id"></a> [dns\_alias\_zone\_id](#input\_dns\_alias\_zone\_id) | Override the Route 53 hosted zone ID for the Elastic Beanstalk alias target. Set this when the module does not have a default ID for the selected region. | `string` | `""` | no |
 | <a name="input_dns_subdomain"></a> [dns\_subdomain](#input\_dns\_subdomain) | The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well | `string` | `""` | no |
-| <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment | `string` | `""` | no |
+| <a name="input_dns_zone_id"></a> [dns\_zone\_id](#input\_dns\_zone\_id) | Route53 parent zone ID, as a list with zero or one element. The module will create sub-domain DNS record in the parent zone for the EB environment | `list(string)` | `[]` | no |
 | <a name="input_elastic_beanstalk_application_name"></a> [elastic\_beanstalk\_application\_name](#input\_elastic\_beanstalk\_application\_name) | Elastic Beanstalk application name | `string` | n/a | yes |
 | <a name="input_elb_scheme"></a> [elb\_scheme](#input\_elb\_scheme) | Specify `internal` if you want to create an internal load balancer in your Amazon VPC so that your Elastic Beanstalk application cannot be accessed from outside your Amazon VPC | `string` | `"public"` | no |
 | <a name="input_enable_capacity_rebalancing"></a> [enable\_capacity\_rebalancing](#input\_enable\_capacity\_rebalancing) | Specifies whether to enable the Capacity Rebalancing feature for Spot Instances in your Auto Scaling Group | `bool` | `false` | no |
