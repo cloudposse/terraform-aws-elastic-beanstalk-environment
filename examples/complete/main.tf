@@ -39,7 +39,7 @@ module "elastic_beanstalk_application" {
 resource "aws_route53_zone" "default" {
   count = length(var.dns_zone_id) == 0 && (var.dns_alias_enabled || var.dns_subdomain != "") ? 1 : 0
 
-  name          = "${module.this.id}.example.com"
+  name          = "${module.this.id}.testing.cloudposse.co"
   force_destroy = true
 
   tags = module.this.tags
