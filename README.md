@@ -183,6 +183,17 @@ For a complete example, see [examples/complete](examples/complete)
 }
 ```
 
+To create a Route 53 A alias instead of the default CNAME, set `dns_alias_enabled = true`. Set `dns_alias_apex_enabled = true` to create the record at the hosted zone apex; otherwise, the module uses `dns_subdomain` or its default name. Alias records require an Elastic Beanstalk environment with a regionalized domain name. For regions without a default Beanstalk hosted zone ID, set `dns_alias_zone_id` to the ID published by AWS for that region.
+
+```hcl
+module "elastic_beanstalk_environment" {
+  source                 = "cloudposse/elastic-beanstalk-environment/aws"
+  dns_zone_id            = ["Z1234567890"]
+  dns_alias_enabled      = true
+  dns_alias_apex_enabled = true
+}
+```
+
 > [!IMPORTANT]
 > In Cloud Posse's examples, we avoid pinning modules to specific versions to prevent discrepancies between the documentation
 > and the latest released versions. However, for your own projects, we strongly advise pinning each module to the exact version
