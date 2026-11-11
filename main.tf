@@ -1140,7 +1140,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     }
   }
 
-  depends_on = [aws_iam_instance_profile.ec2]
+  # The ServiceRole setting only refers to the role by name, so make the
+  # environment depend on the role's policy attachments too. Otherwise
+  # Terraform can detach them on destroy while Elastic Beanstalk is still
+  # terminating the environment, and the service role loses access to
+  # Auto Scaling and Elastic Load Balancing.
+  depends_on = [
+    aws_iam_instance_profile.ec2,
+    aws_iam_role_policy_attachment.service,
+    aws_iam_role_policy_attachment.enhanced_health,
+  ]
 }
 
 resource "random_string" "elb_logs_suffix" {
