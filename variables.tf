@@ -51,15 +51,39 @@ variable "loadbalancer_connection_idle_timeout" {
 }
 
 variable "dns_zone_id" {
-  type        = string
-  default     = ""
-  description = "Route53 parent zone ID. The module will create sub-domain DNS record in the parent zone for the EB environment"
+  type        = list(string)
+  default     = []
+  nullable    = false
+  description = "Route53 parent zone ID, as a list with zero or one element. The module will create sub-domain DNS record in the parent zone for the EB environment"
+
+  validation {
+    condition     = length(var.dns_zone_id) <= 1
+    error_message = "dns_zone_id must contain zero or one element."
+  }
 }
 
 variable "dns_subdomain" {
   type        = string
   default     = ""
   description = "The subdomain to create on Route53 for the EB environment. For the subdomain to be created, the `dns_zone_id` variable must be set as well"
+}
+
+variable "dns_alias_apex_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether to create the A alias at the Route 53 hosted zone apex instead of the configured dns_subdomain or default module name. Requires dns_alias_enabled = true."
+}
+
+variable "dns_alias_enabled" {
+  type        = bool
+  default     = false
+  description = "Whether to create an A alias record for the Elastic Beanstalk environment instead of a CNAME record. The environment must have a regionalized domain name."
+}
+
+variable "dns_alias_zone_id" {
+  type        = string
+  default     = ""
+  description = "Override the Route 53 hosted zone ID for the Elastic Beanstalk alias target. Set this when the module does not have a default ID for the selected region."
 }
 
 variable "vpc_id" {

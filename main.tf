@@ -40,10 +40,17 @@ locals {
     us-west-1      = "Z1LQECGX5PH1X"
     us-west-2      = "Z38NKT9BP95V3O"
   }
+  beanstalk_alias_zone_id = var.dns_alias_zone_id != "" ? var.dns_alias_zone_id : lookup(var.alb_zone_id, var.region, lookup(local.elastic_beanstalk_hosted_zone_ids, var.region, ""))
 }
 
 data "aws_partition" "current" {
   count = local.enabled ? 1 : 0
+}
+
+data "aws_route53_zone" "dns_alias" {
+  count = local.enabled && length(var.dns_zone_id) > 0 && var.tier == "WebServer" && var.dns_alias_enabled && var.dns_alias_apex_enabled ? 1 : 0
+
+  zone_id = one(var.dns_zone_id)
 }
 
 #
@@ -300,9 +307,6 @@ data "aws_iam_policy_document" "default" {
       "rds:DescribeDBEngineVersions",
       "rds:DescribeDBInstances",
       "rds:DescribeOrderableDBInstanceOptions",
-      "s3:GetObject",
-      "s3:GetObjectAcl",
-      "s3:ListBucket",
       "sns:CreateTopic",
       "sns:GetTopicAttributes",
       "sns:ListSubscriptionsByTopic",
@@ -339,14 +343,14 @@ data "aws_iam_policy_document" "default" {
     sid = "AllowS3OperationsOnElasticBeanstalkBuckets"
 
     actions = [
-      "s3:*"
+      "s3:Get*",
+      "s3:List*",
+      "s3:PutObject",
     ]
 
     resources = [
-      #bridgecrew:skip=BC_AWS_IAM_57:Skipping "Ensure IAM policies does not allow write access without constraint"
-      #bridgecrew:skip=BC_AWS_IAM_56:Skipping "Ensure IAM policies do not allow permissions management / resource exposure without constraint"
-      #bridgecrew:skip=BC_AWS_IAM_55:Skipping "Ensure IAM policies do not allow data exfiltration"
-      "arn:${local.partition}:s3:::*"
+      "arn:${local.partition}:s3:::elasticbeanstalk-*",
+      "arn:${local.partition}:s3:::elasticbeanstalk-*/*",
     ]
 
     effect = "Allow"
@@ -1136,7 +1140,16 @@ resource "aws_elastic_beanstalk_environment" "default" {
     }
   }
 
-  depends_on = [aws_iam_instance_profile.ec2]
+  # The ServiceRole setting only refers to the role by name, so make the
+  # environment depend on the role's policy attachments too. Otherwise
+  # Terraform can detach them on destroy while Elastic Beanstalk is still
+  # terminating the environment, and the service role loses access to
+  # Auto Scaling and Elastic Load Balancing.
+  depends_on = [
+    aws_iam_instance_profile.ec2,
+    aws_iam_role_policy_attachment.service,
+    aws_iam_role_policy_attachment.enhanced_health,
+  ]
 }
 
 resource "random_string" "elb_logs_suffix" {
@@ -1155,17 +1168,37 @@ module "elb_logs" {
   context            = module.this.context
 }
 
-module "dns_hostname" {
-  source  = "cloudposse/route53-cluster-hostname/aws"
-  version = "0.12.2"
+# Keep the existing Route 53 record state when moving it out of the hostname module.
+moved {
+  from = module.dns_hostname.aws_route53_record.default[0]
+  to   = aws_route53_record.dns_hostname[0]
+}
 
-  enabled = local.enabled && var.dns_zone_id != "" && var.tier == "WebServer" ? true : false
+resource "aws_route53_record" "dns_hostname" {
+  count = local.enabled && length(var.dns_zone_id) > 0 && var.tier == "WebServer" ? 1 : 0
 
-  dns_name = var.dns_subdomain != "" ? var.dns_subdomain : module.this.name
-  zone_id  = var.dns_zone_id
-  records  = [join("", aws_elastic_beanstalk_environment.default[*].cname)]
+  zone_id = one(var.dns_zone_id)
+  name    = var.dns_alias_enabled && var.dns_alias_apex_enabled ? one(data.aws_route53_zone.dns_alias[*].name) : (var.dns_subdomain != "" ? var.dns_subdomain : module.this.name)
+  type    = var.dns_alias_enabled ? "A" : "CNAME"
+  ttl     = var.dns_alias_enabled ? null : 300
+  records = var.dns_alias_enabled ? null : [join("", aws_elastic_beanstalk_environment.default[*].cname)]
 
-  context = module.this.context
+  dynamic "alias" {
+    for_each = var.dns_alias_enabled ? [true] : []
+
+    content {
+      name                   = join("", aws_elastic_beanstalk_environment.default[*].cname)
+      zone_id                = local.beanstalk_alias_zone_id
+      evaluate_target_health = true
+    }
+  }
+
+  lifecycle {
+    precondition {
+      condition     = !var.dns_alias_enabled || local.beanstalk_alias_zone_id != ""
+      error_message = "No Elastic Beanstalk Route 53 hosted zone ID is available for region ${var.region}. Set dns_alias_zone_id to the correct regional hosted zone ID."
+    }
+  }
 }
 
 data "aws_lb_listener" "http" {
