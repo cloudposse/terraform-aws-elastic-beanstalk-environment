@@ -1059,9 +1059,15 @@ resource "aws_route53_record" "dns_hostname" {
   }
 }
 
+# Evaluated in a local so the data source does not reference the environment resource directly.
+# A direct reference makes Terraform defer the read to apply time whenever the environment has pending changes.
+locals {
+  http_listener_load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(flatten(aws_elastic_beanstalk_environment.default[*].load_balancers))
+}
+
 data "aws_lb_listener" "http" {
   count             = local.enabled && var.loadbalancer_redirect_http_to_https ? 1 : 0
-  load_balancer_arn = var.loadbalancer_is_shared ? var.shared_loadbalancer_arn : one(aws_elastic_beanstalk_environment.default[0].load_balancers)
+  load_balancer_arn = local.http_listener_load_balancer_arn
   port              = var.application_port
 }
 
